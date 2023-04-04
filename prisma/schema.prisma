@@ -1,29 +1,35 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 model User {
   id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  email        String   @unique
   username     String   @unique
   passwordHash String
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
   events       Event[]
 }
 
 model Event {
   id          String      @id @default(uuid())
-  userId      String
-  organizer   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
   title       String
   description String
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  creatorId   String      @unique
+  creator     User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  
   attendees   Attendee[]
   eventItems  EventItem[]
 }
@@ -36,7 +42,7 @@ model EventItem {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   contributor String
-  eventId     String
+  event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Attendee {
@@ -47,5 +53,5 @@ model Attendee {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   contributor String
-  eventId     String
+  event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
 }
