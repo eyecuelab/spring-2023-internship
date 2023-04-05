@@ -7,51 +7,116 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  username     String   @unique
-  passwordHash String
+// model User {
+//   id           String   @id @default(uuid())
+//   email        String   @unique
+//   username     String   @unique
+//   passwordHash String
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+//   createdAt    DateTime @default(now())
+//   updatedAt    DateTime @updatedAt
   
-  events       Event[]
+//   events       Event[]
+// }
+
+// model Event {
+//   id          String      @id @default(uuid())
+//   title       String
+//   description String
+
+//   createdAt   DateTime    @default(now())
+//   updatedAt   DateTime    @updatedAt
+
+//   creatorId   String      @unique
+//   creator     User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  
+//   attendees   Attendee[]
+//   eventItems  EventItem[]
+// }
+
+// model EventItem {
+//   id          String   @id @default(uuid())
+//   name        String
+//   quantity    Int
+//   note        String
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   contributor String
+//   event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
+// }
+
+// model Attendee {
+//   id          String   @id @default(uuid())
+//   attending   Boolean
+//   quantity    Int
+//   note        String
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   contributor String
+//   event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
+// }
+
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  password Password?
+
+  events   Event[]
+  attending Attendee[]
+}
+
+model Password {
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
 }
 
 model Event {
-  id          String      @id @default(uuid())
-  title       String
+  id          String       @id @default(cuid())
+  title       String  
   description String
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
-  creatorId   String      @unique
-  creator     User        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  
-  attendees   Attendee[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String       
+
   eventItems  EventItem[]
+  attendees   Attendee[]
 }
 
 model EventItem {
-  id          String   @id @default(uuid())
+  id          String    @id @default(cuid())
   name        String
-  quantity    Int
   note        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  contributor String
-  event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  attendee    Attendee  @relation(fields: [attendeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  attendeeId  String
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  eventId     String      
 }
 
 model Attendee {
-  id          String   @id @default(uuid())
-  attending   Boolean
-  quantity    Int
-  note        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  contributor String
-  event       Event    @relation(fields: [id], references: [id], onDelete: Cascade)
+  id          String    @id @default(cuid())
+  attending   Boolean   @default(false)
+  confirmed   Boolean   @default(false)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId      String
+  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+  eventId     String 
+
+  eventItems  EventItem[]
 }
