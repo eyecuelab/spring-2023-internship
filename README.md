@@ -1,6 +1,6 @@
-# Welcome to Remix!
+# EyeCue Lab Spring 2023 Internship
 
-- [Remix Docs](https://remix.run/docs)
+ [Remix Docs](https://remix.run/docs)
 
 ## Development
 
