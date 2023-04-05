@@ -20,7 +20,7 @@ export default function EventsRoute() {
         </div>
       </header>
       <hr />
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>
           <Link to="new">+ Create New Event</Link>
           <h5>Your Events</h5>
@@ -36,7 +36,7 @@ export default function EventsRoute() {
             <li><Link to={"id12345"}>event 3</Link></li>
           </ul>
         </div>
-        <div style={{ marginLeft: "100px" }}>
+        <div style={{ marginLeft: "50px", width: "70%" }}>
           <Outlet />
         </div>
       </div>
