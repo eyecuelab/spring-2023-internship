@@ -1,3 +1,5 @@
+import { Outlet } from "@remix-run/react";
+
 export default function EventRoute() {
   return (
     <div>
@@ -8,11 +10,7 @@ export default function EventRoute() {
       <h4>1234 Address St. Portland, OR 97211</h4>
       <h4>5/01/23 -- 5:00pm</h4>
       <hr />
-      <ul>
-        <li>Event Item (Attendee)</li>
-        <li>Event Item (Attendee)</li>
-        <li>Event Item (Attendee)</li>
-      </ul>
+      <Outlet />
     </div>
   )
 }
