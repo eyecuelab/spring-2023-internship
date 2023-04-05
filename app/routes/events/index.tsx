@@ -1,10 +1,5 @@
-import { prisma } from "~/db.server";
-
-export default function EventsIndexRoute() {
+export default function EventsIndex() {
   return (
-    <div>
-      Events Index Route
-
-    </div>
-  );
+    <h2>Select an event to view the details!</h2>
+  )
 }
