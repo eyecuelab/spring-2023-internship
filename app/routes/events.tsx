@@ -1,8 +1,13 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getEvents } from "~/models/events.server";
 import { json } from "@remix-run/node";
+import { useUser } from "~/utils";
 
-export const loader = async () => {
+import type { LoaderArgs } from "@remix-run/node";
+import { requireUserId } from "~/session.server";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const userId = await requireUserId(request);
   const events = await getEvents();
   return json({ events });
 }
@@ -10,6 +15,8 @@ export const loader = async () => {
 
 export default function EventsRoute() {
   const data = useLoaderData<typeof loader>();
+  const user = useUser();
+
   return (
     <div>
       <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
@@ -18,9 +25,9 @@ export default function EventsRoute() {
         </div>
         <h1 style={{ marginLeft: "200px" }}>Get Together</h1>
         <div className="user-info" style={{ marginLeft: "200px" }}>
-          {/* <span>{`Hi ${data.user.username}`}</span> */}
+          <span>{`Hi ${user.email}`}</span>
           {/* vvvvv---Remove below after hooking up authentication---vvvvv */}
-          <span>{`Hi User`}</span>
+          {/* <span>{`Hi User`}</span> */}
           <form action="/logout" method="post">
             <button type="submit" className="button">
               Logout

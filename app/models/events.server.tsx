@@ -5,4 +5,3 @@ export async function getEvents() {
     select: { id: true, title: true, description: true}
   });
 }
-
