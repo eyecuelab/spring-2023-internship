@@ -3,11 +3,11 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { createEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
-// import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/session.server";
 
 
 export const action = async ({ request }: ActionArgs) => {
-  // const userId = await requireUserId(request);  
+  const userId = await requireUserId(request);  
 
   const formData = await request.formData();
   const title = formData.get("title");
