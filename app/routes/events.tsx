@@ -1,6 +1,15 @@
-import { Link, Outlet } from "@remix-run/react";
+import { Link, Outlet, useLoaderData } from "@remix-run/react";
+import { getEvents } from "~/models/events.server";
+import { json } from "@remix-run/node";
+
+export const loader = async () => {
+  const events = await getEvents();
+  return json({ events });
+}
+
 
 export default function EventsRoute() {
+  const data = useLoaderData<typeof loader>();
   return (
     <div>
       <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
@@ -25,9 +34,11 @@ export default function EventsRoute() {
           <Link to="new">+ Create New Event</Link>
           <h5>Your Events</h5>
           <ul>
-            <li><Link to={"id12345"}>event 1</Link></li>
-            <li><Link to={"id12345"}>event 2</Link></li>
-            <li><Link to={"id12345"}>event 3</Link></li>
+          {data.events.map((event: any) => (
+                <li key={event.id}>
+                  <Link prefetch="intent" to={event.id}>{event.title}</Link>
+                </li>
+              ))}
           </ul>
           <h5>Events You're Attending</h5>
           <ul>
