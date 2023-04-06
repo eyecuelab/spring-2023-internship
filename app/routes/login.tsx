@@ -1,27 +1,16 @@
-import {
-  ActionArgs,
-  LinksFunction,
-  redirect,
-} from "@remix-run/node";
-import { json } from "@remix-run/node";
-import {
-  Link,
-  useActionData,
-  useSearchParams,
-} from "@remix-run/react";
+import { json, redirect } from "@remix-run/node";
+import { Link, useActionData, useSearchParams } from "@remix-run/react";
 
-// import stylesUrl from "~/styles/login.css";
-// import { db } from "~/utils/db.server";
-// import { badRequest } from "~/utils/request.server";
-// import { createUserSession, login, register } from "~/utils/session.server";
+import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 
-// export const links: LinksFunction = () => [
-//   { rel: "stylesheet", href: stylesUrl },
-// ];
+import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
+import { badRequest } from "~/request.server";
+import { createUserSession, getUserId } from "~/session.server";
+import { safeRedirect } from "~/utils";
 
-function validateUsername(username: unknown) {
-  if (typeof username !== "string" || username.length < 3) {
-    return `Usernames must be at least 3 characters long`;
+function validateEmail(email: unknown) {
+  if (typeof email !== "string" && email.length > 3 && email.includes("@")) {
+    return `Email is invalid`;
   }
 }
 
@@ -31,28 +20,21 @@ function validatePassword(password: unknown) {
   }
 }
 
-function validateUrl(url: string) {
-  let urls = ["/events", "/", "https://remix.run"];
-  if (urls.includes(url)) {
-    return url;
-  }
-  return "/events";
-}
+export const loader = async ({ request }: LoaderArgs) => {
+  const userId = await getUserId(request);
+  if (userId) return redirect("/events");
+  return json({});
+};
 
 export const action = async ({ request }: ActionArgs) => {
-  // vvvvv---REMOVE AFTER DB HOOKUP(don't forget to remove import)---vvvvvv
-  return redirect("/events")
-  // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  const form = await request.formData();
-  const loginType = form.get("loginType");
-  const username = form.get("username");
-  const password = form.get("password");
-  const redirectTo = validateUrl(
-    form.get("redirectTo") || "/events"
-  );
+  const formData = await request.formData();
+  const loginType = formData.get("loginType");
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
   if (
     typeof loginType !== "string" ||
-    typeof username !== "string" ||
+    typeof email !== "string" ||
     typeof password !== "string" ||
     typeof redirectTo !== "string"
   ) {
@@ -63,9 +45,9 @@ export const action = async ({ request }: ActionArgs) => {
     });
   }
 
-  const fields = { loginType, username, password };
+  const fields = { loginType, email, password };
   const fieldErrors = {
-    username: validateUsername(username),
+    email: validateEmail(email),
     password: validatePassword(password),
   };
   if (Object.values(fieldErrors).some(Boolean)) {
@@ -78,10 +60,8 @@ export const action = async ({ request }: ActionArgs) => {
 
   switch (loginType) {
     case "login": {
-      // login to get the user
-      const user = await login({ username, password });
-      console.log({ user });
-      // if there's no user, return the fields and a formError
+      const user = await verifyLogin(email, password);
+
       if (!user) {
         return badRequest({
           fieldErrors: null,
@@ -89,45 +69,49 @@ export const action = async ({ request }: ActionArgs) => {
           formError: `Username/Password combination is incorrect`,
         });
       }
-      // if there is a user, create their session and redirect to /jokes
-      return createUserSession(user.id, redirectTo);
+
+      // use remember if we decide to impliment on login 
+      // createUserSession() currently sets remember to true by default
+      return createUserSession({
+        redirectTo,
+        // remember: remember === "on" ? true : false,
+        request,
+        userId: user.id,
+      });
     }
     case "register": {
-      const userExists = await db.user.findFirst({
-        where: { username },
-      });
-      if (userExists) {
-        return badRequest({
-          fieldErrors: null,
-          fields,
-          formError: `User with username ${username} already exists`,
-        });
+      const existingUser = await getUserByEmail(email);
+      if (existingUser) {
+        return json(
+          {
+            errors: {
+              email: "A user already exists with this email",
+              password: null,
+            },
+          },
+          { status: 400 }
+        );
       }
-      // create the user
-      const user = await register({ username, password });
-      if (!user) {
-        return badRequest({
-          fieldErrors: null,
-          fields,
-          formError: `Something went wrong trying to create a new user.`,
-        });
-      }
-      // create their session and redirect to /jokes
-      return createUserSession(user.id, redirectTo);
-    }
-    default: {
-      return badRequest({
-        fieldErrors: null,
-        fields,
-        formError: `Login type invalid`,
+
+      const user = await createUser(email, password);
+
+      // use remember if we decide to impliment on login 
+      // createUserSession() currently sets remember to true by default
+      return createUserSession({
+        redirectTo,
+        // remember: remember === "on" ? true : false,
+        request,
+        userId: user.id,
       });
     }
   }
-};
+}
 
 export default function Login() {
   const actionData = useActionData<typeof action>();
   const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/events";
+
   return (
     <div className="container">
       <div className="content" data-light="">
@@ -136,9 +120,7 @@ export default function Login() {
           <input
             type="hidden"
             name="redirectTo"
-            value={
-              searchParams.get("redirectTo") ?? undefined
-            }
+            value={redirectTo}
           />
           <fieldset>
             <legend className="sr-only">
@@ -170,28 +152,28 @@ export default function Login() {
             </label>
           </fieldset>
           <div>
-            <label htmlFor="username-input">Username</label>
+            <label htmlFor="email-input">Email</label>
             <input
               type="text"
-              id="username-input"
-              name="username"
-              defaultValue={actionData?.fields?.username}
+              id="email-input"
+              name="email"
+              defaultValue={actionData?.fields?.email}
               aria-invalid={Boolean(
-                actionData?.fieldErrors?.username
+                actionData?.fieldErrors?.email
               )}
               aria-errormessage={
-                actionData?.fieldErrors?.username
-                  ? "username-error"
+                actionData?.fieldErrors?.email
+                  ? "email-error"
                   : undefined
               }
             />
-            {actionData?.fieldErrors?.username ? (
+            {actionData?.fieldErrors?.email ? (
               <p
                 className="form-validation-error"
                 role="alert"
-                id="username-error"
+                id="email-error"
               >
-                {actionData.fieldErrors.username}
+                {actionData.fieldErrors.email}
               </p>
             ) : null}
           </div>
