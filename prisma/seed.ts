@@ -23,7 +23,6 @@ async function seed() {
       },
     },
   });
-
   await db.event.create({
     data: {
       title: "My First Potluck",
