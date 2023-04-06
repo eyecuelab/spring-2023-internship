@@ -27,7 +27,14 @@ async function seed() {
   await db.event.create({
     data: {
       title: "My First Potluck",
-      description: "Hello potuck!",
+      description: "This is my first potluck",
+      userId: user.id
+    }
+  });
+  await db.event.create({
+    data: {
+      title: "My Second Potluck",
+      description: "This is my second potluck",
       userId: user.id
     }
   });
