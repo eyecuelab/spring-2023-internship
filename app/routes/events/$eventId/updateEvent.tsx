@@ -1,13 +1,14 @@
-import type { ActionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
-import { createEvent } from "~/models/events.server";
+import { updateEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
 import { requireUserId } from "~/session.server";
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 
-
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireUserId(request);  
+  invariant(params.eventId, "eventId not found");
 
   const formData = await request.formData();
   const title = formData.get("title");
@@ -19,20 +20,20 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-
   if (typeof description !== "string" || description.length === 0) {
     return json(
       { errors: { description: "Description is required", title: null } },
       { status: 400 }
     );
   }
-
-  const event = await createEvent({ title, description, userId });
+  
+  const id = params.eventId;
+  const event = await updateEvent({ id, title, description, userId });
 
   return redirect(`/events/${event.id}`);
 }
 
-export default function NewEventRoute() {
+export default function UpdateEventRoute() {
   const actionData = useActionData<typeof action>();
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -97,10 +98,7 @@ export default function NewEventRoute() {
       </div>
 
       <div className="text-right">
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
+        <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
           Save
         </button>
       </div>
