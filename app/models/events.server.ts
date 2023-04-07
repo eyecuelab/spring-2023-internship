@@ -38,7 +38,6 @@ export function updateEvent({
   id,
   title,
   description,
-  userId
 }: Pick<Event, "id" | "title" | "description"> & {
   userId: User["id"]
 }) {

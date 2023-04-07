@@ -1,13 +1,14 @@
-import { createEvent } from "~/models/events.server";
+import { updateEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
 import { requireUserId } from "~/session.server";
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 
-
-export const action = async ({ request }: ActionArgs) => {
+export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireUserId(request);  
+  invariant(params.eventId, "eventId not found");
 
   const formData = await request.formData();
   const title = formData.get("title");
@@ -25,8 +26,9 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-//Reusing createEvent() Need to load event id to pass into updateEvent()
-  const event = await createEvent({ title, description, userId });
+  
+  const id = params.eventId;
+  const event = await updateEvent({ id, title, description, userId });
 
   return redirect(`/events/${event.id}`);
 }
@@ -96,10 +98,7 @@ export default function UpdateEventRoute() {
       </div>
 
       <div className="text-right">
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
+        <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
           Save
         </button>
       </div>
