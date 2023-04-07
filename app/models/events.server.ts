@@ -51,10 +51,9 @@ export function updateEvent({
 
 export function deleteEvent({
   id,
-  userId,
 }: Pick<Event, "id"> & { userId: User["id"] }) {
-  return prisma.event.deleteMany({
-    where: { id, userId },
+  return prisma.event.delete({
+    where: { id }
   });
 }
 

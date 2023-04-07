@@ -1,15 +1,16 @@
-import type { LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { getEvent } from "~/models/events.server"
-import { useLoaderData } from "@remix-run/react";
-
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { deleteEvent, getEvent } from "~/models/events.server"
+import { useLoaderData, Form } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
+import { requireUserId } from "~/session.server";
+import invariant from "tiny-invariant";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", {status: 404})
   }
-  console.log("Event Id:" + eventId);
   const event = await getEvent(eventId);
   if (!event) {
     throw new Response("Uh Oh! No event found.", {status: 404});
@@ -17,22 +18,34 @@ export const loader: LoaderFunction = async ({ params }) => {
   return json({ event });
 }
 
-import { Outlet } from "@remix-run/react";
+export async function action({ request, params }: ActionArgs) {
+  const userId = await requireUserId(request);
+  invariant(params.eventId, "eventId not found");
+
+  await deleteEvent({ userId, id: params.eventId });
+  return redirect("/events");
+}
 
 export default function EventRoute() {
   const data = useLoaderData();
   return (
     <div>
       <h1>Event Info</h1>
-      <hr />
+      <hr/>
       <h3>Event Title:</h3>
       {data.event.title}
       <h3>Event Description:</h3>
       {data.event.description}
-      <h4>1234 Address St. Portland, OR 97211</h4>
-      <h4>5/01/23 -- 5:00pm</h4>
+      <Form method="post">
+        <button
+          type="submit"
+          className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+        >
+          Delete
+        </button>
+      </Form>
       <hr />
-      <Outlet />
+      <Outlet/>
     </div>
   )
 }
