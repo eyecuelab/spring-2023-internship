@@ -1,7 +1,7 @@
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { deleteEvent, getEvent } from "~/models/events.server"
-import { useLoaderData, Form } from "@remix-run/react";
+import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Outlet } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import invariant from "tiny-invariant";
@@ -37,13 +37,15 @@ export default function EventRoute() {
       <h3>Event Description:</h3>
       {data.event.description}
       <Form method="post">
-        <button
-          type="submit"
-          className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
+        <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
           Delete
         </button>
       </Form>
+      <Link to="updateEvent">
+        <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
+          Update
+        </button>
+      </Link>
       <hr />
       <Outlet/>
     </div>
