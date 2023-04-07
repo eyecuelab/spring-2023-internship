@@ -1,24 +1,12 @@
 import { json, redirect } from "@remix-run/node";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 
 import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
-import { badRequest } from "~/request.server";
 import { createUserSession, getUserId } from "~/session.server";
-import { safeRedirect } from "~/utils";
-
-function validateEmail(email: unknown) {
-  if (typeof email !== "string" && email.length > 3 && email.includes("@")) {
-    return `Email is invalid`;
-  }
-}
-
-function validatePassword(password: unknown) {
-  if (typeof password !== "string" || password.length < 6) {
-    return `Passwords must be at least 6 characters long`;
-  }
-}
+import { safeRedirect, validateEmail } from "~/utils";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -32,30 +20,26 @@ export const action = async ({ request }: ActionArgs) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
-  if (
-    typeof loginType !== "string" ||
-    typeof email !== "string" ||
-    typeof password !== "string" ||
-    typeof redirectTo !== "string"
-  ) {
-    return badRequest({
-      fieldErrors: null,
-      fields: null,
-      formError: `Form not submitted correctly.`,
-    });
+
+  if (!validateEmail(email)) {
+    return json(
+      { errors: { email: "Email is invalid", password: null } },
+      { status: 400 }
+    );
   }
 
-  const fields = { loginType, email, password };
-  const fieldErrors = {
-    email: validateEmail(email),
-    password: validatePassword(password),
-  };
-  if (Object.values(fieldErrors).some(Boolean)) {
-    return badRequest({
-      fieldErrors,
-      fields,
-      formError: null,
-    });
+  if (typeof password !== "string" || password.length === 0) {
+    return json(
+      { errors: { email: null, password: "Password is required" } },
+      { status: 400 }
+    );
+  }
+
+  if (password.length < 8) {
+    return json(
+      { errors: { email: null, password: "Password is too short" } },
+      { status: 400 }
+    );
   }
 
   switch (loginType) {
@@ -63,11 +47,10 @@ export const action = async ({ request }: ActionArgs) => {
       const user = await verifyLogin(email, password);
 
       if (!user) {
-        return badRequest({
-          fieldErrors: null,
-          fields,
-          formError: `Username/Password combination is incorrect`,
-        });
+        return json(
+          { errors: { email: "Invalid email or password", password: null } },
+          { status: 400 }
+        );
       }
 
       // use remember if we decide to impliment on login 
@@ -81,6 +64,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
     case "register": {
       const existingUser = await getUserByEmail(email);
+
       if (existingUser) {
         return json(
           {
@@ -111,6 +95,16 @@ export default function Login() {
   const actionData = useActionData<typeof action>();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/events";
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (actionData?.errors?.email) {
+      emailRef.current?.focus();
+    } else if (actionData?.errors?.password) {
+      passwordRef.current?.focus();
+    }
+  }, [actionData]);
 
   return (
     <div className="container">
@@ -131,10 +125,11 @@ export default function Login() {
                 type="radio"
                 name="loginType"
                 value="login"
-                defaultChecked={
-                  !actionData?.fields?.loginType ||
-                  actionData?.fields?.loginType === "login"
-                }
+                defaultChecked={true}
+                // defaultChecked={
+                //   actionData?.fields?.loginType ===
+                //   "login"
+                // }
               />{" "}
               Login
             </label>
@@ -143,75 +138,61 @@ export default function Login() {
                 type="radio"
                 name="loginType"
                 value="register"
-                defaultChecked={
-                  actionData?.fields?.loginType ===
-                  "register"
-                }
+                // defaultChecked={
+                //   actionData?.fields?.loginType ===
+                //   "register"
+                // }
               />{" "}
               Register
             </label>
           </fieldset>
           <div>
-            <label htmlFor="email-input">Email</label>
-            <input
-              type="text"
-              id="email-input"
-              name="email"
-              defaultValue={actionData?.fields?.email}
-              aria-invalid={Boolean(
-                actionData?.fieldErrors?.email
+            <label
+              htmlFor="email"
+            >
+              Email address
+            </label>
+            <div>
+              <input
+                ref={emailRef}
+                id="email"
+                required
+                autoFocus={true}
+                name="email"
+                type="email"
+                autoComplete="email"
+                aria-invalid={actionData?.errors?.email ? true : undefined}
+                aria-describedby="email-error"
+              />
+              {actionData?.errors?.email && (
+                <div id="email-error">
+                  {actionData.errors.email}
+                </div>
               )}
-              aria-errormessage={
-                actionData?.fieldErrors?.email
-                  ? "email-error"
-                  : undefined
-              }
-            />
-            {actionData?.fieldErrors?.email ? (
-              <p
-                className="form-validation-error"
-                role="alert"
-                id="email-error"
-              >
-                {actionData.fieldErrors.email}
-              </p>
-            ) : null}
+            </div>
           </div>
           <div>
-            <label htmlFor="password-input">Password</label>
-            <input
-              id="password-input"
-              name="password"
-              type="password"
-              defaultValue={actionData?.fields?.password}
-              aria-invalid={Boolean(
-                actionData?.fieldErrors?.password
+            <label
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <div>
+              <input
+                id="password"
+                ref={passwordRef}
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                aria-invalid={actionData?.errors?.password ? true : undefined}
+                aria-describedby="password-error"
+              />
+              {actionData?.errors?.password && (
+                <div id="password-error">
+                  {actionData.errors.password}
+                </div>
               )}
-              aria-errormessage={
-                actionData?.fieldErrors?.password
-                  ? "password-error"
-                  : undefined
-              }
-            />
-            {actionData?.fieldErrors?.password ? (
-              <p
-                className="form-validation-error"
-                role="alert"
-                id="password-error"
-              >
-                {actionData.fieldErrors.password}
-              </p>
-            ) : null}
-          </div>
-          <div id="form-error-message">
-            {actionData?.formError ? (
-              <p
-                className="form-validation-error"
-                role="alert"
-              >
-                {actionData.formError}
-              </p>
-            ) : null}
+            </div>
           </div>
           <button type="submit" className="button">
             Submit

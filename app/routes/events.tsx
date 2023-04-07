@@ -26,8 +26,6 @@ export default function EventsRoute() {
         <h1 style={{ marginLeft: "200px" }}>Get Together</h1>
         <div className="user-info" style={{ marginLeft: "200px" }}>
           <span>{`Hi ${user.email}`}</span>
-          {/* vvvvv---Remove below after hooking up authentication---vvvvv */}
-          {/* <span>{`Hi User`}</span> */}
           <form action="/logout" method="post">
             <button type="submit" className="button">
               Logout
