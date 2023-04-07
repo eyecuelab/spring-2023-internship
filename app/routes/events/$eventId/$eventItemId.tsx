@@ -6,7 +6,7 @@ export default function EventItem() {
       <h1>Event Item Details</h1>
       <h4>Event Item</h4>
       <p>Event Item Details</p>
-      <Link to={"/events/id12345"}>View All Items</Link>
+      <Link to={"/events"}>View All Items</Link>
     </div>
   )
 }

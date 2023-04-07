@@ -12,22 +12,39 @@ export const action = async ({ request }: ActionArgs) => {
   const formData = await request.formData();
   const title = formData.get("title");
   const description = formData.get("description");
+  const address = formData.get("address");
+  const date = formData.get("datetime");
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { description: null, title: "Title is required" } },
+      { errors: { description: null, title: "Title is required", address: null, datetime: null } },
       { status: 400 }
     );
   }
 
   if (typeof description !== "string" || description.length === 0) {
     return json(
-      { errors: { description: "Description is required", title: null } },
+      { errors: { description: "Description is required", title: null, address: null, datetime: null } },
+      { status: 400 }
+    );
+  }
+  
+  if (typeof address !== "string" || address.length === 0) {
+    return json(
+      { errors: { description: null, title: null, address: "Address is required", datetime: null } },
+      { status: 400 }
+    );
+  }
+  
+  if (typeof date !== "string" || date.length === 0) {
+    return json(
+      { errors: { description: null, title: null, address: null, datetime: "Date and Time is required" } },
       { status: 400 }
     );
   }
 
-  const event = await createEvent({ title, description, userId });
+  const dateTime = new Date(date);
+  const event = await createEvent({ title, description, address, dateTime, userId });
 
   return redirect(`/events/${event.id}`);
 }
@@ -36,12 +53,18 @@ export default function NewEventRoute() {
   const actionData = useActionData<typeof action>();
   const titleRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  const datetimeRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (actionData?.errors?.title) {
       titleRef.current?.focus();
     } else if (actionData?.errors?.description) {
       descriptionRef.current?.focus();
+    } else if (actionData?.errors?.address) {
+      addressRef.current?.focus();
+    } else if (actionData?.errors?.datetime) {
+      datetimeRef.current?.focus();
     }
   }, [actionData]);
 
@@ -92,6 +115,45 @@ export default function NewEventRoute() {
         {actionData?.errors?.description && (
           <div className="pt-1 text-red-700" id="description-error">
             {actionData.errors.description}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Address: </span>
+          <input
+            ref={addressRef}
+            name="address"
+            aria-invalid={actionData?.errors?.address ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.address ? "address-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.address && (
+          <div className="pt-1 text-red-700" id="address-error">
+            {actionData.errors.address}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <label className="flex w-full flex-col gap-1">
+          <span>Date and Time: </span>
+          <input
+            ref={datetimeRef}
+            type="datetime-local"
+            name="datetime"
+            aria-invalid={actionData?.errors?.datetime ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.datetime ? "datetime-error" : undefined
+            }
+          />
+        </label>
+        {actionData?.errors?.datetime && (
+          <div className="pt-1 text-red-700" id="datetime-error">
+            {actionData.errors.datetime}
           </div>
         )}
       </div>

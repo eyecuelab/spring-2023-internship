@@ -16,6 +16,9 @@ export const loader: LoaderFunction = async ({ params }) => {
     throw new Response("Uh Oh! No event found.", {status: 404});
   }
   return json({ event });
+
+  const datetime = new Date();
+  const test = datetime.toLocaleDateString
 }
 
 export async function action({ request, params }: ActionArgs) {
@@ -28,14 +31,20 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function EventRoute() {
   const data = useLoaderData();
+  const dateTime: Date = data.event.dateTime;
+  const dateTimeDisplay = dateTime.toLocaleDateString();
   return (
     <div>
       <h1>Event Info</h1>
       <hr/>
       <h3>Event Title:</h3>
       {data.event.title}
-      <h3>Event Description:</h3>
+      <h3>Description:</h3>
       {data.event.description}
+      <h3>Address:</h3>
+      {data.event.address}
+      <h3>Date and Time:</h3>
+      {dateTimeDisplay}
       <Form method="post">
         <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
           Delete
