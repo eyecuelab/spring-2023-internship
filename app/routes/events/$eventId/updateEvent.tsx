@@ -6,7 +6,9 @@ import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const userId = await requireUserId(request);
+
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", {status: 404})
@@ -15,6 +17,11 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!event) {
     throw new Response("Uh Oh! No event found.", {status: 404});
   }
+
+  if (event.userId !== userId) {
+    throw new Response("Uh Oh! You do not have access to update this event.", {status: 403});
+  }
+
   return json({ event });
 }
 
