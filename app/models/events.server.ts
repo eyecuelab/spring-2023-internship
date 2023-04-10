@@ -17,14 +17,18 @@ export async function getEvent(id: string ) {
 export function createEvent({
   title,
   description,
+  address,
+  dateTime,
   userId
-}: Pick<Event, "title" | "description"> & {
+}: Pick<Event, "title" | "description" | "address" | "dateTime"> & {
   userId: User["id"];
 }) {
   return prisma.event.create({
     data: {
       title,
       description,
+      address,
+      dateTime,
       user: {
         connect: {
           id: userId,
@@ -38,14 +42,18 @@ export function updateEvent({
   id,
   title,
   description,
-}: Pick<Event, "id" | "title" | "description"> & {
+  address,
+  dateTime
+}: Pick<Event, "id" | "title" | "description" | "address" | "dateTime"> & {
   userId: User["id"]
 }) {
   return prisma.event.update({
     where: { id },
     data: {
       title,
-      description
+      description,
+      address,
+      dateTime
     }
   })
 }
