@@ -6,12 +6,15 @@ export type { Event } from "@prisma/client";
 
 export async function getEvents() {
   return prisma.event.findMany({
-    select: { id: true, title: true}
+    select: { id: true, title: true }, 
   });
 }
 
 export async function getEvent(id: string ) {
-  return prisma.event.findUnique({ where: { id } });
+  return prisma.event.findUnique({ 
+    where: { id },
+    // include: { attendees: true } 
+  });
 } 
 
 export function createEvent({

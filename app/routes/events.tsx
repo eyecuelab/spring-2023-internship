@@ -39,11 +39,11 @@ export default function EventsRoute() {
           <Link to="new">+ Create New Event</Link>
           <h5>Your Events</h5>
           <ul>
-          {data.events.map((event: any) => (
-                <li key={event.id}>
-                  <Link prefetch="intent" to={event.id}>{event.title}</Link>
-                </li>
-              ))}
+          {data.events.map((event) => (
+            <li key={event.id}>
+              <Link prefetch="intent" to={event.id}>{event.title}</Link>
+            </li>
+          ))}
           </ul>
           <h5>Events You're Attending</h5>
           <ul>
@@ -52,7 +52,7 @@ export default function EventsRoute() {
             <li><Link to={"id12345"}>event 3</Link></li>
           </ul>
         </div>
-        <div style={{ marginLeft: "50px", width: "70%" }}>
+        <div style={{ marginLeft: "50px" }}>
           <Outlet />
         </div>
       </div>
