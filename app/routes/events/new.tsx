@@ -21,21 +21,18 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-
   if (typeof description !== "string" || description.length === 0) {
     return json(
       { errors: { description: "Description is required", title: null, address: null, datetime: null } },
       { status: 400 }
     );
   }
-  
   if (typeof address !== "string" || address.length === 0) {
     return json(
       { errors: { description: null, title: null, address: "Address is required", datetime: null } },
       { status: 400 }
     );
   }
-  
   if (typeof date !== "string" || date.length === 0) {
     return json(
       { errors: { description: null, title: null, address: null, datetime: "Date and Time is required" } },

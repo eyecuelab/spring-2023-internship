@@ -42,14 +42,18 @@ export function updateEvent({
   id,
   title,
   description,
-}: Pick<Event, "id" | "title" | "description"> & {
+  address,
+  dateTime
+}: Pick<Event, "id" | "title" | "description" | "address" | "dateTime"> & {
   userId: User["id"]
 }) {
   return prisma.event.update({
     where: { id },
     data: {
       title,
-      description
+      description,
+      address,
+      dateTime
     }
   })
 }
