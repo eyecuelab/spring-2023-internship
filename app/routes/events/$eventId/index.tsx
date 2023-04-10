@@ -1,11 +1,11 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, } from "@remix-run/react";
 import { getEventItems } from "~/models/eventItems.server";
 import { json } from "@remix-run/node";
 import { useUser } from "~/utils";
-import { Event } from "~/models/eventItems.server";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/session.server";
+
 
 export const loader = async ({ request, params }: LoaderArgs) => {
   const userId = await requireUserId(request);
@@ -28,7 +28,7 @@ export default function EventItemsList() {
       <ul>
         {data.eventItemsList.map((item: any) => (
           <li key={item.id}>
-            <p>{item.name}: {item.note}</p>
+            <Link prefetch="intent" to={item.id}> <p>{item.name}</p> </Link>
           </li>
         ))}
       </ul>

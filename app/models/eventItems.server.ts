@@ -11,6 +11,10 @@ export async function getEventItems(eventId: string) {
   });
 }
 
+export async function getEventItem(id: string ) {
+  return prisma.eventItem.findUnique({ where: { id } });
+} 
+
 export function createEventItem({
   name,
   note,
@@ -28,5 +32,13 @@ export function createEventItem({
         },
       }
     },
+  });
+}
+
+export function deleteEventItem({
+  id,
+}: Pick<EventItem, "id">) {
+  return prisma.eventItem.delete({
+    where: { id }
   });
 }
