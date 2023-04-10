@@ -1,10 +1,27 @@
-import { updateEvent } from "~/models/events.server";
+import { getEvent, updateEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
 import { requireUserId } from "~/session.server";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import invariant from "tiny-invariant";
+
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const userId = await requireUserId(request);
+  const { eventId } = params;
+  if (!eventId) {
+    throw new Response("Uh Oh! There was no id.", {status: 404})
+  }
+  const event = await getEvent(eventId);
+  if (!event) {
+    throw new Response("Uh Oh! No event found.", {status: 404});
+  }
+  if (event.userId !== userId) {
+    throw new Response("Uh Oh! You do not have access to update this event.", {status: 403});
+  }
+
+  return json({ event });
+}
 
 export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireUserId(request);  
