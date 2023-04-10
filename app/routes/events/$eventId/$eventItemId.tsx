@@ -23,10 +23,12 @@ export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
   invariant(params.eventItemId, "event item not found");
 
-  const event =  await prisma.event.findFirst({ where: {} });
-
+  const eventId = params.eventId;
+  if (!eventId) {
+    throw new Response("Uh Oh! There was no id found.", {status: 404})
+  }
   await deleteEventItem({ id: params.eventItemId });
-  return redirect(`/events`);
+  return redirect(`/events/${eventId}`);
 }
 
 export default function EventItem() {
