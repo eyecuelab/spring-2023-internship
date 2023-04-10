@@ -27,6 +27,8 @@ async function seed() {
     data: {
       title: "My First Potluck",
       description: "This is my first potluck",
+      address: "1234 N Test St. Portland, OR 97123",
+      dateTime: new Date("2023-06-20T17:00:00Z"), 
       userId: user.id
     }
   });
@@ -34,6 +36,8 @@ async function seed() {
     data: {
       title: "My Second Potluck",
       description: "This is my second potluck",
+      address: "1234 N Test St. Portland, OR 97123",
+      dateTime: new Date("2023-06-20T14:00:00Z"),
       userId: user.id
     }
   });
