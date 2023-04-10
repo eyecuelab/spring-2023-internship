@@ -1,5 +1,5 @@
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { Form, Link, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData, useActionData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { getEventItem, deleteEventItem } from "~/models/eventItems.server";
 import { getEvent } from "~/models/events.server";
@@ -9,6 +9,7 @@ import { prisma } from "~/db.server";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const { eventItemId } = params;
+  
   if (!eventItemId) {
     throw new Response("Uh Oh! There was no id found.", {status: 404})
   }
@@ -16,6 +17,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!eventItem) {
     throw new Response("Uh Oh! No event item found.", {status: 404});
   }
+  console.log({eventItem});
   return json({ eventItem });
 }
 
@@ -33,7 +35,6 @@ export async function action({ request, params }: ActionArgs) {
 
 export default function EventItem() {
   const data = useLoaderData();
-
   return (
     <div>
       <h1>Event Item Details</h1>
@@ -44,7 +45,7 @@ export default function EventItem() {
           Delete
         </button>
       </Form>
-      <Link to="/events">Back to Event List</Link>
+      <Link to={`/events/${data.eventItem.eventId}`}>Back to Event List</Link>
     </div>
   )
 }
