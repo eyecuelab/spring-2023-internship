@@ -61,6 +61,7 @@ export default function EventRoute() {
 
       <hr />
       <Outlet/>
+      
     </div>
   )
 }
