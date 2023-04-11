@@ -36,13 +36,13 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
-      { errors: { note: null, name: "Item name is required" } },
+      { errors: { note: null, name: "Item name is required!" } },
       { status: 400 }
     );
   }
   if (typeof note !== "string" || note.length === 0) {
     return json(
-      { errors: { note: "Description is required", name: null } },
+      { errors: { note: "Note is required!", name: null } },
       { status: 400 }
     );
   }
@@ -121,7 +121,10 @@ export default function UpdateEventItemRoute() {
       </div>
 
       <div className="text-right">
-        <button type="submit" className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
+        <button
+          type="submit"
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
+        >
           Save
         </button>
       </div>
