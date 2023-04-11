@@ -35,6 +35,22 @@ export function createEventItem({
   });
 }
 
+export function updateEventItem({
+  id,
+  name,
+  note,
+}: Pick<EventItem, "id" | "name" | "note"> & {
+  eventId: Event["id"]
+}) {
+  return prisma.eventItem.update({
+    where: { id },
+    data: {
+      name,
+      note,
+    }
+  })
+}
+
 export function deleteEventItem({
   id,
 }: Pick<EventItem, "id">) {

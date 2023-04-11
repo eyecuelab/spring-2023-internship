@@ -20,10 +20,11 @@ export default function EventsRoute() {
   return (
     <div>
       <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
-        <div className="links">
-          <Link to="/">Home</Link>
-        </div>
-        <h1 style={{ marginLeft: "200px" }}>Get Together</h1>
+        <Link to="/events">
+          <div style={{ marginLeft: "200px", textDecoration: "none" }}>
+            <h1>Get Together</h1>
+          </div>
+        </Link>
         <div className="user-info" style={{ marginLeft: "200px" }}>
           <span>{`Hi ${user.email}`}</span>
           <form action="/logout" method="post">
