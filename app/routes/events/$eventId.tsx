@@ -5,7 +5,7 @@ import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Outlet } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import invariant from "tiny-invariant";
-import { createAttendee, getAttendeesByEventId } from "~/models/attendee.server";
+import { createAttendee, getAttendeesByEventId, isAttendee } from "~/models/attendee.server";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -22,7 +22,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json({ event, userId });
   }
   
-  console.log(event)
   return json({ event, userId, attendees });
 }
 
@@ -41,8 +40,12 @@ export async function action({ request, params }: ActionArgs) {
     return redirect("/events");
   }
   if (_action === "create") {
-    await createAttendee({ userId, eventId })
-    return redirect(`/events/${params.eventId}`)
+    const attendee = await isAttendee(userId, eventId);
+    if (!attendee) {
+      await createAttendee({ userId, eventId })
+      return redirect(`/events/${params.eventId}`)
+    }
+    return null
   }
 }
 

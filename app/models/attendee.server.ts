@@ -25,3 +25,14 @@ export function getAttendeesByEventId(eventId: string) {
     include: { user: true }
   })
 }
+
+export function isAttendee(userId: string, eventId: string) {
+  return prisma.attendee.findFirst({
+    where: {
+      AND: [
+        { userId: { equals: userId } },
+        { eventId: { equals: eventId } }
+      ]
+    }
+  })
+}

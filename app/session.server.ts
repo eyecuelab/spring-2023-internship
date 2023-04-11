@@ -63,7 +63,7 @@ export async function requireUser(request: Request) {
   throw await logout(request);
 }
 
-// uncomment remember if we decide to impliment on login 
+// uncomment "remember" if we decide to impliment on login 
 // currently set to true as default
 export async function createUserSession({
   request,
