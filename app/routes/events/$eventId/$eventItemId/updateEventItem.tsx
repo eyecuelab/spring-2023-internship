@@ -104,7 +104,7 @@ export default function UpdateEventItemRoute() {
           <textarea
             ref={noteRef}
             name="note"
-            defaultValue={data.event.note}
+            defaultValue={data.eventItem.note}
             rows={8}
             className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
             aria-invalid={actionData?.errors?.note ? true : undefined}
