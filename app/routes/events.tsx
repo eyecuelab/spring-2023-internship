@@ -40,6 +40,7 @@ export default function EventsRoute() {
       <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>
           <Link to="new">+ Create New Event</Link>
+          
           <h5>Your Events</h5>
           <ul>
           {data.events.map((event) => (
@@ -48,12 +49,16 @@ export default function EventsRoute() {
             </li>
           ))}
           </ul>
+
           <h5>Events You're Attending</h5>
-          {data.attendingEvents.map((attendee) => (
-            <li key={attendee.event.id}>
-              <Link prefetch="intent" to={attendee.event.id}>{attendee.event.title}</Link>
-            </li>
-          ))}
+          <ul>
+            {data.attendingEvents.map((attendee) => (
+              <li key={attendee.event.id}>
+                <Link prefetch="intent" to={attendee.event.id}>{attendee.event.title}</Link>
+              </li>
+            ))}
+          </ul>
+
         </div>
         <div style={{ marginLeft: "50px" }}>
           <Outlet />

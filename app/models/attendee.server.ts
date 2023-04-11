@@ -1,6 +1,6 @@
 import { prisma } from "~/db.server";
 
-import type { User, Event, Attendee } from "@prisma/client";
+import type { User, Event } from "@prisma/client";
 
 export type { Attendee } from "@prisma/client";
 
