@@ -13,10 +13,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", {status: 404})
   }
+
   const event = await getEvent(eventId);
   if (!event) {
     throw new Response("Uh Oh! No event found.", {status: 404});
   }
+
   const attendees = await getAttendeesByEventId(eventId);
   if (!attendees) {
     return json({ event, userId });
@@ -93,9 +95,6 @@ export default function EventRoute() {
             {data.attendees.map((attendee: any) => (
               <li key={attendee.id}>{attendee.user.email}</li>
             ))}
-            <li>guest 1</li>
-            <li>guest 2</li>
-            <li>guest 3</li>
           </ul>
         </div>
       </div>

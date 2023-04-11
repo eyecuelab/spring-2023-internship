@@ -36,3 +36,10 @@ export function isAttendee(userId: string, eventId: string) {
     }
   })
 }
+
+export function getAttendeesEvents(userId: string) {
+  return prisma.attendee.findMany({
+    where: { userId },
+    select: { event: true }
+  })
+}

@@ -5,11 +5,14 @@ import { useUser } from "~/utils";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/session.server";
+import { getAttendeesEvents } from "~/models/attendee.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
   const events = await getEvents();
-  return json({ events });
+  const attendingEvents = await getAttendeesEvents(userId);
+
+  return json({ events, attendingEvents });
 }
 
 
@@ -46,11 +49,11 @@ export default function EventsRoute() {
           ))}
           </ul>
           <h5>Events You're Attending</h5>
-          <ul>
-            <li><Link to={"id12345"}>event 1</Link></li>
-            <li><Link to={"id12345"}>event 2</Link></li>
-            <li><Link to={"id12345"}>event 3</Link></li>
-          </ul>
+          {data.attendingEvents.map((attendee) => (
+            <li key={attendee.event.id}>
+              <Link prefetch="intent" to={attendee.event.id}>{attendee.event.title}</Link>
+            </li>
+          ))}
         </div>
         <div style={{ marginLeft: "50px" }}>
           <Outlet />
