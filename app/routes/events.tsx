@@ -5,11 +5,14 @@ import { useUser } from "~/utils";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/session.server";
+import { getAttendeesEvents } from "~/models/attendee.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
   const events = await getEvents();
-  return json({ events });
+  const attendingEvents = await getAttendeesEvents(userId);
+
+  return json({ events, attendingEvents });
 }
 
 
@@ -38,22 +41,27 @@ export default function EventsRoute() {
       <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>
           <Link to="new">+ Create New Event</Link>
+          
           <h5>Your Events</h5>
           <ul>
-          {data.events.map((event: any) => (
-                <li key={event.id}>
-                  <Link prefetch="intent" to={event.id}>{event.title}</Link>
-                </li>
-              ))}
+          {data.events.map((event) => (
+            <li key={event.id}>
+              <Link prefetch="intent" to={event.id}>{event.title}</Link>
+            </li>
+          ))}
           </ul>
+
           <h5>Events You're Attending</h5>
           <ul>
-            <li><Link to={"id12345"}>event 1</Link></li>
-            <li><Link to={"id12345"}>event 2</Link></li>
-            <li><Link to={"id12345"}>event 3</Link></li>
+            {data.attendingEvents.map((attendee) => (
+              <li key={attendee.event.id}>
+                <Link prefetch="intent" to={attendee.event.id}>{attendee.event.title}</Link>
+              </li>
+            ))}
           </ul>
+
         </div>
-        <div style={{ marginLeft: "50px", width: "70%" }}>
+        <div style={{ marginLeft: "50px" }}>
           <Outlet />
         </div>
       </div>

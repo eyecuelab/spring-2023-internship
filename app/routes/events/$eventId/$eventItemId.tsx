@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!eventItem) {
     throw new Response("Uh Oh! No event item found.", { status: 404 });
   }
-  console.log({ eventItem });
+  
   return json({ eventItem });
 };
 
