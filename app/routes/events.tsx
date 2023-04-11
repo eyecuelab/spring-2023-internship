@@ -1,5 +1,5 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
-import { getEvents } from "~/models/events.server";
+import { getEventsByUserId } from "~/models/events.server";
 import { json } from "@remix-run/node";
 import { useUser } from "~/utils";
 
@@ -9,7 +9,7 @@ import { getAttendeesEvents } from "~/models/attendee.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
-  const events = await getEvents();
+  const events = await getEventsByUserId(userId);
   const attendingEvents = await getAttendeesEvents(userId);
 
   return json({ events, attendingEvents });

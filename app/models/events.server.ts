@@ -4,8 +4,9 @@ import type { User, Event } from "@prisma/client";
 
 export type { Event } from "@prisma/client";
 
-export async function getEvents() {
+export async function getEventsByUserId(userId: string) {
   return prisma.event.findMany({
+    where: { userId },
     select: { id: true, title: true }, 
   });
 }
