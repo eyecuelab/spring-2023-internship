@@ -15,23 +15,23 @@ function Appbar() {
   const user = useUser();
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="static" sx={{ bgcolor: "#424242" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box>
             <img alt="logo" src={logo}></img>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button sx={{ my: 2, color: "white", display: "block" }}>
+            <Button sx={{ my: 1, pl: 5, color: "white", display: "block" }}>
           <span>{`Hi ${user.email}`}</span>
-          <form action="/logout" method="post">
+            </Button>
+          </Box>
+          <Box sx={{ flexGrow: 0 }}>
+          <form action="/logout" method="post" style={{ float: "left", padding: "1rem" }}>
             <button type="submit" className="button">
               Logout
             </button>
           </form>
-            </Button>
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src={avatar} />
