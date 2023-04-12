@@ -15,7 +15,7 @@ export default function App() {
         <meta charSet="utf-8" />
         <title>GeTogether</title>
       </head>
-      <body>
+      <body style={{ margin: "0", padding: "0"}}>
         <Outlet />
         <LiveReload />
       </body>
