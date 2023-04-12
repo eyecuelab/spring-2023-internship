@@ -4,6 +4,8 @@ import { json } from "@remix-run/node";
 import type { LoaderArgs } from "@remix-run/node";
 import { getUser } from "./session.server";
 import Appbar from "./components/Appbar";
+// import createMuiTheme from "@material-ui/core";
+
 
 export const loader = async ({ request }: LoaderArgs) => {
   return json({ user: await getUser(request) });
