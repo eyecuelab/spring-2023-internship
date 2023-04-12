@@ -8,8 +8,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import logo from "../../public/img/logo.png";
 import avatar from "../../public/img/avatar.png";
+import { useUser } from "~/utils";
+
 
 function Appbar() {
+  const user = useUser();
+
   return (
     <AppBar position="static" color="primary">
       <Container maxWidth="xl">
@@ -19,7 +23,12 @@ function Appbar() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button sx={{ my: 2, color: "white", display: "block" }}>
-              {/* Sign in Button Here */}
+          <span>{`Hi ${user.email}`}</span>
+          <form action="/logout" method="post">
+            <button type="submit" className="button">
+              Logout
+            </button>
+          </form>
             </Button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>

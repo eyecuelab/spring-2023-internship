@@ -6,6 +6,8 @@ import { useUser } from "~/utils";
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/session.server";
 import { getAttendeesEvents } from "~/models/attendee.server";
+import Appbar from "~/components/Appbar";
+
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
@@ -22,7 +24,8 @@ export default function EventsRoute() {
 
   return (
     <div>
-      <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
+      <Appbar />
+      {/* <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
         <Link to="/events">
           <div style={{ marginLeft: "200px", textDecoration: "none" }}>
             <h1>Get Together</h1>
@@ -36,7 +39,7 @@ export default function EventsRoute() {
             </button>
           </form>
         </div>
-      </header>
+      </header> */}
       <hr />
       <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>

@@ -15,6 +15,7 @@ export default function Index() {
         important discussions in one convenient place. start planning your next
         unforgettable event with ease!
       </Box>
+      <Link to='/login'>Login/Register</Link>
     </div>
   );
 }
