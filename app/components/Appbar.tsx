@@ -15,11 +15,11 @@ function Appbar() {
   const user = useUser();
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "#424242" }}>
+    <AppBar position="static" sx={{ bgcolor: "#424242", mb: 1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box>
-            <img alt="logo" src={logo}></img>
+            <img alt="logo" src={logo} style={{height: "2rem"}}></img>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button sx={{ my: 1, pl: 5, color: "white", display: "block" }}>

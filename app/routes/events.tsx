@@ -25,7 +25,6 @@ export default function EventsRoute() {
   return (
     <div>
       <Appbar />
-      <hr />
       <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>
           <Link to="new">+ Create New Event</Link>
