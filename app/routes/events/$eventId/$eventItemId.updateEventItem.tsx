@@ -50,7 +50,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const id = params.eventItemId;
   const updatedEventItem = await updateEventItem({ id, name, note, eventId });
 
-  return redirect(`/events/${eventId}`);
+  return redirect(`/events/${eventId}/${updatedEventItem.id}`);
 };
 
 export default function UpdateEventItemRoute() {

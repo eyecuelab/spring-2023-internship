@@ -25,21 +25,6 @@ export default function EventsRoute() {
   return (
     <div>
       <Appbar />
-      {/* <header style={{ display: "inline-flex", flexWrap: "wrap" }}>
-        <Link to="/events">
-          <div style={{ marginLeft: "200px", textDecoration: "none" }}>
-            <h1>Get Together</h1>
-          </div>
-        </Link>
-        <div className="user-info" style={{ marginLeft: "200px" }}>
-          <span>{`Hi ${user.email}`}</span>
-          <form action="/logout" method="post">
-            <button type="submit" className="button">
-              Logout
-            </button>
-          </form>
-        </div>
-      </header> */}
       <hr />
       <div style={{ display: "inline-flex" }}>
         <div className="events" style={{ width: "30%" }}>
