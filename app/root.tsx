@@ -12,6 +12,12 @@ const theme = createTheme({
     primary: {
       main: "#9e9e9e"
     }
+  },
+  typography: {
+    fontFamily: [
+      "open sans",
+      "rasa",
+    ].join(",")
   }
 });
 
@@ -28,10 +34,7 @@ export default function App() {
           <title>Get-Together</title>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link href="https://fonts.googleapis.com/css2?family=Rasa:wght@300&display=swap" rel="stylesheet" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Rasa:wght@300&display=swap" rel="stylesheet" />
+          <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Rasa:wght@400&display=swap" rel="stylesheet" />
         </head>
         <body style={{ backgroundImage: `url(${Background})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "right", margin: "0", padding: "0" }}>
           <Outlet />
