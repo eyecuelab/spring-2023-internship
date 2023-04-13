@@ -31,7 +31,7 @@ export default function App() {
       <html lang="en" style={{ height: "100%" }}>
         <head>
           <meta charSet="utf-8" />
-          <title>Get-Together</title>
+          <title>GeTogether</title>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Rasa:wght@400&display=swap" rel="stylesheet" />
