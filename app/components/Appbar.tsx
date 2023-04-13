@@ -10,37 +10,55 @@ import logo from "../../public/img/logo.png";
 import avatar from "../../public/img/avatar.png";
 import { useUser } from "~/utils";
 
-
 function Appbar() {
   const user = useUser();
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "#424242", mb: 1 }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Box>
-            <img alt="logo" src={logo} style={{height: "2rem"}}></img>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            <Button sx={{ my: 1, pl: 5, color: "white", display: "block" }}>
-          <span>{`Hi ${user.email}`}</span>
-            </Button>
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-          <form action="/logout" method="post" style={{ float: "left", padding: "1rem" }}>
-            <button type="submit" className="button">
-              Logout
-            </button>
-          </form>
-            <Tooltip title="Open settings">
-              <IconButton sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={avatar} />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+    <Box sx={{ flexGrow: 1, display: "flex" }}>
+      <AppBar position="static" sx={{ bgcolor: "#404040", mb: 1, height: 45 }}>
+        <Container maxWidth="xl" sx={{height: 45, display: "flex"}}>
+          <Toolbar disableGutters>
+            <Box>
+              <img
+                alt="logo"
+                src={logo}
+                style={{ height: "1.4rem", width: "6rem", padding: "0" }}
+              ></img>
+            </Box>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: "flex" },
+              }}
+            >
+              <Button
+                href="/events"
+                variant="text"
+                sx={{ pl: 5, color: "white", display: "block" }}
+              >
+                My GeTogethers
+              </Button>
+            </Box>
+            <Box sx={{ flexGrow: 0 }}>
+              <Button
+                variant="text"
+                href="/logout"
+                style={{ float: "left", padding: "1rem", color: "white" }}
+              >
+                Logout
+              </Button>
+            </Box>
+            <Box>
+              <Tooltip title="Open settings">
+                <IconButton sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src={avatar} sx={{ width: 36, height: 36 }} />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </Box>
   );
 }
 export default Appbar;
