@@ -1,21 +1,18 @@
 import { Link } from "@remix-run/react";
-import { Box } from "@mui/material";
+import { Typography, Button } from "@mui/material";
+
+import BlackLogo from "~/images/black-logo.png";
 
 export default function Index() {
   return (
-    <div className="index">
-      <h1>You are Invited!</h1>
-      <Box>
-        Are you tired of endless group chats, missed messages and forgotten
-        details when it comes to planning events with your loved ones? Well, say
-        hello to Getogether - the exclusive app designed to help you plan and
-        organize your next gathering effortlessly! Whether you're throwing a
-        potluck, a wedding, or simply planning a weekend getaway, Getogether is
-        here to help you create lists, share memories, and keep all the
-        important discussions in one convenient place. start planning your next
-        unforgettable event with ease!
-      </Box>
-      <Link to='/login'>Login/Register</Link>
+    <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
+      <div style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
+        <img src={BlackLogo} style={{ height: "40px"}} alt="Black logo." />
+        <Typography variant="h3" fontFamily="rasa" sx={{ marginTop: "0", marginBottom: "1rem", fontSize: "43px" }}>You Are Invited!</Typography>
+        <Typography sx={{ fontSize: "13px", lineHeight: "1.4rem" }}>Are You Tired Of Endless Group Chats, Missed Messages And Forgotten Details When It Comes To Planning Events With Your Loved Ones? Well, Say Hello To Getogether - The Exclusive App Designed To Help You Plan And Organize Your Next Gathering Effortlessly! Whether You're Throwing A Potluck, A Wedding, Or Simply Planning A Weekend Getaway, Getogether Is Here To Help You Create Lists, Share Memories, And Kepp All The Important Discussions In One Convenient Place.</Typography>
+        <Typography sx={{ fontSize: "13px", marginTop: "2rem", marginBottom: "3rem" }}>Start Planning Your Next Unforgettable Event With Ease!</Typography>
+        <Button variant="outlined" color="primary" href="/login">Signup/Login</Button>
+      </div>
     </div>
   );
 }
