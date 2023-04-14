@@ -3,12 +3,18 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#9e9e9e",
-    },
+      main: "#9e9e9e"
+    }
   },
   typography: {
-    fontFamily: ["open sans", "rasa"].join(","),
-  },
+    fontFamily: [
+      "open sans",
+      "rasa",
+    ].join(","),
+    body1: {
+      fontWeight: "300"
+    }
+  }
 });
 
 export default theme;

@@ -1,4 +1,5 @@
 import AppBar from "@mui/material/AppBar";
+import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
@@ -9,6 +10,7 @@ import { useUser } from "~/utils/utils";
 import { Typography } from "@mui/material";
 import { Form } from "@remix-run/react";
 
+
 function Appbar() {
   const user = useUser();
 
@@ -17,7 +19,6 @@ function Appbar() {
       position="static"
       sx={{
         bgcolor: "#404040",
-        mb: 1,
         height: 35,
         display: "flex",
         flexDirection: "row",
