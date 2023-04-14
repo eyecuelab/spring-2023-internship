@@ -1,7 +1,7 @@
 import { Link, Outlet, useLoaderData } from "@remix-run/react";
 import { getEventsByUserId } from "~/models/events.server";
 import { json } from "@remix-run/node";
-import { useUser } from "~/utils";
+import { useUser } from "~/utils/utils";
 
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/session.server";

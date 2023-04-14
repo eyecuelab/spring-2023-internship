@@ -1,6 +1,4 @@
-import { Link } from "@remix-run/react";
 import { Typography, Button } from "@mui/material";
-
 import BlackLogo from "~/images/black-logo.png";
 
 export default function Index() {

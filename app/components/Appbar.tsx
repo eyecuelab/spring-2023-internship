@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import logo from "../../public/img/logo.png";
 import avatar from "../../public/img/avatar.png";
-import { useUser } from "~/utils";
+import { useUser } from "~/utils/utils";
 
 
 function Appbar() {
