@@ -26,14 +26,15 @@ export default function EventsRoute() {
     <div>
       <Appbar />
       <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
-        <div className="events" style={{ width: "30%" }}>
+        <div style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
+          <h2>Select an event to view the details!</h2>
           <Link to="new">+ Create New Event</Link>
           
           <h5>Your Events</h5>
           <ul>
           {data.events.map((event) => (
             <li key={event.id}>
-              <Link prefetch="intent" to={event.id}>{event.title}</Link>
+              <Link prefetch="intent" to={`/${event.id}`}>{event.title}</Link>
             </li>
           ))}
           </ul>
@@ -42,7 +43,7 @@ export default function EventsRoute() {
           <ul>
             {data.attendingEvents.map((attendee) => (
               <li key={attendee.event.id}>
-                <Link prefetch="intent" to={attendee.event.id}>{attendee.event.title}</Link>
+                <Link prefetch="intent" to={`/${attendee.event.id}`}>{attendee.event.title}</Link>
               </li>
             ))}
           </ul>
