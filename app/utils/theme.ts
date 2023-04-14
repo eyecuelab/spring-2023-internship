@@ -12,7 +12,10 @@ const theme = createTheme({
       "rasa",
     ].join(","),
     body1: {
-      fontWeight: "300"
+      fontWeight: "400",
+      fontSize: "13px",
+      lineHeight: "170%",
+      textTransform: "capitalize"
     }
   }
 });
