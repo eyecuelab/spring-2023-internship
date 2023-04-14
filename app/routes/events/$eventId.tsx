@@ -1,3 +1,5 @@
+import React from "react";
+import { Typography, Button, Box, Tabs, Tab } from "@mui/material";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { deleteEvent, getEvent } from "~/models/events.server"
@@ -51,9 +53,47 @@ export async function action({ request, params }: ActionArgs) {
   }
 }
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 export default function EventRoute() {
   const data = useLoaderData();
   const dateTime = new Date(data.event.dateTime);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
   return (
     <div>
       <div style={{ display: "inline-flex", width: "110%" }}>
@@ -62,8 +102,26 @@ export default function EventRoute() {
           <hr/>
           <h3>Event Title:</h3>
           {data.event.title}
-          <h3>Description:</h3>
-          {data.event.description}
+          <hr />
+
+          <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Summary" {...a11yProps(0)} />
+                <Tab label="Memories" {...a11yProps(1)} />
+                <Tab label="Connections" {...a11yProps(2)} />
+              </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+            {data.event.description}
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              Pictures of Event Go Here
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+              Not Sure What Goes Here Yet
+            </TabPanel>
+          </Box>
           <h3>Address:</h3>
           {data.event.address}
           <h3>Date and Time:</h3>
