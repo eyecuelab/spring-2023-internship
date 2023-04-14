@@ -26,7 +26,7 @@ export default function EventsRoute() {
     <div>
       <Appbar />
       <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
-        <div style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
+        <div style={{ margin: "8%" }}>
           <h2>Select an event to view the details!</h2>
           <Link to="new">+ Create New Event</Link>
           

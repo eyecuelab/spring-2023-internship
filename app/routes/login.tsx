@@ -107,9 +107,9 @@ export default function Login() {
   }, [actionData]);
 
   return (
-    <div className="container">
-      <div className="content" data-light="">
-        <h1>Login</h1>
+    <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
+      <div data-light="" style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
+        <h1>Login/Register</h1>
         <form method="post">
           <input
             type="hidden"
@@ -198,9 +198,9 @@ export default function Login() {
             Submit
           </button>
         </form>
-      </div>
-      <div className="links">
-        <Link to="/">Home</Link>
+        <div className="links">
+          <Link to="/">Home</Link>
+        </div>
       </div>
     </div>
   );

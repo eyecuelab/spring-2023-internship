@@ -12,9 +12,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import avatar from "../../public/img/avatar.png";
 import React from "react";
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-// import TabPanel from '@mui/lab/TabPanel';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
