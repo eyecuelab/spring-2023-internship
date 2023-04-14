@@ -12,11 +12,10 @@ import {
 } from "@remix-run/react";
 import { ThemeProvider, withEmotionCache } from "@emotion/react";
 import {
-  createTheme,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from "@mui/material";
 import ClientStyleContext from "./utils/ClientStyleContext";
-// import Layout from './src/Layout';
+import theme from "./utils/theme";
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -72,16 +71,16 @@ const Document = withEmotionCache(
   }
 );
 
-export const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#9e9e9e",
-    },
-  },
-  typography: {
-    fontFamily: ["open sans", "rasa"].join(","),
-  },
-});
+// export const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: "#9e9e9e",
+//     },
+//   },
+//   typography: {
+//     fontFamily: ["open sans", "rasa"].join(","),
+//   },
+// });
 
 export default function App() {
   return (
