@@ -16,7 +16,6 @@ function Appbar() {
       position="static"
       sx={{
         bgcolor: "#404040",
-        mb: 1,
         height: 35,
         display: "flex",
         flexDirection: "row",
