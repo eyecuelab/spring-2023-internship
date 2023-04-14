@@ -28,7 +28,7 @@ function Appbar() {
         alt="logo"
         src={logo}
         style={{
-          height: "1.4rem",
+          height: "2.2rem",
           width: "6rem",
           padding: ".5rem",
         }}
