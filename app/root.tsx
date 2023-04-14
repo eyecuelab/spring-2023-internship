@@ -71,17 +71,6 @@ const Document = withEmotionCache(
   }
 );
 
-// export const theme = createTheme({
-//   palette: {
-//     primary: {
-//       main: "#9e9e9e",
-//     },
-//   },
-//   typography: {
-//     fontFamily: ["open sans", "rasa"].join(","),
-//   },
-// });
-
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
