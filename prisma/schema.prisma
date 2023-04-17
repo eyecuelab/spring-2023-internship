@@ -16,8 +16,9 @@ model User {
 
   password Password?
 
-  events   Event[]
-  attending Attendee[]
+  events        Event[]
+  contributions Contribution[]
+  comments      Comment[]
 }
 
 model Password {
@@ -28,48 +29,99 @@ model Password {
 }
 
 model Event {
-  id          String       @id @default(cuid())
-  title       String  
-  description String
-  address     String?
-  dateTime    DateTime?
+  id String @id @default(cuid())
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
 
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId      String       
+  name          String
+  summary       String
+  streetAddress String?
+  unit          String?
+  city          String?
+  state         String?
+  zip           String?
+  dateTime      DateTime?
 
-  eventItems  EventItem[]
-  attendees   Attendee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contributions Contribution[]
 }
 
-model EventItem {
-  id          String    @id @default(cuid())
-  name        String
-  note        String
+model Contribution {
+  id String @id @default(cuid())
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId  String?
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  eventId String
 
-  attendee    Attendee?  @relation(fields: [attendeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  attendeeId  String?
-  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
-  eventId     String      
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comments Comment[]
 }
 
-model Attendee {
-  id          String    @id @default(cuid())
-  attending   Boolean   @default(false)
-  confirmed   Boolean   @default(false)
+model Comment {
+  id String @id @default(cuid())
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId         String
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contributionId String
 
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId      String
-  event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
-  eventId     String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  eventItems  EventItem[]
+  post String
 }
+
+// model Event {
+//   id          String       @id @default(cuid())
+//   title       String  
+//   description String
+//   address     String?
+//   dateTime    DateTime?
+
+// createdAt   DateTime     @default(now())
+// updatedAt   DateTime     @updatedAt
+
+//   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   userId      String       
+
+//   eventItems  EventItem[]
+//   attendees   Attendee[]
+// }
+
+// model EventItem {
+//   id          String    @id @default(cuid())
+//   name        String
+//   note        String
+
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt
+
+//   attendee    Attendee?  @relation(fields: [attendeeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   attendeeId  String?
+//   event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+//   eventId     String      
+// }
+
+// model Attendee {
+//   id          String    @id @default(cuid())
+//   attending   Boolean   @default(false)
+//   confirmed   Boolean   @default(false)
+
+//   createdAt   DateTime  @default(now())
+//   updatedAt   DateTime  @updatedAt
+
+//   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+//   userId      String
+//   event       Event     @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade) 
+//   eventId     String 
+
+//   eventItems  EventItem[]
+// }
