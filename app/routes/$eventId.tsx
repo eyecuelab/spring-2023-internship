@@ -7,7 +7,7 @@ import { requireUserId } from "~/session.server";
 import invariant from "tiny-invariant";
 import { createAttendee, getAttendeesByEventId, isAttendee } from "~/models/attendee.server";
 import Appbar from "~/components/Appbar";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import avatar from "../../public/img/avatar.png";
@@ -142,9 +142,14 @@ export default function EventRoute() {
               </Box>
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>claim your contributions</Typography>
               <Typography>show your generosity and claim a few items to Bring with you!</Typography>
-              <ul>
-                <li>
-                  Deviled Eggs
+              <ul style={{ listStyleType: "none", padding: "0" }}>
+                <li style={{ display: "inline-flex" }}>
+                  <div style={{ marginRight: ".5rem" }}>•</div>
+                  <div>Deviled Eggs</div>
+                  <div>Discussion</div>
+                  <div>
+                    <Button variant="outlined" color="primary" href="">Claim Item</Button>
+                  </div>
                 </li>
                 <hr style={{ borderTop: "1px dashed #bbb" }}/>
               </ul>
