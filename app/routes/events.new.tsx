@@ -8,14 +8,13 @@ import {
   Avatar,
   Box,
   Button,
-  Tab,
-  Tabs,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
-
+import { Delete } from "@mui/icons-material";
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireUserId(request);
 
@@ -110,158 +109,124 @@ export default function NewEventRoute() {
   }, [actionData]);
 
   return (
-    <Box>
+    <div>
       <Appbar />
-      <div
+      <Form
         style={{
           backgroundColor: "rgb(245, 245, 245)",
-          width: "53vw",
-          height: "100vh",
+          width: "53%",
+          minHeight: "100%",
+          maxHeight: "auto",
           position: "absolute",
         }}
       >
         <div style={{ margin: "8%" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
+          <div style={{ display: "flex" }}>
             <Avatar
               alt="Remy Sharp"
               src={avatar}
               sx={{ height: "60px", width: "60px" }}
             />
-
             <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
               <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
               <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
                 Lucia Schmitt
               </Typography>
             </div>
-
-            <Button
-              variant="outlined"
-              color="primary"
-              sx={{
-                maxWidth: "80px",
-                maxHeight: "30px",
-                minWidth: "30px",
-                minHeight: "30px",
-              }}
-            >
-              Publish
-            </Button>
           </div>
-
-          <Form
-            method="post"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              width: "100%",
-            }}
-          >
-            <label className="flex w-full flex-col gap-1">
-              <TextField
-                ref={titleRef}
-                name="title"
-                className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-                placeholder="title"
-                aria-invalid={actionData?.errors?.title ? true : undefined}
-                aria-errormessage={
-                  actionData?.errors?.title ? "title-error" : undefined
-                }
-              />
-            </label>
-            {actionData?.errors?.title && (
-              <div className="pt-1 text-red-700" id="title-error">
-                {actionData.errors.title}
-              </div>
-            )}
-
+          <TextField
+            sx={{ mt: ".5rem", width: "100%" }}
+            ref={titleRef}
+            name="title"
+            placeholder="Title"
+            aria-invalid={actionData?.errors?.title ? true : undefined}
+            aria-errormessage={
+              actionData?.errors?.title ? "title-error" : undefined
+            }
+          />
+          {/* ------------------------------------------------------------------------------------------------------ */}
+          <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
                 Details
               </Typography>
             </Box>
 
-            <div>
-              <span>Summary</span>
-              <br />
-              <TextField
-                ref={descriptionRef}
-                name="description"
-                rows={8}
-                className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
-                aria-invalid={
-                  actionData?.errors?.description ? true : undefined
-                }
-                aria-errormessage={
-                  actionData?.errors?.description
-                    ? "description-error"
-                    : undefined
-                }
-              />
-              {actionData?.errors?.description && (
-                <div className="pt-1 text-red-700" id="description-error">
-                  {actionData.errors.description}
-                </div>
-              )}
-            </div>
+            <Box sx={{ mt: "1rem" }}>
+              <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
+              {/* {data.event.description} */}
+              <TextField sx={{ width: "100%" }}></TextField>
+              <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
+                <Box sx={{}}>
+                  <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    Location & Contact
+                  </Typography>
+                  {/* {data.event.address} */}
+                  <TextField
+                    ref={addressRef}
+                    name="address"
+                    placeholder="street address"
+                    aria-invalid={
+                      actionData?.errors?.address ? true : undefined
+                    }
+                    aria-errormessage={
+                      actionData?.errors?.address ? "address-error" : undefined
+                    }
+                  />
+                  {actionData?.errors?.address && (
+                    <div className="pt-1 text-red-700" id="address-error">
+                      {actionData.errors.address}
+                    </div>
+                  )}
+                  <TextField name="city" placeholder="city" />
+                  <TextField
+                    name="building / unit #"
+                    placeholder="building / unit #"
+                  />
+                  <TextField name="state" placeholder="state" />
+                  <TextField name="zip" placeholder="zip" />
+                </Box>
+              </Box>
 
-            <div>
-              <span>Location and Contact</span>
-              <br />
-              <TextField
-                ref={addressRef}
-                name="address"
-                placeholder="street address"
-                aria-invalid={actionData?.errors?.address ? true : undefined}
-                aria-errormessage={
-                  actionData?.errors?.address ? "address-error" : undefined
-                }
-              />
-              {actionData?.errors?.address && (
-                <div className="pt-1 text-red-700" id="address-error">
-                  {actionData.errors.address}
-                </div>
-              )}
-              <TextField name="city" placeholder="city" />
-              <TextField
-                name="building / unit #"
-                placeholder="building / unit #"
-              />
-              <TextField name="state" placeholder="state" />
-              <TextField name="zip" placeholder="zip" />
-            </div>
+              <Box style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <Box>
+                  <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
+                    claim your contributions
+                  </Typography>
+                  <Typography>
+                    let your guests know how they can contribute!
+                  </Typography>
+                </Box>
+                <Button
+                  sx={{
+                    fontFamily: "rasa",
+                    textTransform: "capitalize",
+                    pl: "1.5rem",
+                    pr: "1.5rem",
+                    pt: "8px",
+                    height: "1.75rem",
+                  }}
+                  variant="outlined"
+                  color="primary"
+                  href=""
+                >
+                  Add An Item
+                </Button>
+              </Box>
 
-            <div>
-              <label className="flex w-full flex-col gap-1">
-                <span>Date and Time: </span>
-                <input
-                  ref={datetimeRef}
-                  type="datetime-local"
-                  name="datetime"
-                  aria-invalid={actionData?.errors?.datetime ? true : undefined}
-                  aria-errormessage={
-                    actionData?.errors?.datetime ? "datetime-error" : undefined
-                  }
-                />
-              </label>
-              {actionData?.errors?.datetime && (
-                <div className="pt-1 text-red-700" id="datetime-error">
-                  {actionData.errors.datetime}
-                </div>
-              )}
-            </div>
-
-            <span>Contributions</span>
-          </Form>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <TextField sx={{ width: "100%" }} placeholder="" />
+                <IconButton aria-label="delete" size="small">
+                  <Delete fontSize="inherit" />
+                </IconButton>
+                <div style={{ marginLeft: "2rem" }}></div>
+              </div>
+              <hr style={{ borderTop: "1px dashed #bbb" }} />
+            </Box>
+          </Box>
+          {/* ------------------------------------------------------------------------------------------------------ */}
         </div>
-      </div>
-    </Box>
+      </Form>
+    </div>
   );
 }
