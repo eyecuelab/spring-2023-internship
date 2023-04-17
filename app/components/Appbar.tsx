@@ -14,7 +14,7 @@ function Appbar() {
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
         bgcolor: "#404040",
         height: 35,

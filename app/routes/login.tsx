@@ -107,7 +107,7 @@ export default function Login() {
   }, [actionData]);
 
   return (
-    <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
+    <div style={{ backgroundColor: "white", width: "53%", height: "100%", position: "absolute" }}>
       <div data-light="" style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
         <h1>Login/Register</h1>
         <form method="post">
