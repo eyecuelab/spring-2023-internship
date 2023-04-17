@@ -5,11 +5,6 @@ import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Outlet } from "@remix-run/react";
 import { requireUserId } from "~/session.server";
 import invariant from "tiny-invariant";
-import {
-  createAttendee,
-  getAttendeesByEventId,
-  isAttendee,
-} from "~/models/attendee.server";
 import Appbar from "~/components/Appbar";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
@@ -30,12 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("Uh Oh! No event found.", { status: 404 });
   }
 
-  const attendees = await getAttendeesByEventId(eventId);
-  if (!attendees) {
-    return json({ event, userId });
-  }
-
-  return json({ event, userId, attendees });
+  return json({ event, userId });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -51,14 +41,6 @@ export async function action({ request, params }: ActionArgs) {
   if (_action === "delete") {
     await deleteEvent({ userId, id: eventId });
     return redirect("/events");
-  }
-  if (_action === "create") {
-    const attendee = await isAttendee(userId, eventId);
-    if (!attendee) {
-      await createAttendee({ userId, eventId });
-      return redirect(`/events/${params.eventId}`);
-    }
-    return null;
   }
 }
 

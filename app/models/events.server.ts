@@ -7,31 +7,39 @@ export type { Event } from "@prisma/client";
 export async function getEventsByUserId(userId: string) {
   return prisma.event.findMany({
     where: { userId },
-    select: { id: true, title: true }, 
+    select: { id: true, name: true }, 
   });
 }
 
 export async function getEvent(id: string ) {
   return prisma.event.findUnique({ 
     where: { id },
-    // include: { attendees: true } 
+    // include: { contributions: true } 
   });
 } 
 
 export function createEvent({
-  title,
-  description,
-  address,
+  name,
+  summary,
+  streetAddress,
+  unit,
+  city,
+  state,
+  zip,
   dateTime,
   userId
-}: Pick<Event, "title" | "description" | "address" | "dateTime"> & {
+}: Pick<Event, "name" | "summary" | "streetAddress" | "unit" | "city" | "state" | "zip" | "dateTime"> & {
   userId: User["id"];
 }) {
   return prisma.event.create({
     data: {
-      title,
-      description,
-      address,
+      name,
+      summary,
+      streetAddress,
+      unit,
+      city,
+      state,
+      zip,
       dateTime,
       user: {
         connect: {
@@ -44,19 +52,27 @@ export function createEvent({
 
 export function updateEvent({
   id,
-  title,
-  description,
-  address,
+  name,
+  summary,
+  streetAddress,
+  unit,
+  city,
+  state,
+  zip,
   dateTime
-}: Pick<Event, "id" | "title" | "description" | "address" | "dateTime"> & {
+}: Pick<Event, "id" | "name" | "summary" | "streetAddress" | "unit" | "city" | "state" | "zip" | "dateTime"> & {
   userId: User["id"]
 }) {
   return prisma.event.update({
     where: { id },
     data: {
-      title,
-      description,
-      address,
+      name,
+      summary,
+      streetAddress,
+      unit,
+      city,
+      state,
+      zip,
       dateTime
     }
   })
