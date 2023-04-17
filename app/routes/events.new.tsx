@@ -121,7 +121,6 @@ export default function NewEventRoute() {
         }}
       >
         <div style={{ margin: "8%" }}>
-          {/* <div> */}
           <div
             style={{
               display: "flex",
@@ -134,6 +133,7 @@ export default function NewEventRoute() {
               src={avatar}
               sx={{ height: "60px", width: "60px" }}
             />
+
             <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
               <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
               <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
@@ -181,12 +181,11 @@ export default function NewEventRoute() {
                 {actionData.errors.title}
               </div>
             )}
-            {/* </div> */}
 
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs aria-label="basic tabs example">
-                <Tab label="Details" />
-              </Tabs>
+              <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
+                Details
+              </Typography>
             </Box>
 
             <div>
@@ -260,7 +259,6 @@ export default function NewEventRoute() {
             </div>
 
             <span>Contributions</span>
-            
           </Form>
         </div>
       </div>
