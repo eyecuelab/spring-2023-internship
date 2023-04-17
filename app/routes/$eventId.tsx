@@ -113,7 +113,7 @@ export default function EventRoute() {
             </div>
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
-            Sunday Potluck At Luci's
+            {data.event.name}
           </Typography>
           {/* ------------------------------------------------------------------------------------------------------ */}
           <Box sx={{ width: "100%", mt: "1rem" }}>
@@ -143,22 +143,16 @@ export default function EventRoute() {
             <TabPanel value={value} index={0}>
               <Box sx={{ mt: "1rem" }}>
                 <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
-                {/* {data.event.description} */}
-                <Typography>
-                  It's that time of the year again - time for our annual potluck
-                  dinner! We're excited to gather with our friends and family to
-                  share some delicious food and great company. We'll provide the
-                  plates, utensils, and drinks. We’ve had requests from our last
-                  Potluck, feel free to claim them if you are interested!
-                </Typography>
+                {/* {data.event.summary} */}
+                <Typography>{data.event.summary}</Typography>
                 <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                   <Box sx={{}}>
                     <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                       Location & Contact
                     </Typography>
                     {/* {data.event.address} */}
-                    <Typography>1234 San Marino Ave</Typography>
-                    <Typography>Minivile, CO 56789</Typography>
+                    <Typography>{data.event.streetAddress} {data.event.unit}</Typography>
+                    <Typography>{data.event.city}, {data.event.state} {data.event.zip}</Typography>
                     <Typography>(501) 778-1145</Typography>
                     <Typography>lucia.schmitt@gmail.com</Typography>
                     <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
@@ -186,11 +180,12 @@ export default function EventRoute() {
                 <Typography>
                   show your generosity and claim a few items to Bring with you!
                 </Typography>
-                <ul style={{ listStyleType: "none", padding: "0" }}>
-                  <li>
+                {data.event.contributions.map((contribution: any) => (
+                  <ul style={{ listStyleType: "none", padding: "0" }}>
+                  <li key={contribution.id}>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: ".5rem" }}>•</div>
-                      <div style={{}}>Deviled Eggs</div>
+                      <div style={{}}>{contribution.name}</div>
                       <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
                         Discussion
                       </div>
@@ -215,6 +210,7 @@ export default function EventRoute() {
                   </li>
                   <hr style={{ borderTop: "1px dashed #bbb" }} />
                 </ul>
+                ))}
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
