@@ -8,15 +8,13 @@ import { requireUserId } from "~/session.server";
 import { getAttendeesEvents } from "~/models/attendee.server";
 import Appbar from "~/components/Appbar";
 
-
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await requireUserId(request);
   const events = await getEventsByUserId(userId);
   const attendingEvents = await getAttendeesEvents(userId);
 
   return json({ events, attendingEvents });
-}
-
+};
 
 export default function EventsRoute() {
   const data = useLoaderData<typeof loader>();
@@ -25,31 +23,41 @@ export default function EventsRoute() {
   return (
     <div>
       <Appbar />
-      <div style={{ backgroundColor: "white", width: "53%", height: "100vh", position: "absolute" }}>
+      <div
+        style={{
+          backgroundColor: "white",
+          width: "53%",
+          height: "100vh",
+          position: "absolute",
+        }}
+      >
         <div style={{ margin: "8%" }}>
           <h2>Select an event to view the details!</h2>
           <Link to="new">+ Create New Event</Link>
-          
+
           <h5>Your Events</h5>
           <ul>
-          {data.events.map((event) => (
-            <li key={event.id}>
-              <Link prefetch="intent" to={`/${event.id}`}>{event.title}</Link>
-            </li>
-          ))}
+            {data.events.map((event) => (
+              <li key={event.id}>
+                <Link prefetch="intent" to={`/${event.id}`}>
+                  {event.title}
+                </Link>
+              </li>
+            ))}
           </ul>
 
           <h5>Events You're Attending</h5>
           <ul>
             {data.attendingEvents.map((attendee) => (
               <li key={attendee.event.id}>
-                <Link prefetch="intent" to={`/${attendee.event.id}`}>{attendee.event.title}</Link>
+                <Link prefetch="intent" to={`/${attendee.event.id}`}>
+                  {attendee.event.title}
+                </Link>
               </li>
             ))}
           </ul>
-
         </div>
       </div>
     </div>
-  )
+  );
 }

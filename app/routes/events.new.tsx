@@ -4,10 +4,20 @@ import { Form, useActionData } from "@remix-run/react";
 import { createEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
 import { requireUserId } from "~/session.server";
-
+import {
+  Avatar,
+  Box,
+  Button,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from "@mui/material";
+import avatar from "../../public/img/avatar.png";
+import Appbar from "~/components/Appbar";
 
 export const action = async ({ request }: ActionArgs) => {
-  const userId = await requireUserId(request);  
+  const userId = await requireUserId(request);
 
   const formData = await request.formData();
   const title = formData.get("title");
@@ -17,34 +27,68 @@ export const action = async ({ request }: ActionArgs) => {
 
   if (typeof title !== "string" || title.length === 0) {
     return json(
-      { errors: { description: null, title: "Title is required", address: null, datetime: null } },
+      {
+        errors: {
+          description: null,
+          title: "Title is required",
+          address: null,
+          datetime: null,
+        },
+      },
       { status: 400 }
     );
   }
   if (typeof description !== "string" || description.length === 0) {
     return json(
-      { errors: { description: "Description is required", title: null, address: null, datetime: null } },
+      {
+        errors: {
+          description: "Description is required",
+          title: null,
+          address: null,
+          datetime: null,
+        },
+      },
       { status: 400 }
     );
   }
   if (typeof address !== "string" || address.length === 0) {
     return json(
-      { errors: { description: null, title: null, address: "Address is required", datetime: null } },
+      {
+        errors: {
+          description: null,
+          title: null,
+          address: "Address is required",
+          datetime: null,
+        },
+      },
       { status: 400 }
     );
   }
   if (typeof date !== "string" || date.length === 0) {
     return json(
-      { errors: { description: null, title: null, address: null, datetime: "Date and Time is required" } },
+      {
+        errors: {
+          description: null,
+          title: null,
+          address: null,
+          datetime: "Date and Time is required",
+        },
+      },
       { status: 400 }
     );
   }
 
   const dateTime = new Date(date);
-  const event = await createEvent({ title, description, address, dateTime, userId });
+  const event = await createEvent({
+    title,
+    description,
+    address,
+    dateTime,
+    userId,
+  });
 
   return redirect(`/events/${event.id}`);
-}
+};
 
 export default function NewEventRoute() {
   const actionData = useActionData<typeof action>();
@@ -66,103 +110,160 @@ export default function NewEventRoute() {
   }, [actionData]);
 
   return (
-    <Form
-      method="post"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        width: "100%",
-      }}
-    >
-      <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Title: </span>
-          <input
-            ref={titleRef}
-            name="title"
-            className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.title && (
-          <div className="pt-1 text-red-700" id="title-error">
-            {actionData.errors.title}
-          </div>
-        )}
-      </div>
+    <Box>
+      <Appbar />
+      <div
+        style={{
+          backgroundColor: "rgb(245, 245, 245)",
+          width: "53vw",
+          height: "100vh",
+          position: "absolute",
+        }}
+      >
+        <div style={{ margin: "8%" }}>
+          {/* <div> */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Avatar
+              alt="Remy Sharp"
+              src={avatar}
+              sx={{ height: "60px", width: "60px" }}
+            />
+            <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
+              <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
+              <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
+                Lucia Schmitt
+              </Typography>
+            </div>
 
-      <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Description: </span>
-          <textarea
-            ref={descriptionRef}
-            name="description"
-            rows={8}
-            className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
-            aria-invalid={actionData?.errors?.description ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.description ? "description-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.description && (
-          <div className="pt-1 text-red-700" id="description-error">
-            {actionData.errors.description}
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{
+                maxWidth: "80px",
+                maxHeight: "30px",
+                minWidth: "30px",
+                minHeight: "30px",
+              }}
+            >
+              Publish
+            </Button>
           </div>
-        )}
-      </div>
 
-      <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Address: </span>
-          <input
-            ref={addressRef}
-            name="address"
-            aria-invalid={actionData?.errors?.address ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.address ? "address-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.address && (
-          <div className="pt-1 text-red-700" id="address-error">
-            {actionData.errors.address}
-          </div>
-        )}
-      </div>
+          <Form
+            method="post"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              width: "100%",
+            }}
+          >
+            <label className="flex w-full flex-col gap-1">
+              <TextField
+                ref={titleRef}
+                name="title"
+                className="flex-1 rounded-md border-2 border-blue-500 px-3 text-lg leading-loose"
+                placeholder="title"
+                aria-invalid={actionData?.errors?.title ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.title ? "title-error" : undefined
+                }
+              />
+            </label>
+            {actionData?.errors?.title && (
+              <div className="pt-1 text-red-700" id="title-error">
+                {actionData.errors.title}
+              </div>
+            )}
+            {/* </div> */}
 
-      <div>
-        <label className="flex w-full flex-col gap-1">
-          <span>Date and Time: </span>
-          <input
-            ref={datetimeRef}
-            type="datetime-local"
-            name="datetime"
-            aria-invalid={actionData?.errors?.datetime ? true : undefined}
-            aria-errormessage={
-              actionData?.errors?.datetime ? "datetime-error" : undefined
-            }
-          />
-        </label>
-        {actionData?.errors?.datetime && (
-          <div className="pt-1 text-red-700" id="datetime-error">
-            {actionData.errors.datetime}
-          </div>
-        )}
-      </div>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs aria-label="basic tabs example">
+                <Tab label="Details" />
+              </Tabs>
+            </Box>
 
-      <div className="text-right">
-        <button
-          type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-        >
-          Save
-        </button>
+            <div>
+              <span>Summary</span>
+              <br />
+              <TextField
+                ref={descriptionRef}
+                name="description"
+                rows={8}
+                className="w-full flex-1 rounded-md border-2 border-blue-500 px-3 py-2 text-lg leading-6"
+                aria-invalid={
+                  actionData?.errors?.description ? true : undefined
+                }
+                aria-errormessage={
+                  actionData?.errors?.description
+                    ? "description-error"
+                    : undefined
+                }
+              />
+              {actionData?.errors?.description && (
+                <div className="pt-1 text-red-700" id="description-error">
+                  {actionData.errors.description}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <span>Location and Contact</span>
+              <br />
+              <TextField
+                ref={addressRef}
+                name="address"
+                placeholder="street address"
+                aria-invalid={actionData?.errors?.address ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.address ? "address-error" : undefined
+                }
+              />
+              {actionData?.errors?.address && (
+                <div className="pt-1 text-red-700" id="address-error">
+                  {actionData.errors.address}
+                </div>
+              )}
+              <TextField name="city" placeholder="city" />
+              <TextField
+                name="building / unit #"
+                placeholder="building / unit #"
+              />
+              <TextField name="state" placeholder="state" />
+              <TextField name="zip" placeholder="zip" />
+            </div>
+
+            <div>
+              <label className="flex w-full flex-col gap-1">
+                <span>Date and Time: </span>
+                <input
+                  ref={datetimeRef}
+                  type="datetime-local"
+                  name="datetime"
+                  aria-invalid={actionData?.errors?.datetime ? true : undefined}
+                  aria-errormessage={
+                    actionData?.errors?.datetime ? "datetime-error" : undefined
+                  }
+                />
+              </label>
+              {actionData?.errors?.datetime && (
+                <div className="pt-1 text-red-700" id="datetime-error">
+                  {actionData.errors.datetime}
+                </div>
+              )}
+            </div>
+
+            <span>Contributions</span>
+            
+          </Form>
+        </div>
       </div>
-    </Form>
+    </Box>
   );
 }
