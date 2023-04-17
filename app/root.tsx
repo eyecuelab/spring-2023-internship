@@ -82,11 +82,11 @@ export default function App() {
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500;700&family=Rasa:wght@400&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Rasa:wght@400&display=swap"
             rel="stylesheet"
           />
         </head>
-        <body style={{ backgroundImage: `url(${Background})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "right",  margin: "0", padding: "0" }}>
+        <body style={{ backgroundImage: `url(${Background})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "right", backgroundAttachment: "fixed", margin: "0", padding: "0" }}>
           <Document>
             <Outlet />
             <LiveReload />

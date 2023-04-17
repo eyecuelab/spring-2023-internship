@@ -11,10 +11,11 @@ import {
   isAttendee,
 } from "~/models/attendee.server";
 import Appbar from "~/components/Appbar";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import avatar from "../../public/img/avatar.png";
+import MapImg from "~/images/map.png";
 import React from "react";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -109,8 +110,9 @@ export default function EventRoute() {
       <div
         style={{
           backgroundColor: "rgb(245, 245, 245)",
-          width: "53vw",
-          height: "100vh",
+          width: "53%",
+          minHeight: "100%",
+          maxHeight: "auto",
           position: "absolute",
         }}
       >
@@ -119,62 +121,119 @@ export default function EventRoute() {
             <Avatar
               alt="Remy Sharp"
               src={avatar}
-              sx={{ height: "70px", width: "70px" }}
+              sx={{ height: "60px", width: "60px" }}
             />
-            <div style={{ marginLeft: "1rem", marginTop: ".5rem" }}>
-              <Typography>Created By</Typography>
-              <Typography sx={{ fontWeight: "bold" }}>Lucia Schmitt</Typography>
+            <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
+              <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
+              <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
+                Lucia Schmitt
+              </Typography>
             </div>
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             Sunday Potluck At Luci's
           </Typography>
           {/* ------------------------------------------------------------------------------------------------------ */}
-          <Box sx={{ width: "100%", mt: "2rem" }}>
+          <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={value}
                 onChange={handleChange}
                 aria-label="basic tabs example"
               >
-                <Tab label="Details" {...a11yProps(0)} />
-                <Tab label="Memories" {...a11yProps(1)} />
-                <Tab label="Connections" {...a11yProps(2)} />
+                <Tab
+                  sx={{ fontSize: ".75rem", fontWeight: "bold" }}
+                  label="Details"
+                  {...a11yProps(0)}
+                />
+                <Tab
+                  sx={{ fontSize: ".75rem", fontWeight: "bold" }}
+                  label="Memories"
+                  {...a11yProps(1)}
+                />
+                <Tab
+                  sx={{ fontSize: ".75rem", fontWeight: "bold" }}
+                  label="Connections"
+                  {...a11yProps(2)}
+                />
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <div>
-                <h3>Description:</h3>
-                {data.event.description}
-                <h3>Address:</h3>
-                {data.event.address}
-                <h3>Date and Time:</h3>
-                {`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}
-                {data.event.userId === data.userId ? (
-                  <div>
-                    <Form method="post">
-                      <button
-                        type="submit"
-                        name="_action"
-                        value="delete"
-                        className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-                      >
-                        Delete
-                      </button>
-                    </Form>
-                    <Link to="updateEvent">
-                      <button
-                        type="submit"
-                        className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400"
-                      >
-                        Update
-                      </button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-              </div>
+              <Box sx={{ mt: "1rem" }}>
+                <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
+                {/* {data.event.description} */}
+                <Typography>
+                  It's that time of the year again - time for our annual potluck
+                  dinner! We're excited to gather with our friends and family to
+                  share some delicious food and great company. We'll provide the
+                  plates, utensils, and drinks. We’ve had requests from our last
+                  Potluck, feel free to claim them if you are interested!
+                </Typography>
+                <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
+                  <Box sx={{}}>
+                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                      Location & Contact
+                    </Typography>
+                    {/* {data.event.address} */}
+                    <Typography>1234 San Marino Ave</Typography>
+                    <Typography>Minivile, CO 56789</Typography>
+                    <Typography>(501) 778-1145</Typography>
+                    <Typography>lucia.schmitt@gmail.com</Typography>
+                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                      Date and Time
+                    </Typography>
+                    <Typography
+                      sx={{ whiteSpace: "nowrap" }}
+                    >{`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      backgroundImage: `url(${MapImg})`,
+                      border: "1px solid #D3D3D3",
+                      width: "530px",
+                      height: "264px",
+                      borderRadius: "3px",
+                      ml: "80px",
+                      mt: "1rem",
+                    }}
+                  ></Box>
+                </Box>
+                <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
+                  claim your contributions
+                </Typography>
+                <Typography>
+                  show your generosity and claim a few items to Bring with you!
+                </Typography>
+                <ul style={{ listStyleType: "none", padding: "0" }}>
+                  <li>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <div style={{ marginRight: ".5rem" }}>•</div>
+                      <div style={{}}>Deviled Eggs</div>
+                      <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                        Discussion
+                      </div>
+                      <div style={{ marginLeft: "2rem" }}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          sx={{
+                            fontFamily: "rasa",
+                            textTransform: "capitalize",
+                            pl: "1.5rem",
+                            pr: "1.5rem",
+                            pt: "8px",
+                            height: "1.75rem",
+                          }}
+                          href=""
+                        >
+                          Claim Item
+                        </Button>
+                      </div>
+                    </div>
+                  </li>
+                  <hr style={{ borderTop: "1px dashed #bbb" }} />
+                </ul>
+              </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
               Item Two
@@ -189,49 +248,20 @@ export default function EventRoute() {
     </div>
   );
 }
-// <div>
-//   <div style={{ display: "inline-flex", width: "110%" }}>
-//     <div>
-//       <h1>Event Info</h1>
-//       <hr/>
-//       <h3>Event Title:</h3>
-//       {data.event.title}
-//       <h3>Description:</h3>
-//       {data.event.description}
-//       <h3>Address:</h3>
-//       {data.event.address}
-//       <h3>Date and Time:</h3>
-//       {`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}
-//       {data.event.userId === data.userId ? (
-//         <div>
-//           <Form method="post">
-//             <button type="submit" name="_action" value="delete" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
-//               Delete
-//             </button>
-//           </Form>
-//           <Link to="updateEvent">
-//             <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
-//               Update
-//             </button>
-//           </Link>
-//         </div>
-//       ) : (<div></div>)}
-//     </div>
-//     <div style={{ marginLeft: "100px"}}>
-//       <h1>Attendees</h1>
-//       <hr />
-//       <Form method="post">
-//         <button type="submit" name="_action" value="create" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
-//           RSVP
-//         </button>
-//       </Form>
-//       <ul>
-//         {data.attendees.map((attendee: any) => (
-//           <li key={attendee.id}>{attendee.user.email}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   </div>
-//   <hr />
-//   <Outlet/>
-// </div>
+
+{
+  /* {data.event.userId === data.userId ? (
+                    <div>
+                      <Form method="post">
+                        <button type="submit" name="_action" value="delete" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
+                          Delete
+                        </button>
+                      </Form>
+                      <Link to="updateEvent">
+                        <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
+                          Update
+                        </button>
+                      </Link>
+                    </div>
+                  ) : (<div></div>)} */
+}
