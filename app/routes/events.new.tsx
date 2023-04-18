@@ -33,9 +33,13 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          summary: null,
           name: "Title is required",
-          address: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: null,
+          zip: null,
           datetime: null,
         },
       },
@@ -46,22 +50,98 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          summary: "Description is required",
           name: null,
-          address: null,
+          summary: "Event Summary is required",
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: null,
+          zip: null,
           datetime: null,
         },
       },
       { status: 400 }
     );
   }
-  if (typeof address !== "string" || address.length === 0) {
+  if (typeof streetAddress !== "string" || streetAddress.length === 0) {
     return json(
       {
         errors: {
-          summary: null,
           name: null,
-          address: "Address is required",
+          summary: null,
+          streetAddress: "Address is required",
+          unit: null,
+          city: null,
+          state: null,
+          zip: null,
+          datetime: null,
+        },
+      },
+      { status: 400 }
+    );
+  }
+  if (typeof unit !== "string" || unit.length === 0) {
+    return json(
+      {
+        errors: {
+          name: null,
+          summary: null,
+          streetAddress: null,
+          unit: "Unit is required",
+          city: null,
+          state: null,
+          zip: null,
+          datetime: null,
+        },
+      },
+      { status: 400 }
+    );
+  }
+  if (typeof city !== "string" || city.length === 0) {
+    return json(
+      {
+        errors: {
+          name: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: "City is Required",
+          state: null,
+          zip: null,
+          datetime: null,
+        },
+      },
+      { status: 400 }
+    );
+  }
+  if (typeof state !== "string" || state.length === 0) {
+    return json(
+      {
+        errors: {
+          name: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: "State is required",
+          zip: null,
+          datetime: null,
+        },
+      },
+      { status: 400 }
+    );
+  }
+  if (typeof zip !== "string" || zip.length === 0) {
+    return json(
+      {
+        errors: {
+          name: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: null,
+          zip: "zip is required",
           datetime: null,
         },
       },
@@ -72,9 +152,13 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          summary: null,
           name: null,
-          address: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: null,
+          zip: null,
           datetime: "Date and Time is required",
         },
       },
@@ -110,7 +194,7 @@ export default function NewEventRoute() {
       nameRef.current?.focus();
     } else if (actionData?.errors?.summary) {
       summaryRef.current?.focus();
-    } else if (actionData?.errors?.address) {
+    } else if (actionData?.errors?.streetAddress) {
       addressRef.current?.focus();
     } else if (actionData?.errors?.datetime) {
       dateTimeRef.current?.focus();
@@ -180,7 +264,7 @@ export default function NewEventRoute() {
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
               {/* {data.event.summary} */}
-              <TextField sx={{ width: "100%" }} name= "summary"></TextField>
+              <TextField sx={{ width: "100%" }} name="summary"></TextField>
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
@@ -192,26 +276,41 @@ export default function NewEventRoute() {
                     name="streetAddress"
                     placeholder="street address"
                     aria-invalid={
-                      actionData?.errors?.address ? true : undefined
+                      actionData?.errors?.streetAddress ? true : undefined
                     }
                     aria-errormessage={
-                      actionData?.errors?.address ? "address-error" : undefined
+                      actionData?.errors?.streetAddress ? "address-error" : undefined
                     }
                   />
-                  {actionData?.errors?.address && (
+                  {actionData?.errors?.streetAddress && (
                     <div className="pt-1 text-red-700" id="address-error">
-                      {actionData.errors.address}
+                      {actionData.errors.streetAddress}
                     </div>
                   )}
                   <TextField name="city" placeholder="city" />
-                  <TextField
-                    name="unit"
-                    placeholder="unit #"
-                  />
+                  <TextField name="unit" placeholder="unit #" />
                   <TextField name="state" placeholder="state" />
                   <TextField name="zip" placeholder="zip" />
                 </Box>
               </Box>
+
+              <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    Date & Time
+                  </Typography>
+              <input
+                ref={dateTimeRef}
+                type="datetime-local"
+                name="datetime"
+                aria-invalid={actionData?.errors?.datetime ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.datetime ? "datetime-error" : undefined
+                }
+              />
+              {actionData?.errors?.datetime && (
+                <div className="pt-1 text-red-700" id="datetime-error">
+                  {actionData.errors.datetime}
+                </div>
+              )}
 
               <Box
                 style={{
