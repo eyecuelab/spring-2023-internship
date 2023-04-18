@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   IconButton,
+  Input,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,6 +29,7 @@ export const action = async ({ request }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
+  console.log("🚀 ~ file: events.new.tsx:32 ~ action ~ date:", date)
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -217,6 +219,7 @@ export default function NewEventRoute() {
     <div>
       <Appbar />
       <Form
+      method="post"
         style={{
           backgroundColor: "rgb(245, 245, 245)",
           width: "53%",
@@ -368,10 +371,10 @@ export default function NewEventRoute() {
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Date & Time
               </Typography>
-              <input
+              <Input
                 ref={dateTimeRef}
                 type="datetime-local"
-                name="datetime"
+                name="dateTime"
                 aria-invalid={actionData?.errors?.datetime ? true : undefined}
                 aria-errormessage={
                   actionData?.errors?.datetime ? "datetime-error" : undefined
