@@ -15,21 +15,26 @@ import {
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
 import { Delete } from "@mui/icons-material";
+
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireUserId(request);
 
   const formData = await request.formData();
-  const title = formData.get("title");
-  const description = formData.get("description");
-  const address = formData.get("address");
-  const date = formData.get("datetime");
+  const name = formData.get("name");
+  const summary = formData.get("summary");
+  const streetAddress = formData.get("streetAddress");
+  const unit = formData.get("unit");
+  const city = formData.get("city");
+  const state = formData.get("state");
+  const zip = formData.get("zip");
+  const date = formData.get("dateTime");
 
-  if (typeof title !== "string" || title.length === 0) {
+  if (typeof name !== "string" || name.length === 0) {
     return json(
       {
         errors: {
-          description: null,
-          title: "Title is required",
+          summary: null,
+          name: "Title is required",
           address: null,
           datetime: null,
         },
@@ -37,12 +42,12 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-  if (typeof description !== "string" || description.length === 0) {
+  if (typeof summary !== "string" || summary.length === 0) {
     return json(
       {
         errors: {
-          description: "Description is required",
-          title: null,
+          summary: "Description is required",
+          name: null,
           address: null,
           datetime: null,
         },
@@ -54,8 +59,8 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          description: null,
-          title: null,
+          summary: null,
+          name: null,
           address: "Address is required",
           datetime: null,
         },
@@ -67,8 +72,8 @@ export const action = async ({ request }: ActionArgs) => {
     return json(
       {
         errors: {
-          description: null,
-          title: null,
+          summary: null,
+          name: null,
           address: null,
           datetime: "Date and Time is required",
         },
@@ -79,9 +84,13 @@ export const action = async ({ request }: ActionArgs) => {
 
   const dateTime = new Date(date);
   const event = await createEvent({
-    title,
-    description,
-    address,
+    name,
+    summary,
+    streetAddress,
+    unit,
+    city,
+    state,
+    zip,
     dateTime,
     userId,
   });
@@ -91,20 +100,20 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function NewEventRoute() {
   const actionData = useActionData<typeof action>();
-  const titleRef = useRef<HTMLInputElement>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const summaryRef = useRef<HTMLTextAreaElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
-  const datetimeRef = useRef<HTMLInputElement>(null);
+  const dateTimeRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (actionData?.errors?.title) {
-      titleRef.current?.focus();
-    } else if (actionData?.errors?.description) {
-      descriptionRef.current?.focus();
+    if (actionData?.errors?.name) {
+      nameRef.current?.focus();
+    } else if (actionData?.errors?.summary) {
+      summaryRef.current?.focus();
     } else if (actionData?.errors?.address) {
       addressRef.current?.focus();
     } else if (actionData?.errors?.datetime) {
-      datetimeRef.current?.focus();
+      dateTimeRef.current?.focus();
     }
   }, [actionData]);
 
@@ -133,15 +142,31 @@ export default function NewEventRoute() {
                 Lucia Schmitt
               </Typography>
             </div>
+            <Button
+              sx={{
+                fontFamily: "rasa",
+                textTransform: "capitalize",
+                pl: "1.5rem",
+                pr: "1.5rem",
+                pt: "8px",
+                height: "1.75rem",
+                alignSelf: "stretch",
+              }}
+              variant="outlined"
+              color="primary"
+              type="submit"
+            >
+              Publish
+            </Button>
           </div>
           <TextField
             sx={{ mt: ".5rem", width: "100%" }}
-            ref={titleRef}
-            name="title"
-            placeholder="Title"
-            aria-invalid={actionData?.errors?.title ? true : undefined}
+            ref={nameRef}
+            name="name"
+            placeholder="name"
+            aria-invalid={actionData?.errors?.name ? true : undefined}
             aria-errormessage={
-              actionData?.errors?.title ? "title-error" : undefined
+              actionData?.errors?.name ? "name-error" : undefined
             }
           />
           {/* ------------------------------------------------------------------------------------------------------ */}
@@ -154,8 +179,8 @@ export default function NewEventRoute() {
 
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
-              {/* {data.event.description} */}
-              <TextField sx={{ width: "100%" }}></TextField>
+              {/* {data.event.summary} */}
+              <TextField sx={{ width: "100%" }} name= "summary"></TextField>
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
@@ -164,7 +189,7 @@ export default function NewEventRoute() {
                   {/* {data.event.address} */}
                   <TextField
                     ref={addressRef}
-                    name="address"
+                    name="streetAddress"
                     placeholder="street address"
                     aria-invalid={
                       actionData?.errors?.address ? true : undefined
@@ -180,15 +205,22 @@ export default function NewEventRoute() {
                   )}
                   <TextField name="city" placeholder="city" />
                   <TextField
-                    name="building / unit #"
-                    placeholder="building / unit #"
+                    name="unit"
+                    placeholder="unit #"
                   />
                   <TextField name="state" placeholder="state" />
                   <TextField name="zip" placeholder="zip" />
                 </Box>
               </Box>
 
-              <Box style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <Box
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "baseline",
+                }}
+              >
                 <Box>
                   <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                     claim your contributions
