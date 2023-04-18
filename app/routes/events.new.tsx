@@ -16,6 +16,7 @@ import {
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
 import { Delete } from "@mui/icons-material";
+import { createContribution } from "~/models/contributions.server";
 
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireUserId(request);
@@ -29,7 +30,7 @@ export const action = async ({ request }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
-  console.log("🚀 ~ file: events.new.tsx:32 ~ action ~ date:", date)
+  const contribution = formData.get("contribution");
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -167,7 +168,10 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
+  if (typeof contribution !== "string" || contribution.length === 0) 
+  
 
+  const contributionItem = await createContribution(contribution);
   const dateTime = new Date(date);
   const event = await createEvent({
     name,
@@ -194,6 +198,7 @@ export default function NewEventRoute() {
   const stateRef = useRef<HTMLInputElement>(null);
   const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
+  const contributionRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -212,6 +217,8 @@ export default function NewEventRoute() {
       zipRef.current?.focus();
     } else if (actionData?.errors?.datetime) {
       dateTimeRef.current?.focus();
+    } else if (actionData?.errors?.datetime) {
+      contributionRef.current?.focus();
     }
   }, [actionData]);
 
@@ -420,7 +427,7 @@ export default function NewEventRoute() {
               </Box>
 
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <TextField sx={{ width: "100%" }} placeholder="" />
+                <TextField sx={{ width: "100%" }} name="contribution" placeholder="" />
                 <IconButton aria-label="delete" size="small">
                   <Delete fontSize="inherit" />
                 </IconButton>
