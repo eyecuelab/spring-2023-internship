@@ -187,6 +187,10 @@ export default function NewEventRoute() {
   const nameRef = useRef<HTMLInputElement>(null);
   const summaryRef = useRef<HTMLTextAreaElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
+  const unitRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
+  const stateRef = useRef<HTMLInputElement>(null);
+  const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -196,6 +200,14 @@ export default function NewEventRoute() {
       summaryRef.current?.focus();
     } else if (actionData?.errors?.streetAddress) {
       addressRef.current?.focus();
+    } else if (actionData?.errors?.unit) {
+      unitRef.current?.focus();
+    } else if (actionData?.errors?.city) {
+      cityRef.current?.focus();
+    } else if (actionData?.errors?.state) {
+      stateRef.current?.focus();
+    } else if (actionData?.errors?.zip) {
+      zipRef.current?.focus();
     } else if (actionData?.errors?.datetime) {
       dateTimeRef.current?.focus();
     }
@@ -271,6 +283,7 @@ export default function NewEventRoute() {
                     Location & Contact
                   </Typography>
                   {/* {data.event.address} */}
+
                   <TextField
                     ref={addressRef}
                     name="streetAddress"
@@ -279,7 +292,9 @@ export default function NewEventRoute() {
                       actionData?.errors?.streetAddress ? true : undefined
                     }
                     aria-errormessage={
-                      actionData?.errors?.streetAddress ? "address-error" : undefined
+                      actionData?.errors?.streetAddress
+                        ? "address-error"
+                        : undefined
                     }
                   />
                   {actionData?.errors?.streetAddress && (
@@ -287,16 +302,72 @@ export default function NewEventRoute() {
                       {actionData.errors.streetAddress}
                     </div>
                   )}
-                  <TextField name="city" placeholder="city" />
-                  <TextField name="unit" placeholder="unit #" />
-                  <TextField name="state" placeholder="state" />
-                  <TextField name="zip" placeholder="zip" />
+
+                  <TextField
+                    ref={unitRef}
+                    name="unit"
+                    placeholder="unit #"
+                    aria-invalid={actionData?.errors?.unit ? true : undefined}
+                    aria-errormessage={
+                      actionData?.errors?.unit ? "unit-error" : undefined
+                    }
+                  />
+                  {actionData?.errors?.unit && (
+                    <div className="pt-1 text-red-700" id="unit-error">
+                      {actionData.errors.unit}
+                    </div>
+                  )}
+
+                  <TextField
+                    ref={cityRef}
+                    name="city"
+                    placeholder="city"
+                    aria-invalid={actionData?.errors?.city ? true : undefined}
+                    aria-errormessage={
+                      actionData?.errors?.city ? "city-error" : undefined
+                    }
+                  />
+                  {actionData?.errors?.city && (
+                    <div className="pt-1 text-red-700" id="city-error">
+                      {actionData.errors.city}
+                    </div>
+                  )}
+
+                  <TextField
+                    ref={stateRef}
+                    name="state"
+                    placeholder="state"
+                    aria-invalid={actionData?.errors?.state ? true : undefined}
+                    aria-errormessage={
+                      actionData?.errors?.state ? "state-error" : undefined
+                    }
+                  />
+                  {actionData?.errors?.state && (
+                    <div className="pt-1 text-red-700" id="state-error">
+                      {actionData.errors.state}
+                    </div>
+                  )}
+
+                  <TextField
+                    ref={zipRef}
+                    name="zip"
+                    placeholder="zip"
+                    aria-invalid={actionData?.errors?.zip ? true : undefined}
+                    aria-errormessage={
+                      actionData?.errors?.zip ? "zip-error" : undefined
+                    }
+                  />
+                  {actionData?.errors?.zip && (
+                    <div className="pt-1 text-red-700" id="zip-error">
+                      {actionData.errors.zip}
+                    </div>
+                  )}
                 </Box>
               </Box>
 
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
-                    Date & Time
-                  </Typography>
+                Date & Time
+              </Typography>
               <input
                 ref={dateTimeRef}
                 type="datetime-local"
