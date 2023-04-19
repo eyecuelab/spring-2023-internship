@@ -50,19 +50,19 @@ async function seed() {
   await db.contribution.create({
     data: {
       eventId: event1.id,
-      name: "deviled eggs"
+      contributionName: "deviled eggs"
     }
   });
   await db.contribution.create({
     data: {
       eventId: event1.id,
-      name: "meatballs"
+      contributionName: "meatballs"
     }
   });
   await db.contribution.create({
     data: {
       eventId: event1.id,
-      name: "stuffed mushrooms"
+      contributionName: "stuffed mushrooms"
     }
   });
 

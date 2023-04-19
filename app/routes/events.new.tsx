@@ -1,7 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
-import { createEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
 import { requireUserId } from "~/session.server";
 import {
@@ -16,6 +15,7 @@ import {
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
 import { Delete } from "@mui/icons-material";
+import { createEvent } from "~/models/events.server";
 import { createContribution } from "~/models/contributions.server";
 
 export const action = async ({ request }: ActionArgs) => {
@@ -30,7 +30,7 @@ export const action = async ({ request }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
-  const contribution = formData.get("contribution");
+  const contributionName = formData.get("contributionName");
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -43,7 +43,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -60,7 +61,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -77,7 +79,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -94,7 +97,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -111,7 +115,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: "City is Required",
           state: null,
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -128,7 +133,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: "State is required",
           zip: null,
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -145,7 +151,8 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: "zip is required",
-          datetime: null,
+          dateTime: null,
+          contributionName: null,
         },
       },
       { status: 400 }
@@ -162,16 +169,33 @@ export const action = async ({ request }: ActionArgs) => {
           city: null,
           state: null,
           zip: null,
-          datetime: "Date and Time is required",
+          dateTime: "Date and Time is required",
+          contributionName: null,
         },
       },
       { status: 400 }
     );
   }
-  if (typeof contribution !== "string" || contribution.length === 0) 
+  if (typeof contributionName !== "string" || contributionName.length === 0) {
+    return json(
+      {
+      errors: {
+        name: null,
+          summary: null,
+          streetAddress: null,
+          unit: null,
+          city: null,
+          state: null,
+          zip: null,
+          dateTime: null,
+        contributionName: "Contribution name is required",
+      },
+    },
+    {status: 400}
+    );
+  }
   
 
-  const contributionItem = await createContribution(contribution);
   const dateTime = new Date(date);
   const event = await createEvent({
     name,
@@ -184,7 +208,9 @@ export const action = async ({ request }: ActionArgs) => {
     dateTime,
     userId,
   });
-
+  
+  const eventId = event.id;
+  await createContribution({contributionName, eventId});
   return redirect(`/events/${event.id}`);
 };
 
@@ -215,9 +241,9 @@ export default function NewEventRoute() {
       stateRef.current?.focus();
     } else if (actionData?.errors?.zip) {
       zipRef.current?.focus();
-    } else if (actionData?.errors?.datetime) {
+    } else if (actionData?.errors?.dateTime) {
       dateTimeRef.current?.focus();
-    } else if (actionData?.errors?.datetime) {
+    } else if (actionData?.errors?.contributionName) {
       contributionRef.current?.focus();
     }
   }, [actionData]);
@@ -380,16 +406,16 @@ export default function NewEventRoute() {
               </Typography>
               <Input
                 ref={dateTimeRef}
-                type="datetime-local"
+                type="dateTime-local"
                 name="dateTime"
-                aria-invalid={actionData?.errors?.datetime ? true : undefined}
+                aria-invalid={actionData?.errors?.dateTime ? true : undefined}
                 aria-errormessage={
-                  actionData?.errors?.datetime ? "datetime-error" : undefined
+                  actionData?.errors?.dateTime ? "dateTime-error" : undefined
                 }
               />
-              {actionData?.errors?.datetime && (
-                <div className="pt-1 text-red-700" id="datetime-error">
-                  {actionData.errors.datetime}
+              {actionData?.errors?.dateTime && (
+                <div className="pt-1 text-red-700" id="dateTime-error">
+                  {actionData.errors.dateTime}
                 </div>
               )}
 
@@ -427,7 +453,20 @@ export default function NewEventRoute() {
               </Box>
 
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <TextField sx={{ width: "100%" }} name="contribution" placeholder="" />
+                <TextField 
+                ref={contributionRef}
+                sx={{ width: "100%" }} 
+                name="name" 
+                aria-invalid={actionData?.errors?.contributionName ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.contributionName ? "contributionName-error" : undefined
+                }
+              />
+              {actionData?.errors?.contributionName && (
+                <div className="pt-1 text-red-700" id="contributionName-error">
+                  {actionData.errors.contributionName}
+                </div>
+              )}
                 <IconButton aria-label="delete" size="small">
                   <Delete fontSize="inherit" />
                 </IconButton>

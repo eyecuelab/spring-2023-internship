@@ -6,7 +6,7 @@ export type { Event, Contribution } from "@prisma/client";
 
 export async function getContributions(eventId: string) {
   return prisma.contribution.findMany({
-    select: { id: true, name: true },
+    select: { id: true, contributionName: true },
     where: { eventId }
   });
 }
@@ -16,14 +16,14 @@ export async function getContribution(id: string ) {
 } 
 
 export function createContribution({
-  name,
+  contributionName,
   eventId,
-}: Pick<Contribution, "name"> & {
+}: Pick<Contribution, "contributionName"> & {
   eventId: Event["id"];
 }) {
   return prisma.contribution.create({
     data: {
-      name,
+      contributionName,
       event: {
         connect: {
           id: eventId,
@@ -35,14 +35,14 @@ export function createContribution({
 
 export function updateContribution({
   id,
-  name,
-}: Pick<Contribution, "id" | "name"> & {
+  contributionName,
+}: Pick<Contribution, "id" | "contributionName"> & {
   eventId: Event["id"]
 }) {
   return prisma.contribution.update({
     where: { id },
     data: {
-      name,
+      contributionName,
     }
   })
 }
