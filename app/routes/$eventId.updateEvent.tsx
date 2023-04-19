@@ -309,7 +309,7 @@ export default function UpdateEventRoute() {
                 height: "1.75rem",
                 alignSelf: "stretch",
               }}
-              variant="text"
+              variant="outlined"
               color="primary"
               type="submit"
             >

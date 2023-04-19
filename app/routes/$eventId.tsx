@@ -98,55 +98,74 @@ export default function EventRoute() {
         }}
       >
         <div style={{ margin: "8%" }}>
-          <div style={{ display: "flex" }}>
-            <Avatar
-              alt="Remy Sharp"
-              src={avatar}
-              sx={{ height: "60px", width: "60px" }}
-            />
-            <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
-              <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
-              <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                Lucia Schmitt
-              </Typography>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                marginLeft: "1rem",
+                marginTop: "1rem",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src={avatar}
+                sx={{ height: "60px", width: "60px" }}
+              />
+              <Box sx={{ pl: ".75rem" }}>
+                <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
+                <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
+                  Lucia Schmitt
+                </Typography>
+              </Box>
             </div>
-            <Form method="post">
-              <Button
-                sx={{
-                  fontFamily: "rasa",
-                  textTransform: "capitalize",
-                  pl: "1.5rem",
-                  pr: "1.5rem",
-                  pt: "8px",
-                  height: "1.75rem",
-                  alignSelf: "stretch",
-                }}
-                variant="outlined"
-                color="primary"
-                type="submit"
-                name="_action"
-                value="delete"
-              >
-                Unpublish
-              </Button>
-            </Form>
-            <Link to="updateEvent">
-              <Button
-                sx={{
-                  fontFamily: "rasa",
-                  textTransform: "capitalize",
-                  pl: "1.5rem",
-                  pr: "1.5rem",
-                  pt: "8px",
-                  height: "1.75rem",
-                  alignSelf: "stretch",
-                }}
-                variant="outlined"
-                color="primary"
-              >
-                Update
-              </Button>
-            </Link>
+
+            <Box sx={{ display: "flex" }}>
+              <Form method="post">
+                <Button
+                  sx={{
+                    fontFamily: "rasa",
+                    textTransform: "capitalize",
+                    pl: "1.5rem",
+                    pr: "1.5rem",
+                    pt: "8px",
+                    height: "1.75rem",
+                    alignSelf: "stretch",
+                  }}
+                  variant="text"
+                  color="primary"
+                  type="submit"
+                  name="_action"
+                  value="delete"
+                >
+                  Unpublish
+                </Button>
+              </Form>
+              <Link to="updateEvent">
+                <Button
+                  sx={{
+                    fontFamily: "rasa",
+                    textTransform: "capitalize",
+                    pl: "1.5rem",
+                    pr: "1.5rem",
+                    pt: "8px",
+                    height: "1.75rem",
+                    alignSelf: "stretch",
+                  }}
+                  variant="outlined"
+                  color="primary"
+                >
+                  Update
+                </Button>
+              </Link>
+            </Box>
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
