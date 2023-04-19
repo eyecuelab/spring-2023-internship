@@ -210,7 +210,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const eventId = event.id;
   await createContribution({ contributionName, eventId });
-  return redirect(`/events/${event.id}`);
+  return redirect(`/${event.id}`);
 };
 
 export default function NewEventRoute() {
@@ -283,7 +283,7 @@ export default function NewEventRoute() {
                 height: "1.75rem",
                 alignSelf: "stretch",
               }}
-              variant="outlined"
+              variant="text"
               color="primary"
               type="submit"
             >

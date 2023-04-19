@@ -30,18 +30,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
+  const formData = await request.formData();
+  const { _action, ...values } = Object.fromEntries(formData);
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
   }
-  // invariant(params.eventId, "eventId not found");
-
-  const formData = await request.formData();
-  const { _action, ...values } = Object.fromEntries(formData);
   if (_action === "delete") {
     await deleteEvent({ userId, id: eventId });
-    return redirect("/events");
   }
+  return redirect("/events");
+  // invariant(params.eventId, "eventId not found");
 }
 
 interface TabPanelProps {
@@ -111,6 +110,26 @@ export default function EventRoute() {
                 Lucia Schmitt
               </Typography>
             </div>
+            <Form method="post">
+              <Button
+                sx={{
+                  fontFamily: "rasa",
+                  textTransform: "capitalize",
+                  pl: "1.5rem",
+                  pr: "1.5rem",
+                  pt: "8px",
+                  height: "1.75rem",
+                  alignSelf: "stretch",
+                }}
+                variant="outlined"
+                color="primary"
+                type="submit"
+                name="_action"
+                value="delete"
+              >
+                Unpublish
+              </Button>
+            </Form>
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
@@ -151,8 +170,12 @@ export default function EventRoute() {
                       Location & Contact
                     </Typography>
                     {/* {data.event.address} */}
-                    <Typography>{data.event.streetAddress} {data.event.unit}</Typography>
-                    <Typography>{data.event.city}, {data.event.state} {data.event.zip}</Typography>
+                    <Typography>
+                      {data.event.streetAddress} {data.event.unit}
+                    </Typography>
+                    <Typography>
+                      {data.event.city}, {data.event.state} {data.event.zip}
+                    </Typography>
                     <Typography>(501) 778-1145</Typography>
                     <Typography>lucia.schmitt@gmail.com</Typography>
                     <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
@@ -182,34 +205,34 @@ export default function EventRoute() {
                 </Typography>
                 {data.event.contributions.map((contribution: any) => (
                   <ul style={{ listStyleType: "none", padding: "0" }}>
-                  <li key={contribution.id}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: ".5rem" }}>•</div>
-                      <div style={{}}>{contribution.contributionName}</div>
-                      <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
-                        Discussion
+                    <li key={contribution.id}>
+                      <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ marginRight: ".5rem" }}>•</div>
+                        <div style={{}}>{contribution.contributionName}</div>
+                        <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                          Discussion
+                        </div>
+                        <div style={{ marginLeft: "2rem" }}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            sx={{
+                              fontFamily: "rasa",
+                              textTransform: "capitalize",
+                              pl: "1.5rem",
+                              pr: "1.5rem",
+                              pt: "8px",
+                              height: "1.75rem",
+                            }}
+                            href=""
+                          >
+                            Claim Item
+                          </Button>
+                        </div>
                       </div>
-                      <div style={{ marginLeft: "2rem" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          sx={{
-                            fontFamily: "rasa",
-                            textTransform: "capitalize",
-                            pl: "1.5rem",
-                            pr: "1.5rem",
-                            pt: "8px",
-                            height: "1.75rem",
-                          }}
-                          href=""
-                        >
-                          Claim Item
-                        </Button>
-                      </div>
-                    </div>
-                  </li>
-                  <hr style={{ borderTop: "1px dashed #bbb" }} />
-                </ul>
+                    </li>
+                    <hr style={{ borderTop: "1px dashed #bbb" }} />
+                  </ul>
                 ))}
               </Box>
             </TabPanel>
@@ -227,7 +250,7 @@ export default function EventRoute() {
   );
 }
 
-{
+// {
   /* {data.event.userId === data.userId ? (
                     <div>
                       <Form method="post">
@@ -242,4 +265,4 @@ export default function EventRoute() {
                       </Link>
                     </div>
                   ) : (<div></div>)} */
-}
+// }
