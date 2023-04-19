@@ -287,35 +287,55 @@ export default function UpdateEventRoute() {
         }}
       >
         <div style={{ margin: "8%" }}>
-          <div style={{ display: "flex" }}>
-            <Avatar
-              alt="Remy Sharp"
-              src={avatar}
-              sx={{ height: "60px", width: "60px" }}
-            />
-            <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
-              <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
-              <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                Lucia Schmitt
-              </Typography>
-            </div>
-            <Button
-              sx={{
-                fontFamily: "rasa",
-                textTransform: "capitalize",
-                pl: "1.5rem",
-                pr: "1.5rem",
-                pt: "8px",
-                height: "1.75rem",
-                alignSelf: "stretch",
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                marginLeft: "1rem",
+                marginTop: "1rem",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
               }}
-              variant="outlined"
-              color="primary"
-              type="submit"
             >
-              Publish
-            </Button>
+              <Avatar
+                alt="Remy Sharp"
+                src={avatar}
+                sx={{ height: "60px", width: "60px" }}
+              />
+              <Box sx={{ pl: ".75rem" }}>
+                <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
+                <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
+                  Lucia Schmitt
+                </Typography>
+              </Box>
+            </div>
+
+            <Box sx={{ display: "flex" }}>
+              <Button
+                sx={{
+                  fontFamily: "rasa",
+                  textTransform: "capitalize",
+                  pl: "1.5rem",
+                  pr: "1.5rem",
+                  pt: "8px",
+                  height: "1.75rem",
+                  alignSelf: "stretch",
+                }}
+                variant="outlined"
+                color="primary"
+                type="submit"
+              >
+                Publish
+              </Button>
+            </Box>
           </div>
+
           <TextField
             sx={{ mt: ".5rem", width: "100%" }}
             ref={nameRef}
@@ -337,7 +357,11 @@ export default function UpdateEventRoute() {
 
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
-              <TextField sx={{ width: "100%" }} name="summary" defaultValue={data.event.summary}></TextField>
+              <TextField
+                sx={{ width: "100%" }}
+                name="summary"
+                defaultValue={data.event.summary}
+              ></TextField>
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
@@ -487,7 +511,7 @@ export default function UpdateEventRoute() {
                   ref={contributionRef}
                   sx={{ width: "100%" }}
                   name="contributionName"
-                  defaultValue={data.event.contributions}
+                  defaultValue={data.event.contributions[0].contributionName}
                   aria-invalid={
                     actionData?.errors?.contributionName ? true : undefined
                   }

@@ -261,7 +261,13 @@ export default function NewEventRoute() {
         }}
       >
         <div style={{ margin: "8%" }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <div
               style={{
                 marginLeft: "1rem",
@@ -283,6 +289,7 @@ export default function NewEventRoute() {
                 </Typography>
               </Box>
             </div>
+            
             <Button
               sx={{
                 fontFamily: "rasa",
