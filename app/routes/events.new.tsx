@@ -179,8 +179,8 @@ export const action = async ({ request }: ActionArgs) => {
   if (typeof contributionName !== "string" || contributionName.length === 0) {
     return json(
       {
-      errors: {
-        name: null,
+        errors: {
+          name: null,
           summary: null,
           streetAddress: null,
           unit: null,
@@ -188,13 +188,12 @@ export const action = async ({ request }: ActionArgs) => {
           state: null,
           zip: null,
           dateTime: null,
-        contributionName: "Contribution name is required",
+          contributionName: "Contribution name is required",
+        },
       },
-    },
-    {status: 400}
+      { status: 400 }
     );
   }
-  
 
   const dateTime = new Date(date);
   const event = await createEvent({
@@ -208,9 +207,9 @@ export const action = async ({ request }: ActionArgs) => {
     dateTime,
     userId,
   });
-  
+
   const eventId = event.id;
-  await createContribution({contributionName, eventId});
+  await createContribution({ contributionName, eventId });
   return redirect(`/events/${event.id}`);
 };
 
@@ -252,7 +251,7 @@ export default function NewEventRoute() {
     <div>
       <Appbar />
       <Form
-      method="post"
+        method="post"
         style={{
           backgroundColor: "rgb(245, 245, 245)",
           width: "53%",
@@ -453,20 +452,27 @@ export default function NewEventRoute() {
               </Box>
 
               <div style={{ display: "flex", flexDirection: "row" }}>
-                <TextField 
-                ref={contributionRef}
-                sx={{ width: "100%" }} 
-                name="name" 
-                aria-invalid={actionData?.errors?.contributionName ? true : undefined}
-                aria-errormessage={
-                  actionData?.errors?.contributionName ? "contributionName-error" : undefined
-                }
-              />
-              {actionData?.errors?.contributionName && (
-                <div className="pt-1 text-red-700" id="contributionName-error">
-                  {actionData.errors.contributionName}
-                </div>
-              )}
+                <TextField
+                  ref={contributionRef}
+                  sx={{ width: "100%" }}
+                  name="contributionName"
+                  aria-invalid={
+                    actionData?.errors?.contributionName ? true : undefined
+                  }
+                  aria-errormessage={
+                    actionData?.errors?.contributionName
+                      ? "contributionName-error"
+                      : undefined
+                  }
+                />
+                {actionData?.errors?.contributionName && (
+                  <div
+                    className="pt-1 text-red-700"
+                    id="contributionName-error"
+                  >
+                    {actionData.errors.contributionName}
+                  </div>
+                )}
                 <IconButton aria-label="delete" size="small">
                   <Delete fontSize="inherit" />
                 </IconButton>

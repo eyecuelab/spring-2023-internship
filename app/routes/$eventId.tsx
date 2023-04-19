@@ -185,7 +185,7 @@ export default function EventRoute() {
                   <li key={contribution.id}>
                     <div style={{ display: "flex", flexDirection: "row" }}>
                       <div style={{ marginRight: ".5rem" }}>•</div>
-                      <div style={{}}>{contribution.name}</div>
+                      <div style={{}}>{contribution.contributionName}</div>
                       <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
                         Discussion
                       </div>
