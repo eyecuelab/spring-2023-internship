@@ -5,8 +5,9 @@ import { useEffect, useRef } from "react";
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 
 import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
-import { createUserSession, getUserId } from "~/session.server";
+import { createUserSession, getUserId } from "~/services/session.server";
 import { safeRedirect, validateEmail } from "~/utils/utils";
+import { SocialsProvider } from "remix-auth-socials";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const userId = await getUserId(request);
@@ -197,6 +198,12 @@ export default function Login() {
           <button type="submit" className="button">
             Submit
           </button>
+        </form>
+        <form
+          method="post"
+          action={`/auth/${SocialsProvider.GOOGLE}`}
+        >
+          <button>Login with Google</button>
         </form>
         <div className="links">
           <Link to="/">Home</Link>
