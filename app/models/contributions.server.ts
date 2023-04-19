@@ -15,6 +15,10 @@ export async function getContribution(id: string ) {
   return prisma.contribution.findUnique({ where: { id } });
 } 
 
+export async function getContributionByName(id: string ) {
+  return prisma.contribution.findUnique({ where: { id } });
+} 
+
 export function createContribution({
   contributionName,
   eventId,

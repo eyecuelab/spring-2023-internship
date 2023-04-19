@@ -130,6 +130,23 @@ export default function EventRoute() {
                 Unpublish
               </Button>
             </Form>
+            <Link to="updateEvent">
+              <Button
+                sx={{
+                  fontFamily: "rasa",
+                  textTransform: "capitalize",
+                  pl: "1.5rem",
+                  pr: "1.5rem",
+                  pt: "8px",
+                  height: "1.75rem",
+                  alignSelf: "stretch",
+                }}
+                variant="outlined"
+                color="primary"
+              >
+                Update
+              </Button>
+            </Link>
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
@@ -251,7 +268,7 @@ export default function EventRoute() {
 }
 
 // {
-  /* {data.event.userId === data.userId ? (
+/* {data.event.userId === data.userId ? (
                     <div>
                       <Form method="post">
                         <button type="submit" name="_action" value="delete" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
