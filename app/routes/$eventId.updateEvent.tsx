@@ -5,7 +5,7 @@ import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { createContribution } from "~/models/contributions.server";
+import { updateContribution } from "~/models/contributions.server";
 import { Delete } from "@mui/icons-material";
 import {
   Avatar,
@@ -232,7 +232,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   });
 
   const eventId = updatedEvent.id;
-  await createContribution({ contributionName, eventId });
+  await updateContribution({ contributionName, eventId });
   return redirect(`/${eventId}`);
 };
 
