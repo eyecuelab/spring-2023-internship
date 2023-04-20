@@ -12,9 +12,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import { ThemeProvider, withEmotionCache } from "@emotion/react";
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from "@mui/material";
+import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import ClientStyleContext from "./utils/ClientStyleContext";
 import theme from "./utils/theme";
 
@@ -48,51 +46,50 @@ const Document = withEmotionCache(
     }, []);
 
     return (
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
-          <meta name="theme-color" />
-          {title ? <title>{title}</title> : null}
-          <Meta />
-          <Links />
-          <meta
-            name="emotion-insertion-point"
-            content="emotion-insertion-point"
-          />
-        </head>
-        <body>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </body>
-      </html>
+      <ThemeProvider theme={theme}>
+        <html lang="en" style={{ height: "100%" }}>
+          <head>
+            <meta charSet="utf-8" />
+            <meta name="viewport" content="width=device-width,initial-scale=1"
+            />
+            <meta name="theme-color" />
+            <Meta />
+            <Links />
+            <meta name="emotion-insertion-point" content="emotion-insertion-point"
+            />
+            <title>GeTogether</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Rasa:wght@400&display=swap"
+              rel="stylesheet"
+            />
+          </head>
+          <body
+            style={{
+              backgroundImage: `url(${Background})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right",
+              backgroundAttachment: "fixed",
+              margin: "0",
+              padding: "0",
+            }}
+          >
+            {children}
+            <Scripts />
+          </body>
+        </html>
+      </ThemeProvider>
     );
   }
 );
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <html lang="en" style={{ height: "100%" }}>
-        <head>
-          <meta charSet="utf-8" />
-          <title>GeTogether</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Rasa:wght@400&display=swap"
-            rel="stylesheet"
-          />
-        </head>
-        <body style={{ backgroundImage: `url(${Background})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "right", backgroundAttachment: "fixed", margin: "0", padding: "0" }}>
-          <Document>
-            <Outlet />
-            <LiveReload />
-          </Document>
-        </body>
-      </html>
-    </ThemeProvider>
+    <Document>
+      <Outlet />
+      <LiveReload />
+    </Document>
   );
 }
