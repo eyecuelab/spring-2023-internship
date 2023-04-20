@@ -42,6 +42,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireUserId(request);
   const formData = await request.formData();
   invariant(params.eventId, "eventId not found");
+  // invariant(params.contributionId, "contributionId not found");
 
   const name = formData.get("name");
   const summary = formData.get("summary");
@@ -218,7 +219,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const id = params.eventId;
   const dateTime = new Date(date);
-  const updatedEvent = await updateEvent({
+  await updateEvent({
     id,
     name,
     summary,
@@ -231,9 +232,11 @@ export const action = async ({ request, params }: ActionArgs) => {
     userId,
   });
 
-  const eventId = updatedEvent.id;
-  await updateContribution({ contributionName, eventId });
-  return redirect(`/${eventId}`);
+  // await updateContribution({ contributionId, contributionName, id });
+
+
+
+  return redirect(`/${id}`);
 };
 
 export default function UpdateEventRoute() {
