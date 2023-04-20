@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node";
 import { deleteEvent, getEvent } from "~/models/events.server";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Outlet } from "@remix-run/react";
-import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/services/session.server";
 import invariant from "tiny-invariant";
 import Appbar from "~/components/Appbar";
 import { Avatar, Box, Button, Typography } from "@mui/material";
