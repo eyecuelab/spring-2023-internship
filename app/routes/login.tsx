@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link, useActionData, useSearchParams } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
-import { SocialsProvider } from "remix-auth-socials";
+import { GoogleProfile, SocialsProvider } from "remix-auth-socials";
 
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 
@@ -11,21 +11,25 @@ import { safeRedirect, validateEmail } from "~/utils/utils";
 import { authenticator } from "~/services/auth.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
-  const googleUser = await authenticator.isAuthenticated(request);
+  const googleUser = (await authenticator.isAuthenticated(
+    request
+  )) as GoogleProfile;
   if (googleUser) {
-    const user = await getUserByEmail(googleUser.emails[0].value)
-    const redirectTo = "/events"
-    return createUserSession({
-      redirectTo,
-      // remember: remember === "on" ? true : false,
-      request,
-      userId: user.id,
-    });
+    const user = await getUserByEmail(googleUser.emails[0].value);
+    if (user) {
+      const redirectTo = "/events";
+      return createUserSession({
+        redirectTo,
+        // remember: remember === "on" ? true : false,
+        request,
+        userId: user.id,
+      });
+    }
   }
 
   const userId = await getUserId(request);
   if (userId) return redirect("/events");
-  
+
   return json({});
 };
 
@@ -68,7 +72,7 @@ export const action = async ({ request }: ActionArgs) => {
         );
       }
 
-      // use remember if we decide to impliment on login 
+      // use remember if we decide to impliment on login
       // createUserSession() currently sets remember to true by default
       return createUserSession({
         redirectTo,
@@ -94,7 +98,7 @@ export const action = async ({ request }: ActionArgs) => {
 
       const user = await createUser(email, password);
 
-      // use remember if we decide to impliment on login 
+      // use remember if we decide to impliment on login
       // createUserSession() currently sets remember to true by default
       return createUserSession({
         redirectTo,
@@ -104,14 +108,17 @@ export const action = async ({ request }: ActionArgs) => {
       });
     }
   }
-}
+};
 
 export default function Login() {
-  const actionData = useActionData<typeof action>();
+  // vvvvv---original code was throwing type error on actionData.error---vvvvv
+  // const actionData = useActionData<typeof action>();
+  const actionData = useActionData();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/events";
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  
 
   useEffect(() => {
     if (actionData?.errors?.email) {
@@ -122,29 +129,29 @@ export default function Login() {
   }, [actionData]);
 
   return (
-    <div style={{ backgroundColor: "white", width: "53%", height: "100%", position: "absolute" }}>
-      <div data-light="" style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
+    <div
+      style={{
+        backgroundColor: "white",
+        width: "53%",
+        height: "100%",
+        position: "absolute",
+      }}
+    >
+      <div
+        data-light=""
+        style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%" }}
+      >
         <h1>Login/Register</h1>
         <form method="post">
-          <input
-            type="hidden"
-            name="redirectTo"
-            value={redirectTo}
-          />
+          <input type="hidden" name="redirectTo" value={redirectTo} />
           <fieldset>
-            <legend className="sr-only">
-              Login or Register?
-            </legend>
+            <legend className="sr-only">Login or Register?</legend>
             <label>
               <input
                 type="radio"
                 name="loginType"
                 value="login"
                 defaultChecked={true}
-                // defaultChecked={
-                //   actionData?.fields?.loginType ===
-                //   "login"
-                // }
               />{" "}
               Login
             </label>
@@ -153,20 +160,12 @@ export default function Login() {
                 type="radio"
                 name="loginType"
                 value="register"
-                // defaultChecked={
-                //   actionData?.fields?.loginType ===
-                //   "register"
-                // }
               />{" "}
               Register
             </label>
           </fieldset>
           <div>
-            <label
-              htmlFor="email"
-            >
-              Email address
-            </label>
+            <label htmlFor="email">Email address</label>
             <div>
               <input
                 ref={emailRef}
@@ -180,18 +179,12 @@ export default function Login() {
                 aria-describedby="email-error"
               />
               {actionData?.errors?.email && (
-                <div id="email-error">
-                  {actionData.errors.email}
-                </div>
+                <div id="email-error">{actionData.errors.email}</div>
               )}
             </div>
           </div>
           <div>
-            <label
-              htmlFor="password"
-            >
-              Password
-            </label>
+            <label htmlFor="password">Password</label>
             <div>
               <input
                 id="password"
@@ -203,9 +196,7 @@ export default function Login() {
                 aria-describedby="password-error"
               />
               {actionData?.errors?.password && (
-                <div id="password-error">
-                  {actionData.errors.password}
-                </div>
+                <div id="password-error">{actionData.errors.password}</div>
               )}
             </div>
           </div>
@@ -213,10 +204,7 @@ export default function Login() {
             Submit
           </button>
         </form>
-        <form
-          method="post"
-          action={`/auth/${SocialsProvider.GOOGLE}`}
-        >
+        <form method="post" action={`/auth/${SocialsProvider.GOOGLE}`}>
           <button>Login with Google</button>
         </form>
         <div className="links">
