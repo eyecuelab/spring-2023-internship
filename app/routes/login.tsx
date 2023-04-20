@@ -111,7 +111,9 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Login() {
-  const actionData = useActionData<typeof action>();
+  // vvvvv---original code was throwing type error on actionData.error---vvvvv
+  // const actionData = useActionData<typeof action>();
+  const actionData = useActionData();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/events";
   const emailRef = useRef<HTMLInputElement>(null);
@@ -150,10 +152,6 @@ export default function Login() {
                 name="loginType"
                 value="login"
                 defaultChecked={true}
-                // defaultChecked={
-                //   actionData?.fields?.loginType ===
-                //   "login"
-                // }
               />{" "}
               Login
             </label>
@@ -162,10 +160,6 @@ export default function Login() {
                 type="radio"
                 name="loginType"
                 value="register"
-                // defaultChecked={
-                //   actionData?.fields?.loginType ===
-                //   "register"
-                // }
               />{" "}
               Register
             </label>
