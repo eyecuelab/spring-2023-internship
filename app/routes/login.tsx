@@ -121,12 +121,14 @@ export default function Login() {
   
 
   useEffect(() => {
+    console.log(`ActionData:${actionData}`);
     if (actionData?.errors?.email) {
       emailRef.current?.focus();
     } else if (actionData?.errors?.password) {
       passwordRef.current?.focus();
     }
   }, [actionData]);
+
 
   return (
     <div
