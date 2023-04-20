@@ -261,18 +261,35 @@ export default function NewEventRoute() {
         }}
       >
         <div style={{ margin: "8%" }}>
-          <div style={{ display: "flex" }}>
-            <Avatar
-              alt="Remy Sharp"
-              src={avatar}
-              sx={{ height: "60px", width: "60px" }}
-            />
-            <div style={{ marginLeft: "1rem", marginTop: "1rem" }}>
-              <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
-              <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                Lucia Schmitt
-              </Typography>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                marginLeft: "1rem",
+                marginTop: "1rem",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src={avatar}
+                sx={{ height: "60px", width: "60px" }}
+              />
+              <Box sx={{ pl: ".75rem" }}>
+                <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
+                <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
+                  Lucia Schmitt
+                </Typography>
+              </Box>
             </div>
+            
             <Button
               sx={{
                 fontFamily: "rasa",
@@ -283,7 +300,7 @@ export default function NewEventRoute() {
                 height: "1.75rem",
                 alignSelf: "stretch",
               }}
-              variant="text"
+              variant="outlined"
               color="primary"
               type="submit"
             >
@@ -451,7 +468,13 @@ export default function NewEventRoute() {
                 </Button>
               </Box>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
                 <TextField
                   ref={contributionRef}
                   sx={{ width: "100%" }}
