@@ -56,3 +56,13 @@ export async function createUser(email: User["email"], password: string) {
     },
   });
 }
+
+export async function createGoogleUser(email: User["email"], displayName: string, picture: string) {
+  return prisma.user.create({
+    data: {
+      email,
+      displayName,
+      picture
+    }
+  });
+}

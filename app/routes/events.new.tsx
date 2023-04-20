@@ -2,7 +2,7 @@ import type { ActionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/services/session.server";
 import {
   Avatar,
   Box,

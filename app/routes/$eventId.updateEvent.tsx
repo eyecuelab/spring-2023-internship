@@ -1,6 +1,6 @@
 import { getEvent, updateEvent } from "~/models/events.server";
 import { useEffect, useRef } from "react";
-import { requireUserId } from "~/session.server";
+import { requireUserId } from "~/services/session.server";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
