@@ -1,5 +1,6 @@
-import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
+
+import type { ActionArgs } from "@remix-run/node";
 
 import { logout } from "~/services/session.server";
 

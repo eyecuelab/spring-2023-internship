@@ -1,6 +1,8 @@
 import { Authenticator } from "remix-auth";
+
 import { sessionStorage } from "~/services/session.server";
 import { GoogleStrategy, SocialsProvider } from "remix-auth-socials";
+import { getUserByEmail, createGoogleUser } from "~/models/user.server";
 
 // Create an instance of the authenticator
 // It will take session storage as an input parameter and creates the user session on successful authentication
@@ -11,29 +13,10 @@ async function handleSocialAuthCallback({ profile }) {
   // create user in your db here
   // profile object contains all the user data like image, displayName, id
   const existingUser = await getUserByEmail(profile.emails[0].value);
-
-  if (existingUser) {
-    return createUserSession({
-      redirectTo,
-      // remember: remember === "on" ? true : false,
-      request,
-      userId: existingUser.id,
-    });
+  if (!existingUser) {
+    const user = await createGoogleUser(profile.emails[0].value, profile.displayName, profile.photos[0].value);
   }
 
-  const user = await createUser(email, password);
-
-  // use remember if we decide to impliment on login 
-  // createUserSession() currently sets remember to true by default
-  return createUserSession({
-    redirectTo,
-    // remember: remember === "on" ? true : false,
-    request,
-    userId: user.id,
-  });
-  }
-
-  const user = await createUser(email, password);
   return profile;
 }
 

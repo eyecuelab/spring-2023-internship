@@ -7,7 +7,7 @@ export const action = async ({ request }: LoaderArgs) => {
   // on success --> redirect to dasboard
   // on failure --> back to homepage/login
   return await authenticator.authenticate(SocialsProvider.GOOGLE, request, {
-    successRedirect: "/dashboard",
-    failureRedirect: "/",
+    successRedirect: "/login",
+    failureRedirect: "/login",
   });
 };

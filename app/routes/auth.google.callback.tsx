@@ -4,7 +4,7 @@ import { LoaderArgs } from "@remix-run/node";
 
 export const loader = ({ request }: LoaderArgs) => {
   return authenticator.authenticate(SocialsProvider.GOOGLE, request, {
-    successRedirect: "/events",
-    failureRedirect: "/",
+    successRedirect: "/login",
+    failureRedirect: "/login",
   });
 };

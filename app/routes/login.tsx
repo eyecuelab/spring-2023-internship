@@ -1,17 +1,31 @@
-import { json, redirect } from "@remix-run/node";
-import { Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import { json, redirect } from "@remix-run/node";
+import { SocialsProvider } from "remix-auth-socials";
 
 import type { LoaderArgs, ActionArgs } from "@remix-run/node";
 
 import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/services/session.server";
 import { safeRedirect, validateEmail } from "~/utils/utils";
-import { SocialsProvider } from "remix-auth-socials";
+import { authenticator } from "~/services/auth.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
+  const googleUser = await authenticator.isAuthenticated(request);
+  if (googleUser) {
+    const user = await getUserByEmail(googleUser.emails[0].value)
+    const redirectTo = "/events"
+    return createUserSession({
+      redirectTo,
+      // remember: remember === "on" ? true : false,
+      request,
+      userId: user.id,
+    });
+  }
+
   const userId = await getUserId(request);
   if (userId) return redirect("/events");
+  
   return json({});
 };
 
