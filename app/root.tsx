@@ -18,7 +18,6 @@ import theme from "./utils/theme";
 
 interface DocumentProps {
   children: React.ReactNode;
-  title?: string;
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -26,7 +25,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const Document = withEmotionCache(
-  ({ children, title }: DocumentProps, emotionCache) => {
+  ({ children }: DocumentProps, emotionCache) => {
     const clientStyleData = React.useContext(ClientStyleContext);
 
     // Only executed on client
@@ -50,12 +49,16 @@ const Document = withEmotionCache(
         <html lang="en" style={{ height: "100%" }}>
           <head>
             <meta charSet="utf-8" />
-            <meta name="viewport" content="width=device-width,initial-scale=1"
+            <meta
+              name="viewport"
+              content="width=device-width,initial-scale=1"
             />
             <meta name="theme-color" />
             <Meta />
             <Links />
-            <meta name="emotion-insertion-point" content="emotion-insertion-point"
+            <meta
+              name="emotion-insertion-point"
+              content="emotion-insertion-point"
             />
             <title>GeTogether</title>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -77,7 +80,9 @@ const Document = withEmotionCache(
             }}
           >
             {children}
-            <Scripts />
+            {/* <Scripts /> */}
+            <Outlet />
+            <LiveReload />
           </body>
         </html>
       </ThemeProvider>
@@ -87,9 +92,7 @@ const Document = withEmotionCache(
 
 export default function App() {
   return (
-    <Document>
-      <Outlet />
-      <LiveReload />
-    </Document>
+  <Document>
+  </Document>
   );
 }

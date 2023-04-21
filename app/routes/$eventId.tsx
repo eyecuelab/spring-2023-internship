@@ -53,7 +53,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -65,7 +65,7 @@ function TabPanel(props: TabPanelProps) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -86,9 +86,9 @@ export default function EventRoute() {
   };
 
   return (
-    <div>
+    <Box>
       <Appbar />
-      <div
+      <Box
         style={{
           backgroundColor: "rgb(245, 245, 245)",
           width: "53%",
@@ -97,15 +97,15 @@ export default function EventRoute() {
           position: "absolute",
         }}
       >
-        <div style={{ margin: "8%" }}>
-          <div
+        <Box style={{ margin: "8%" }}>
+          <Box
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <div
+            <Box
               style={{
                 marginLeft: "1rem",
                 marginTop: "1rem",
@@ -125,7 +125,7 @@ export default function EventRoute() {
                   Lucia Schmitt
                 </Typography>
               </Box>
-            </div>
+            </Box>
 
             <Box sx={{ display: "flex" }}>
               <Form method="post">
@@ -166,7 +166,7 @@ export default function EventRoute() {
                 </Button>
               </Link>
             </Box>
-          </div>
+          </Box>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
           </Typography>
@@ -240,36 +240,36 @@ export default function EventRoute() {
                   show your generosity and claim a few items to Bring with you!
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
-                {data.event.contributions.map((contribution: any) => (
+                  {data.event.contributions.map((contribution: any) => (
                     <li key={contribution.id}>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <div style={{ marginRight: ".5rem" }}>•</div>
-                      <div style={{}}>{contribution.contributionName}</div>
-                      <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
-                        Discussion
-                      </div>
-                      <div style={{ marginLeft: "2rem" }}>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          sx={{
-                            fontFamily: "rasa",
-                            textTransform: "capitalize",
-                            pl: "1.5rem",
-                            pr: "1.5rem",
-                            pt: "8px",
-                            height: "1.75rem",
-                          }}
-                          href=""
-                        >
-                          Claim Item
-                        </Button>
-                      </div>
-                    </div>
-                  <hr style={{ borderTop: "1px dashed #bbb" }} />
-                  </li>
-                    ))}
-                    </ul>
+                      <Box style={{ display: "flex", flexDirection: "row" }}>
+                        <Box style={{ marginRight: ".5rem" }}>•</Box>
+                        <Box style={{}}>{contribution.contributionName}</Box>
+                        <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                          Discussion
+                        </Box>
+                        <Box style={{ marginLeft: "2rem" }}>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            sx={{
+                              fontFamily: "rasa",
+                              textTransform: "capitalize",
+                              pl: "1.5rem",
+                              pr: "1.5rem",
+                              pt: "8px",
+                              height: "1.75rem",
+                            }}
+                            href=""
+                          >
+                            Claim Item
+                          </Button>
+                        </Box>
+                      </Box>
+                      <hr style={{ borderTop: "1px dashed #bbb" }} />
+                    </li>
+                  ))}
+                </ul>
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -280,15 +280,15 @@ export default function EventRoute() {
             </TabPanel>
           </Box>
           {/* ------------------------------------------------------------------------------------------------------ */}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
 
 // {
 /* {data.event.userId === data.userId ? (
-                    <div>
+                    <Box>
                       <Form method="post">
                         <button type="submit" name="_action" value="delete" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
                           Delete
@@ -299,6 +299,6 @@ export default function EventRoute() {
                           Update
                         </button>
                       </Link>
-                    </div>
-                  ) : (<div></div>)} */
+                    </Box>
+                  ) : (<Box></Box>)} */
 // }
