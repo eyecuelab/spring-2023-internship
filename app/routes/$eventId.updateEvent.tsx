@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
+import { useUser } from "~/utils/utils";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -35,6 +36,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       status: 403,
     });
   }
+  
   return json({ event });
 };
 
@@ -239,6 +241,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 };
 
 export default function UpdateEventRoute() {
+  const user = useUser();
   const data = useLoaderData();
   const dateTime = new Date(data.event.dateTime);
 
@@ -307,13 +310,15 @@ export default function UpdateEventRoute() {
             >
               <Avatar
                 alt="Remy Sharp"
-                src={avatar}
-                sx={{ height: "60px", width: "60px" }}
+                src={user.picture !== null ? user.picture : ""}
+                sx={{ width: 60, height: 60 }}
               />
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
                 <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                  Lucia Schmitt
+                  {user.displayName !== null
+                      ? user.displayName
+                      : user.email}
                 </Typography>
               </Box>
             </div>
