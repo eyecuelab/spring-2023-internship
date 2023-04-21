@@ -1,18 +1,16 @@
+import React, { useState } from "react";
+import ReactMapGL, { Marker } from "react-map-gl";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { deleteEvent, getEvent } from "~/models/events.server";
 import { useLoaderData, Form, Link } from "@remix-run/react";
-import { Outlet } from "@remix-run/react";
-import { requireUserId } from "~/services/session.server";
-import invariant from "tiny-invariant";
-import Appbar from "~/components/Appbar";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import avatar from "../../public/img/avatar.png";
+import Appbar from "~/components/Appbar";
+import { deleteEvent, getEvent } from "~/models/events.server";
+import { requireUserId } from "~/services/session.server";
 import MapImg from "~/images/map.png";
-import React, { useState } from "react";
-import ReactMapGL from "react-map-gl";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -81,7 +79,11 @@ export default function EventRoute() {
   const data = useLoaderData();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
-  const [viewport, setViewPort] = useState
+  const [viewport, setViewport] = useState({
+    latitude: 45.5152,
+    longitude: 122.6784,
+    zoom: 8
+  });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -223,9 +225,10 @@ export default function EventRoute() {
                       sx={{ whiteSpace: "nowrap" }}
                     >{`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}</Typography>
                   </Box>
+
                   <Box
                     sx={{
-                      // backgroundImage: `url(${MapImg})`,
+                      // backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.6729,45.5148,9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -233,9 +236,18 @@ export default function EventRoute() {
                       ml: "80px",
                       mt: "1rem",
                     }}
+                    id="map"
                   >
-                    <ReactMapGL>
-                      
+                    <ReactMapGL
+                      {...viewport}
+                      width="100%"
+                      height="100%"
+                      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                      onViewportChange={setViewport}
+                    >
+                      <Marker latitude={45.5152} longitude={122.6784}>
+                        <div>Marker</div>
+                      </Marker>
                     </ReactMapGL>
                   </Box>
                 </Box>

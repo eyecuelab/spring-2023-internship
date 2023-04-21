@@ -3,14 +3,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import { getUser } from "./services/session.server";
 import Background from "~/images/background.png";
 import * as React from "react";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { LiveReload, Outlet } from "@remix-run/react";
 import { ThemeProvider, withEmotionCache } from "@emotion/react";
 import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import ClientStyleContext from "./utils/ClientStyleContext";
@@ -54,13 +47,10 @@ const Document = withEmotionCache(
               content="width=device-width,initial-scale=1"
             />
             <meta name="theme-color" />
-            <Meta />
-            <Links />
             <meta
               name="emotion-insertion-point"
               content="emotion-insertion-point"
             />
-            <title>GeTogether</title>
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link
@@ -68,6 +58,7 @@ const Document = withEmotionCache(
               rel="stylesheet"
             />
           </head>
+          <title>GeTogether</title>
           <body
             style={{
               backgroundImage: `url(${Background})`,
@@ -80,7 +71,6 @@ const Document = withEmotionCache(
             }}
           >
             {children}
-            {/* <Scripts /> */}
             <Outlet />
             <LiveReload />
           </body>
@@ -92,7 +82,6 @@ const Document = withEmotionCache(
 
 export default function App() {
   return (
-  <Document>
-  </Document>
+  <Document children={undefined}></Document>
   );
 }
