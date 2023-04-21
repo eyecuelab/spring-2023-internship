@@ -13,7 +13,6 @@ import {
 } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 
-import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
 
@@ -131,10 +130,10 @@ export default function EventRoute() {
                 alignItems: "center",
               }}
             >
-              <img
+              <Avatar
                 alt="Remy Sharp"
-                src={data.event.user.picture}
-                style={{ height: "60px", width: "60px", borderRadius: "30px" }}
+                src={data.event.user.picture !== null ? data.event.user.picture : ""}
+                sx={{ width: 60, height: 60 }}
               />
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
@@ -280,16 +279,10 @@ export default function EventRoute() {
                         <div style={{ marginLeft: "2rem" }}>
                           {contribution.user !== null &&
                           contribution.userId !== data.userId ? (
-                            <img
+                            <Avatar
                               alt="Remy Sharp"
-                              src={contribution.user.picture}
-                              style={{
-                                height: "1.75rem",
-                                width: "1.75rem",
-                                borderRadius: "30px",
-                                marginRight: "40px",
-                                marginLeft: "41px",
-                              }}
+                              src={contribution.user.picture !== null ? contribution.user.picture : ""}
+                              sx={{ width: 30, height: 30, mr: "40px", ml: "41px" }}
                             />
                           ) : (
                             <form method="post">
