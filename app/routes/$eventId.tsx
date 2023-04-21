@@ -239,37 +239,37 @@ export default function EventRoute() {
                 <Typography>
                   show your generosity and claim a few items to Bring with you!
                 </Typography>
+                <ul style={{ listStyleType: "none", padding: "0" }}>
                 {data.event.contributions.map((contribution: any) => (
-                  <ul style={{ listStyleType: "none", padding: "0" }}>
                     <li key={contribution.id}>
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <div style={{ marginRight: ".5rem" }}>•</div>
-                        <div style={{}}>{contribution.contributionName}</div>
-                        <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
-                          Discussion
-                        </div>
-                        <div style={{ marginLeft: "2rem" }}>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            sx={{
-                              fontFamily: "rasa",
-                              textTransform: "capitalize",
-                              pl: "1.5rem",
-                              pr: "1.5rem",
-                              pt: "8px",
-                              height: "1.75rem",
-                            }}
-                            href=""
-                          >
-                            Claim Item
-                          </Button>
-                        </div>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      <div style={{ marginRight: ".5rem" }}>•</div>
+                      <div style={{}}>{contribution.contributionName}</div>
+                      <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                        Discussion
                       </div>
-                    </li>
-                    <hr style={{ borderTop: "1px dashed #bbb" }} />
-                  </ul>
-                ))}
+                      <div style={{ marginLeft: "2rem" }}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          sx={{
+                            fontFamily: "rasa",
+                            textTransform: "capitalize",
+                            pl: "1.5rem",
+                            pr: "1.5rem",
+                            pt: "8px",
+                            height: "1.75rem",
+                          }}
+                          href=""
+                        >
+                          Claim Item
+                        </Button>
+                      </div>
+                    </div>
+                  <hr style={{ borderTop: "1px dashed #bbb" }} />
+                  </li>
+                    ))}
+                    </ul>
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
