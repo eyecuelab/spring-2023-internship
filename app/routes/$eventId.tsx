@@ -1,23 +1,21 @@
 import React from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
-import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
+import { json } from "@remix-run/node";
+
+import type { LoaderFunction, ActionArgs } from "@remix-run/node";
 
 import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
-import {
-  claimItem,
-  getContribution,
-  unclaimItem,
-} from "~/models/contributions.server";
+import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
+import { useOptionalUser } from "~/utils/utils";
 
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  // const userId = await requireUserId(request);
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
@@ -28,7 +26,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("Uh Oh! No event found.", { status: 404 });
   }
 
-  return json({ event, userId });
+  return json({ event });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -94,6 +92,7 @@ function a11yProps(index: number) {
 
 export default function EventRoute() {
   const data = useLoaderData();
+  const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
 
@@ -103,7 +102,7 @@ export default function EventRoute() {
 
   return (
     <div>
-      <Appbar />
+      {user === undefined ? "" : <Appbar />}
       <div
         style={{
           backgroundColor: "rgb(245, 245, 245)",
@@ -132,7 +131,11 @@ export default function EventRoute() {
             >
               <Avatar
                 alt="Remy Sharp"
-                src={data.event.user.picture !== null ? data.event.user.picture : ""}
+                src={
+                  data.event.user.picture !== null
+                    ? data.event.user.picture
+                    : ""
+                }
                 sx={{ width: 60, height: 60 }}
               />
               <Box sx={{ pl: ".75rem" }}>
@@ -144,46 +147,57 @@ export default function EventRoute() {
                 </Typography>
               </Box>
             </div>
-
-            <Box sx={{ display: "flex" }}>
-              <Form method="post">
-                <Button
-                  sx={{
-                    fontFamily: "rasa",
-                    textTransform: "capitalize",
-                    pl: "1.5rem",
-                    pr: "1.5rem",
-                    pt: "8px",
-                    height: "1.75rem",
-                    alignSelf: "stretch",
-                  }}
-                  variant="text"
-                  color="primary"
-                  type="submit"
-                  name="_action"
-                  value="delete"
-                >
-                  Unpublish
-                </Button>
-              </Form>
-              <Link to="updateEvent">
-                <Button
-                  sx={{
-                    fontFamily: "rasa",
-                    textTransform: "capitalize",
-                    pl: "1.5rem",
-                    pr: "1.5rem",
-                    pt: "8px",
-                    height: "1.75rem",
-                    alignSelf: "stretch",
-                  }}
-                  variant="outlined"
-                  color="primary"
-                >
-                  Update
-                </Button>
-              </Link>
-            </Box>
+            {user && data.event.userId === user.id ? (
+              <Box sx={{ display: "flex" }}>
+                <Form method="post">
+                  <Button
+                    sx={{
+                      fontFamily: "rasa",
+                      textTransform: "capitalize",
+                      pl: "1.5rem",
+                      pr: "1.5rem",
+                      pt: "8px",
+                      height: "1.75rem",
+                      alignSelf: "stretch",
+                    }}
+                    variant="text"
+                    color="primary"
+                    type="submit"
+                    name="_action"
+                    value="delete"
+                  >
+                    Unpublish
+                  </Button>
+                </Form>
+                <Link to="updateEvent">
+                  <Button
+                    sx={{
+                      fontFamily: "rasa",
+                      textTransform: "capitalize",
+                      pl: "1.5rem",
+                      pr: "1.5rem",
+                      pt: "8px",
+                      height: "1.75rem",
+                      alignSelf: "stretch",
+                    }}
+                    variant="outlined"
+                    color="primary"
+                  >
+                    Update
+                  </Button>
+                </Link>
+              </Box>
+            ) : (
+              <div>
+                {!user ? (
+                  <Button variant="outlined" color="primary" href="/login">
+                    Signup/Login
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
           </div>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
@@ -260,7 +274,7 @@ export default function EventRoute() {
                     <li key={contribution.id}>
                       <div style={{ display: "flex", flexDirection: "row" }}>
                         <div style={{ marginRight: ".5rem" }}>
-                          {contribution.user ? 
+                          {contribution.user ? (
                             <img
                               alt="Checkmark"
                               src={Checkmark}
@@ -268,46 +282,85 @@ export default function EventRoute() {
                                 height: "7px",
                                 width: "7px",
                               }}
-                            /> :
+                            />
+                          ) : (
                             "•"
-                          }
+                          )}
                         </div>
-                        <div style={ contribution.user ? { fontWeight: "bold"} : {} }>{contribution.contributionName}</div>
+                        <div
+                          style={
+                            contribution.user ? { fontWeight: "bold" } : {}
+                          }
+                        >
+                          {contribution.contributionName}
+                        </div>
                         <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
                           Discussion
                         </div>
-                        <div style={{ marginLeft: "2rem" }}>
-                          {contribution.user !== null &&
-                          contribution.userId !== data.userId ? (
-                            <Avatar
-                              alt="Remy Sharp"
-                              src={contribution.user.picture !== null ? contribution.user.picture : ""}
-                              sx={{ width: 30, height: 30, mr: "40px", ml: "41px" }}
-                            />
-                          ) : (
-                            <form method="post">
-                              <Button
-                                name="_action"
-                                value={contribution.id}
-                                type="submit"
-                                variant="outlined"
-                                color="primary"
+                        {user === undefined ? (
+                          <div>
+                            {contribution.user ? (
+                              <Avatar
+                                alt="Remy Sharp"
+                                src={
+                                  contribution.user.picture !== null
+                                    ? contribution.user.picture
+                                    : ""
+                                }
                                 sx={{
-                                  fontFamily: "rasa",
-                                  textTransform: "capitalize",
-                                  width: "110px",
-                                  pt: "8px",
-                                  height: "1.75rem",
+                                  width: 30,
+                                  height: 30,
+                                  mr: "40px",
+                                  ml: "41px",
                                 }}
-                                href=""
-                              >
-                                {contribution.userId === data.userId
-                                  ? "Unclaim Item"
-                                  : "Claim Item"}
-                              </Button>
-                            </form>
-                          )}
-                        </div>
+                              />
+                            ) : (
+                              <div style={{ marginRight: "111px" }}></div>
+                            )}
+                          </div>
+                        ) : (
+                          <div style={{ marginLeft: "2rem" }}>
+                            {contribution.user !== null &&
+                            contribution.userId !== user.id ? (
+                              <Avatar
+                                alt="Remy Sharp"
+                                src={
+                                  contribution.user.picture !== null
+                                    ? contribution.user.picture
+                                    : ""
+                                }
+                                sx={{
+                                  width: 30,
+                                  height: 30,
+                                  mr: "40px",
+                                  ml: "41px",
+                                }}
+                              />
+                            ) : (
+                              <form method="post">
+                                <Button
+                                  name="_action"
+                                  value={contribution.id}
+                                  type="submit"
+                                  variant="outlined"
+                                  color="primary"
+                                  sx={{
+                                    fontFamily: "rasa",
+                                    textTransform: "capitalize",
+                                    width: "110px",
+                                    pt: "8px",
+                                    height: "1.75rem",
+                                  }}
+                                  href=""
+                                >
+                                  {contribution.userId === user.id
+                                    ? "Unclaim Item"
+                                    : "Claim Item"}
+                                </Button>
+                              </form>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </li>
                     <hr style={{ borderTop: "1px dashed #bbb" }} />
