@@ -11,7 +11,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
-import React from "react";
+import React, { useState } from "react";
+import ReactMapGL from "react-map-gl";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -80,6 +81,7 @@ export default function EventRoute() {
   const data = useLoaderData();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
+  const [viewport, setViewPort] = useState
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -223,7 +225,7 @@ export default function EventRoute() {
                   </Box>
                   <Box
                     sx={{
-                      backgroundImage: `url(${MapImg})`,
+                      // backgroundImage: `url(${MapImg})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -231,7 +233,11 @@ export default function EventRoute() {
                       ml: "80px",
                       mt: "1rem",
                     }}
-                  ></Box>
+                  >
+                    <ReactMapGL>
+                      
+                    </ReactMapGL>
+                  </Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
