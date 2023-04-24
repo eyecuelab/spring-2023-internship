@@ -258,7 +258,7 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      // backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.6729,45.5148,9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
+                      backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.6729,45.5148,9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
