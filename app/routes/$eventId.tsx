@@ -1,28 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
 import { json } from "@remix-run/node";
-
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
-
 import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
 import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
-
-import React, { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
-import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useLoaderData, Form, Link } from "@remix-run/react";
-import { Avatar, Box, Button, Typography } from "@mui/material";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import avatar from "../../public/img/avatar.png";
-import Appbar from "~/components/Appbar";
-import { deleteEvent, getEvent } from "~/models/events.server";
-import { requireUserId } from "~/services/session.server";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
 
