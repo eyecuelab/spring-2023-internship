@@ -94,11 +94,6 @@ export default function EventRoute() {
   const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
-  const [viewport, setViewport] = useState({
-    latitude: 45.5152,
-    longitude: 122.6784,
-    zoom: 8
-  });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -268,17 +263,8 @@ export default function EventRoute() {
                     }}
                     id="map"
                   >
-                    <ReactMapGL
-                      {...viewport}
-                      width="100%"
-                      height="100%"
-                      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                      onViewportChange={setViewport}
-                    >
-                      <Marker latitude={45.5152} longitude={122.6784}>
-                        <div>Marker</div>
-                      </Marker>
-                    </ReactMapGL>
+                    
+                    
                   </Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>

@@ -51,6 +51,11 @@ const Document = withEmotionCache(
               name="emotion-insertion-point"
               content="emotion-insertion-point"
             />
+            <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+            <link
+              href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+              rel="stylesheet"
+            />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link
@@ -81,7 +86,5 @@ const Document = withEmotionCache(
 );
 
 export default function App() {
-  return (
-  <Document children={undefined}></Document>
-  );
+  return <Document children={undefined}></Document>;
 }
