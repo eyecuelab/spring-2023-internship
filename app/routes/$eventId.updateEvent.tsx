@@ -1,11 +1,11 @@
 import { getEvent, updateEvent } from "~/models/events.server";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { requireUserId } from "~/services/session.server";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getContributionByName, updateContribution } from "~/models/contributions.server";
+import { createContribution, getContributionByName, updateContribution } from "~/models/contributions.server";
 import { Delete } from "@mui/icons-material";
 import {
   Avatar,
@@ -19,6 +19,8 @@ import {
 import avatar from "../../public/img/avatar.png";
 import Appbar from "~/components/Appbar";
 import { useUser } from "~/utils/utils";
+import { getContributions } from "~/models/contributions.server";
+import { deleteContribution } from "~/models/contributions.server";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -44,7 +46,6 @@ export const action = async ({ request, params }: ActionArgs) => {
   const userId = await requireUserId(request);
   const formData = await request.formData();
   invariant(params.eventId, "eventId not found");
-  // invariant(params.contributionId, "contributionId not found");
 
   const name = formData.get("name");
   const summary = formData.get("summary");
@@ -54,7 +55,7 @@ export const action = async ({ request, params }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
-  const contributionName = formData.get("contributionName");
+  // const contributionName = formData.get("contributionName");
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -110,7 +111,7 @@ export const action = async ({ request, params }: ActionArgs) => {
       { status: 400 }
     );
   }
-  if (typeof unit !== "string" || unit.length === 0) {
+  if (typeof unit !== "string") {
     return json(
       {
         errors: {
@@ -200,24 +201,24 @@ export const action = async ({ request, params }: ActionArgs) => {
       { status: 400 }
     );
   }
-  if (typeof contributionName !== "string" || contributionName.length === 0) {
-    return json(
-      {
-        errors: {
-          name: null,
-          summary: null,
-          streetAddress: null,
-          unit: null,
-          city: null,
-          state: null,
-          zip: null,
-          dateTime: null,
-          contributionName: "Contribution name is required",
-        },
-      },
-      { status: 400 }
-    );
-  }
+  // if (typeof contributionName !== "string" || contributionName.length === 0) {
+  //   return json(
+  //     {
+  //       errors: {
+  //         name: null,
+  //         summary: null,
+  //         streetAddress: null,
+  //         unit: null,
+  //         city: null,
+  //         state: null,
+  //         zip: null,
+  //         dateTime: null,
+  //         contributionName: "Contribution name is required",
+  //       },
+  //     },
+  //     { status: 400 }
+  //   );
+  // }
 
   const id = params.eventId;
   const dateTime = new Date(date);
@@ -234,6 +235,39 @@ export const action = async ({ request, params }: ActionArgs) => {
     userId,
   });
 
+  const { _action, ...values } = Object.fromEntries(formData);
+  if (typeof _action !== "string") return null;
+  const updatedContributions = JSON.parse(_action);
+  console.log("🚀 ~ file: $eventId.updateEvent.tsx:241 ~ action ~ updatedContributions:", updatedContributions)
+
+  // vvvvv---updating contributions not working WIP!---vvvvv
+  const contributions = await getContributions(id)
+  contributions.forEach(async (e) => {
+    let remove = true;
+    for (let i = 0; i < updatedContributions.length; i++) {
+      if (e.id === updatedContributions[i].id) {
+        remove = false;
+        if (e.contributionName !== updatedContributions[i].contributionName) {
+          await updateContribution({ id: updatedContributions[i].id, contributionName: updatedContributions[i].contributionName })
+        }
+      }
+      console.log(remove);
+      // if (remove) { 
+      //   await deleteContribution({ id: e.id })
+      // }
+    }
+  });
+  updatedContributions.forEach(async (e: { id: string; contributionName: any; }) => {
+    if (e.id === "") {
+      await createContribution({ contributionName: e.contributionName, eventId: id })
+    }
+  })
+
+
+  
+  // return null;
+  
+
   // const contributionId = params.contributionId;
   // await updateContribution({ id: contributionId, contributionName, eventId: id });
 
@@ -243,7 +277,6 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function UpdateEventRoute() {
   const user = useUser();
   const data = useLoaderData();
-  const dateTime = new Date(data.event.dateTime);
 
   const actionData = useActionData<typeof action>();
   const nameRef = useRef<HTMLInputElement>(null);
@@ -255,6 +288,36 @@ export default function UpdateEventRoute() {
   const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
   const contributionRef = useRef<HTMLInputElement>(null);
+  
+  const contributions = data.event.contributions;
+  const currentFormValues:{ name: string, id: string }[] = [];
+  if (contributions) {
+    contributions.forEach((e: { contributionName: string, id: string; }) => {
+      currentFormValues.push({ name: e.contributionName, id: e.id })
+    });
+  }
+  const [formValues, setFormValues] = useState<{ name: string, id: string }[]>(currentFormValues.length === 0 ? [{ name: "", id: "" }] : currentFormValues);
+
+  const handleChange = (
+    i: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newFormValues = [...formValues];
+
+    const value = e.target.value;
+    (newFormValues[i] as { name: string }).name = value;
+    setFormValues(newFormValues);
+  };
+
+  const addFormFields = () => {
+    setFormValues([...formValues, { name: "", id: "" }]);
+  };
+
+  const removeFormFields = (i: number) => {
+    const newFormValues = [...formValues];
+    newFormValues.splice(i, 1);
+    setFormValues(newFormValues);
+  };
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -337,6 +400,8 @@ export default function UpdateEventRoute() {
                 variant="outlined"
                 color="primary"
                 type="submit"
+                name="_action"
+                value={JSON.stringify(formValues)}
               >
                 Publish
               </Button>
@@ -468,7 +533,7 @@ export default function UpdateEventRoute() {
                 ref={dateTimeRef}
                 type="dateTime-local"
                 name="dateTime"
-                defaultValue={dateTime}
+                defaultValue={data.event.dateTime.slice(0, -5)}
                 aria-invalid={actionData?.errors?.dateTime ? true : undefined}
                 aria-errormessage={
                   actionData?.errors?.dateTime ? "dateTime-error" : undefined
@@ -505,6 +570,7 @@ export default function UpdateEventRoute() {
                     pt: "8px",
                     height: "1.75rem",
                   }}
+                  onClick={() => addFormFields()}
                   variant="outlined"
                   color="primary"
                   href=""
@@ -513,7 +579,7 @@ export default function UpdateEventRoute() {
                 </Button>
               </Box>
 
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              {/* <div style={{ display: "flex", flexDirection: "row" }}>
                 <TextField
                   ref={contributionRef}
                   sx={{ width: "100%" }}
@@ -541,7 +607,41 @@ export default function UpdateEventRoute() {
                 </IconButton>
                 <div style={{ marginLeft: "2rem" }}></div>
               </div>
-              <hr style={{ borderTop: "1px dashed #bbb" }} />
+              <hr style={{ borderTop: "1px dashed #bbb" }} /> */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <ul
+                  style={{ listStyleType: "none", padding: "0", width: "100%" }}
+                >
+                  {formValues.map((element, index) => (
+                    <li className="form-inline" key={index}>
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <TextField
+                          sx={{ width: "100%" }}
+                          onChange={(e) => handleChange(index, e)}
+                          name="contributionName"
+                          value={element.name || ""}
+                        />
+
+                        <IconButton aria-label="delete" size="small">
+                          <Delete
+                            onClick={() => removeFormFields(index)}
+                            fontSize="inherit"
+                          />
+                        </IconButton>
+                      </Box>
+                      <hr
+                        style={{ borderTop: "1px dashed #bbb", width: "100%" }}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Box>
           </Box>
           {/* ------------------------------------------------------------------------------------------------------ */}

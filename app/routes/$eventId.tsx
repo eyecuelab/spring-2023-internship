@@ -1,7 +1,7 @@
 import React from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
 
@@ -40,6 +40,7 @@ export async function action({ request, params }: ActionArgs) {
   const { _action, ...values } = Object.fromEntries(formData);
   if (_action === "delete") {
     await deleteEvent({ userId, id: eventId });
+    return redirect("/events");
   }
   if (typeof _action !== "string") {
     return null;

@@ -1,23 +1,16 @@
-import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { useEffect, useRef, useState } from "react";
 import { Form, useActionData } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { json, redirect } from "@remix-run/node";
 import { requireUserId } from "~/services/session.server";
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Input,
-  TextField,
-  Typography,
-} from "@mui/material";
-import avatar from "../../public/img/avatar.png";
-import Appbar from "~/components/Appbar";
+import { Avatar, Box, Button, IconButton, Input, TextField, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+
 import { createEvent } from "~/models/events.server";
 import { createContribution } from "~/models/contributions.server";
 import { useUser } from "~/utils/utils";
+import Appbar from "~/components/Appbar";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
@@ -37,7 +30,6 @@ export const action = async ({ request }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
-  const contributionName = formData.get("contributionName");
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -93,7 +85,7 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-  if (typeof unit !== "string" || unit.length === 0) {
+  if (typeof unit !== "string") {
     return json(
       {
         errors: {
@@ -183,24 +175,6 @@ export const action = async ({ request }: ActionArgs) => {
       { status: 400 }
     );
   }
-  if (typeof contributionName !== "string" || contributionName.length === 0) {
-    return json(
-      {
-        errors: {
-          name: null,
-          summary: null,
-          streetAddress: null,
-          unit: null,
-          city: null,
-          state: null,
-          zip: null,
-          dateTime: null,
-          contributionName: "Contribution name is required",
-        },
-      },
-      { status: 400 }
-    );
-  }
 
   const dateTime = new Date(date);
   const event = await createEvent({
@@ -214,24 +188,57 @@ export const action = async ({ request }: ActionArgs) => {
     dateTime,
     userId,
   });
-
   const eventId = event.id;
-  await createContribution({ contributionName, eventId });
+
+  const { _action, ...values } = Object.fromEntries(formData);
+  if (typeof _action !== "string") return null;
+  const contributions = JSON.parse(_action);
+
+  contributions.forEach(async (e: { name: string; }) => {
+    if (e.name !== "") {
+      const contributionName = e.name;
+      await createContribution({ contributionName, eventId })
+    }
+  });
+
+  
   return redirect(`/${event.id}`);
 };
 
 export default function NewEventRoute() {
   const user = useUser();
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData();
   const nameRef = useRef<HTMLInputElement>(null);
-  const summaryRef = useRef<HTMLTextAreaElement>(null);
+  const summaryRef = useRef<HTMLInputElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
   const unitRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
   const stateRef = useRef<HTMLInputElement>(null);
   const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
-  const contributionRef = useRef<HTMLInputElement>(null);
+
+  const [formValues, setFormValues] = useState<{ name: string }[]>([{ name: "" }]);
+
+  const handleChange = (
+    i: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newFormValues = [...formValues];
+
+    const value = e.target.value;
+    (newFormValues[i] as { name: string }).name = value;
+    setFormValues(newFormValues);
+  };
+
+  const addFormFields = () => {
+    setFormValues([...formValues, { name: "" }]);
+  };
+
+  const removeFormFields = (i: number) => {
+    const newFormValues = [...formValues];
+    newFormValues.splice(i, 1);
+    setFormValues(newFormValues);
+  };
 
   useEffect(() => {
     if (actionData?.errors?.name) {
@@ -250,9 +257,7 @@ export default function NewEventRoute() {
       zipRef.current?.focus();
     } else if (actionData?.errors?.dateTime) {
       dateTimeRef.current?.focus();
-    } else if (actionData?.errors?.contributionName) {
-      contributionRef.current?.focus();
-    }
+    } 
   }, [actionData]);
 
   return (
@@ -293,13 +298,10 @@ export default function NewEventRoute() {
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
                 <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                  {user.displayName !== null
-                      ? user.displayName
-                      : user.email}
+                  {user.displayName !== null ? user.displayName : user.email}
                 </Typography>
               </Box>
             </div>
-            
             <Button
               sx={{
                 fontFamily: "rasa",
@@ -313,6 +315,8 @@ export default function NewEventRoute() {
               variant="outlined"
               color="primary"
               type="submit"
+              name="_action"
+              value={JSON.stringify(formValues)}
             >
               Publish
             </Button>
@@ -327,25 +331,39 @@ export default function NewEventRoute() {
               actionData?.errors?.name ? "name-error" : undefined
             }
           />
-          {/* ------------------------------------------------------------------------------------------------------ */}
+          {actionData?.errors?.name && (
+            <div className="pt-1 text-red-700" id="name">
+              {actionData.errors.name}
+            </div>
+          )}
           <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
                 Details
               </Typography>
             </Box>
-
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
-              {/* {data.event.summary} */}
-              <TextField sx={{ width: "100%" }} name="summary"></TextField>
+              <TextField
+                sx={{ width: "100%" }}
+                ref={summaryRef}
+                name="summary"
+                placeholder="summary"
+                aria-invalid={actionData?.errors?.summary ? true : undefined}
+                aria-errormessage={
+                  actionData?.errors?.summary ? "summary-error" : undefined
+                }
+              />
+              {actionData?.errors?.summary && (
+                <div className="pt-1 text-red-700" id="summary">
+                  {actionData.errors.summary}
+                </div>
+              )}
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                     Location & Contact
                   </Typography>
-                  {/* {data.event.address} */}
-
                   <TextField
                     ref={addressRef}
                     name="streetAddress"
@@ -364,7 +382,6 @@ export default function NewEventRoute() {
                       {actionData.errors.streetAddress}
                     </div>
                   )}
-
                   <TextField
                     ref={unitRef}
                     name="unit"
@@ -379,7 +396,6 @@ export default function NewEventRoute() {
                       {actionData.errors.unit}
                     </div>
                   )}
-
                   <TextField
                     ref={cityRef}
                     name="city"
@@ -394,7 +410,6 @@ export default function NewEventRoute() {
                       {actionData.errors.city}
                     </div>
                   )}
-
                   <TextField
                     ref={stateRef}
                     name="state"
@@ -409,7 +424,6 @@ export default function NewEventRoute() {
                       {actionData.errors.state}
                     </div>
                   )}
-
                   <TextField
                     ref={zipRef}
                     name="zip"
@@ -426,7 +440,6 @@ export default function NewEventRoute() {
                   )}
                 </Box>
               </Box>
-
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Date & Time
               </Typography>
@@ -444,7 +457,6 @@ export default function NewEventRoute() {
                   {actionData.errors.dateTime}
                 </div>
               )}
-
               <Box
                 style={{
                   display: "flex",
@@ -470,6 +482,7 @@ export default function NewEventRoute() {
                     pt: "8px",
                     height: "1.75rem",
                   }}
+                  onClick={() => addFormFields()}
                   variant="outlined"
                   color="primary"
                   href=""
@@ -477,7 +490,6 @@ export default function NewEventRoute() {
                   Add An Item
                 </Button>
               </Box>
-
               <div
                 style={{
                   display: "flex",
@@ -485,36 +497,34 @@ export default function NewEventRoute() {
                   justifyContent: "space-between",
                 }}
               >
-                <TextField
-                  ref={contributionRef}
-                  sx={{ width: "100%" }}
-                  name="contributionName"
-                  aria-invalid={
-                    actionData?.errors?.contributionName ? true : undefined
-                  }
-                  aria-errormessage={
-                    actionData?.errors?.contributionName
-                      ? "contributionName-error"
-                      : undefined
-                  }
-                />
-                {actionData?.errors?.contributionName && (
-                  <div
-                    className="pt-1 text-red-700"
-                    id="contributionName-error"
-                  >
-                    {actionData.errors.contributionName}
-                  </div>
-                )}
-                <IconButton aria-label="delete" size="small">
-                  <Delete fontSize="inherit" />
-                </IconButton>
-                <div style={{ marginLeft: "2rem" }}></div>
+                <ul
+                  style={{ listStyleType: "none", padding: "0", width: "100%" }}
+                >
+                  {formValues.map((element, index) => (
+                    <li className="form-inline" key={index}>
+                      <Box sx={{ display: "flex", flexDirection: "row" }}>
+                        <TextField
+                          sx={{ width: "100%" }}
+                          onChange={(e) => handleChange(index, e)}
+                          name="contributionName"
+                          value={element.name || ""}
+                        />
+                        <IconButton aria-label="delete" size="small">
+                          <Delete
+                            onClick={() => removeFormFields(index)}
+                            fontSize="inherit"
+                          />
+                        </IconButton>
+                      </Box>
+                      <hr
+                        style={{ borderTop: "1px dashed #bbb", width: "100%" }}
+                      />
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <hr style={{ borderTop: "1px dashed #bbb" }} />
             </Box>
           </Box>
-          {/* ------------------------------------------------------------------------------------------------------ */}
         </div>
       </Form>
     </div>

@@ -40,9 +40,7 @@ export function createContribution({
 export function updateContribution({
   id,
   contributionName,
-}: Pick<Contribution, "id" | "contributionName"> & {
-  eventId: Event["id"]
-}) {
+}: Pick<Contribution, "id" | "contributionName">) {
   return prisma.contribution.update({
     where: { id },
     data: {
