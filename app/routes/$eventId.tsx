@@ -12,6 +12,7 @@ import ReactMapGL, { Marker } from "react-map-gl";
 import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
+import { GetCoordinates } from "~/utils/Geocode";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // const userId = await requireUserId(request);
@@ -99,6 +100,15 @@ export default function EventRoute() {
     setValue(newValue);
   };
 
+  const address = data.event.streetAddress + " " + data.event.city + " " + data.event.state + " " + data.event.zip;
+  const coordinates = GetCoordinates(address).then((coordinates) => {
+        console.log(`Longitute: ${coordinates[0]}, Latitude: ${coordinates[1]}`);
+        return coordinates;
+      })
+      .catch((error) => {
+        console.error(error);
+      });;
+  
   return (
     <Box>
       {user === undefined ? "" : <Appbar />}
@@ -253,7 +263,7 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.6729,45.5148,9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
+                      backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${coordinates[0]},${coordinates[1]},9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -263,7 +273,6 @@ export default function EventRoute() {
                     }}
                     id="map"
                   >
-                    
                     
                   </Box>
                 </Box>
