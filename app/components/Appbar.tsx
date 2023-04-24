@@ -4,7 +4,6 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import logo from "../../public/img/logo.png";
-import avatar from "../../public/img/avatar.png";
 import { useUser } from "~/utils/utils";
 import { Typography } from "@mui/material";
 
@@ -24,7 +23,7 @@ function Appbar() {
       }}
     >
       <img
-        alt="logo"
+        alt="user image"
         src={logo}
         style={{
           height: "1.5rem",
@@ -57,7 +56,7 @@ function Appbar() {
         <IconButton sx={{ p: 0 }}>
           <Avatar
             alt="Remy Sharp"
-            src={avatar}
+            src={user.picture !== null ? user.picture : ""}
             sx={{ width: 26, height: 26 }}
           />
         </IconButton>

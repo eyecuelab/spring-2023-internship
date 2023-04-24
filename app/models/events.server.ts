@@ -14,7 +14,12 @@ export async function getEventsByUserId(userId: string) {
 export async function getEvent(id: string ) {
   return prisma.event.findUnique({ 
     where: { id },
-    include: { contributions: true } 
+    include: { 
+      user: true,
+      contributions: {
+        include: { user: true}
+      }
+    } 
   });
 } 
 

@@ -58,3 +58,21 @@ export function deleteContribution({
     where: { id }
   });
 }
+
+export function claimItem(id: string, userId: string) {
+  return prisma.contribution.update({
+    where: { id },
+    data: {
+      user: { connect: { id: userId } }
+    }
+  })
+}
+
+export function unclaimItem(id: string) {
+  return prisma.contribution.update({
+    where: { id },
+    data: {
+      user: { disconnect: true }
+    }
+  })
+}

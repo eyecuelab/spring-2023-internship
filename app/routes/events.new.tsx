@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useActionData } from "@remix-run/react";
 import { useEffect, useRef } from "react";
@@ -17,6 +17,13 @@ import Appbar from "~/components/Appbar";
 import { Delete } from "@mui/icons-material";
 import { createEvent } from "~/models/events.server";
 import { createContribution } from "~/models/contributions.server";
+import { useUser } from "~/utils/utils";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
+
+  return json({});
+};
 
 export const action = async ({ request }: ActionArgs) => {
   const userId = await requireUserId(request);
@@ -214,6 +221,7 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function NewEventRoute() {
+  const user = useUser();
   const actionData = useActionData<typeof action>();
   const nameRef = useRef<HTMLInputElement>(null);
   const summaryRef = useRef<HTMLTextAreaElement>(null);
@@ -279,13 +287,15 @@ export default function NewEventRoute() {
             >
               <Avatar
                 alt="Remy Sharp"
-                src={avatar}
-                sx={{ height: "60px", width: "60px" }}
+                src={user.picture !== null ? user.picture : ""}
+                sx={{ width: 60, height: 60 }}
               />
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
                 <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                  Lucia Schmitt
+                  {user.displayName !== null
+                      ? user.displayName
+                      : user.email}
                 </Typography>
               </Box>
             </div>

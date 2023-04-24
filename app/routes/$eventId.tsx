@@ -1,3 +1,16 @@
+import React from "react";
+import { useLoaderData, Form, Link } from "@remix-run/react";
+import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
+import { json } from "@remix-run/node";
+
+import type { LoaderFunction, ActionArgs } from "@remix-run/node";
+
+import Appbar from "~/components/Appbar";
+import { deleteEvent, getEvent } from "~/models/events.server";
+import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
+import { requireUserId } from "~/services/session.server";
+import { useOptionalUser } from "~/utils/utils";
+
 import React, { useState } from "react";
 import ReactMapGL, { Marker } from "react-map-gl";
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
@@ -11,9 +24,10 @@ import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
 import { requireUserId } from "~/services/session.server";
 import MapImg from "~/images/map.png";
+import Checkmark from "~/images/checkmark.png";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-  const userId = await requireUserId(request);
+  // const userId = await requireUserId(request);
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
@@ -24,22 +38,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("Uh Oh! No event found.", { status: 404 });
   }
 
-  return json({ event, userId });
+  return json({ event });
 };
 
 export async function action({ request, params }: ActionArgs) {
   const userId = await requireUserId(request);
   const formData = await request.formData();
-  const { _action, ...values } = Object.fromEntries(formData);
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
   }
+
+  const { _action, ...values } = Object.fromEntries(formData);
   if (_action === "delete") {
     await deleteEvent({ userId, id: eventId });
   }
-  return redirect("/events");
-  // invariant(params.eventId, "eventId not found");
+  if (typeof _action !== "string") {
+    return null;
+  }
+  const contribution = await getContribution(_action);
+
+  if (contribution !== null) {
+    if (contribution.userId === null) {
+      await claimItem(contribution.id, userId);
+    } else {
+      await unclaimItem(contribution.id);
+    }
+  }
+
+  return null;
 }
 
 interface TabPanelProps {
@@ -77,6 +104,7 @@ function a11yProps(index: number) {
 
 export default function EventRoute() {
   const data = useLoaderData();
+  const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
   const [viewport, setViewport] = useState({
@@ -91,7 +119,7 @@ export default function EventRoute() {
 
   return (
     <Box>
-      <Appbar />
+      {user === undefined ? "" : <Appbar />}
       <Box
         style={{
           backgroundColor: "rgb(245, 245, 245)",
@@ -120,61 +148,77 @@ export default function EventRoute() {
             >
               <Avatar
                 alt="Remy Sharp"
-                src={avatar}
-                sx={{ height: "60px", width: "60px" }}
+                src={
+                  data.event.user.picture !== null
+                    ? data.event.user.picture
+                    : ""
+                }
+                sx={{ width: 60, height: 60 }}
               />
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
                 <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                  Lucia Schmitt
+                  {data.event.user.displayName !== null
+                    ? data.event.user.displayName
+                    : data.event.user.email}
                 </Typography>
               </Box>
             </Box>
-
-            <Box sx={{ display: "flex" }}>
-              <Form method="post">
-                <Button
-                  sx={{
-                    fontFamily: "rasa",
-                    textTransform: "capitalize",
-                    pl: "1.5rem",
-                    pr: "1.5rem",
-                    pt: "8px",
-                    height: "1.75rem",
-                    alignSelf: "stretch",
-                  }}
-                  variant="text"
-                  color="primary"
-                  type="submit"
-                  name="_action"
-                  value="delete"
-                >
-                  Unpublish
-                </Button>
-              </Form>
-              <Link to="updateEvent">
-                <Button
-                  sx={{
-                    fontFamily: "rasa",
-                    textTransform: "capitalize",
-                    pl: "1.5rem",
-                    pr: "1.5rem",
-                    pt: "8px",
-                    height: "1.75rem",
-                    alignSelf: "stretch",
-                  }}
-                  variant="outlined"
-                  color="primary"
-                >
-                  Update
-                </Button>
-              </Link>
-            </Box>
+            {user && data.event.userId === user.id ? (
+              <Box sx={{ display: "flex" }}>
+                <Form method="post">
+                  <Button
+                    sx={{
+                      fontFamily: "rasa",
+                      textTransform: "capitalize",
+                      pl: "1.5rem",
+                      pr: "1.5rem",
+                      pt: "8px",
+                      height: "1.75rem",
+                      alignSelf: "stretch",
+                    }}
+                    variant="text"
+                    color="primary"
+                    type="submit"
+                    name="_action"
+                    value="delete"
+                  >
+                    Unpublish
+                  </Button>
+                </Form>
+                <Link to="updateEvent">
+                  <Button
+                    sx={{
+                      fontFamily: "rasa",
+                      textTransform: "capitalize",
+                      pl: "1.5rem",
+                      pr: "1.5rem",
+                      pt: "8px",
+                      height: "1.75rem",
+                      alignSelf: "stretch",
+                    }}
+                    variant="outlined"
+                    color="primary"
+                  >
+                    Update
+                  </Button>
+                </Link>
+              </Box>
+            ) : (
+              <div>
+                {!user ? (
+                  <Button variant="outlined" color="primary" href="/login">
+                    Signup/Login
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
           </Box>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
           </Typography>
-          {/* ------------------------------------------------------------------------------------------------------ */}
           <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
@@ -202,22 +246,21 @@ export default function EventRoute() {
             <TabPanel value={value} index={0}>
               <Box sx={{ mt: "1rem" }}>
                 <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
-                {/* {data.event.summary} */}
                 <Typography>{data.event.summary}</Typography>
                 <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                   <Box sx={{}}>
                     <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                       Location & Contact
                     </Typography>
-                    {/* {data.event.address} */}
                     <Typography>
                       {data.event.streetAddress} {data.event.unit}
                     </Typography>
                     <Typography>
                       {data.event.city}, {data.event.state} {data.event.zip}
                     </Typography>
+                    <br />
                     <Typography>(501) 778-1145</Typography>
-                    <Typography>lucia.schmitt@gmail.com</Typography>
+                    <Typography>{data.event.user.email}</Typography>
                     <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                       Date and Time
                     </Typography>
@@ -261,28 +304,94 @@ export default function EventRoute() {
                   {data.event.contributions.map((contribution: any) => (
                     <li key={contribution.id}>
                       <Box style={{ display: "flex", flexDirection: "row" }}>
-                        <Box style={{ marginRight: ".5rem" }}>•</Box>
-                        <Box style={{}}>{contribution.contributionName}</Box>
+                        <Box style={{ marginRight: ".5rem" }}>
+                          {contribution.user ? (
+                            <img
+                              alt="Checkmark"
+                              src={Checkmark}
+                              style={{
+                                height: "7px",
+                                width: "7px",
+                              }}
+                            />
+                          ) : (
+                            "•"
+                          )}
+                        </Box>
+                        <Box
+                          style={
+                            contribution.user ? { fontWeight: "bold" } : {}
+                          }
+                        >
+                          {contribution.contributionName}
+                        </Box>
                         <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
                           Discussion
                         </Box>
-                        <Box style={{ marginLeft: "2rem" }}>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            sx={{
-                              fontFamily: "rasa",
-                              textTransform: "capitalize",
-                              pl: "1.5rem",
-                              pr: "1.5rem",
-                              pt: "8px",
-                              height: "1.75rem",
-                            }}
-                            href=""
-                          >
-                            Claim Item
-                          </Button>
-                        </Box>
+                        {user === undefined ? (
+                          <div>
+                            {contribution.user ? (
+                              <Avatar
+                                alt="Remy Sharp"
+                                src={
+                                  contribution.user.picture !== null
+                                    ? contribution.user.picture
+                                    : ""
+                                }
+                                sx={{
+                                  width: 30,
+                                  height: 30,
+                                  mr: "40px",
+                                  ml: "41px",
+                                }}
+                              />
+                            ) : (
+                              <div style={{ marginRight: "111px" }}></div>
+                            )}
+                          </div>
+                        ) : (
+                          <Box style={{ marginLeft: "2rem" }}>
+                            {contribution.user !== null &&
+                            contribution.userId !== user.id ? (
+                              <Avatar
+                                alt="Remy Sharp"
+                                src={
+                                  contribution.user.picture !== null
+                                    ? contribution.user.picture
+                                    : ""
+                                }
+                                sx={{
+                                  width: 30,
+                                  height: 30,
+                                  mr: "40px",
+                                  ml: "41px",
+                                }}
+                              />
+                            ) : (
+                              <form method="post">
+                                <Button
+                                  name="_action"
+                                  value={contribution.id}
+                                  type="submit"
+                                  variant="outlined"
+                                  color="primary"
+                                  sx={{
+                                    fontFamily: "rasa",
+                                    textTransform: "capitalize",
+                                    width: "110px",
+                                    pt: "8px",
+                                    height: "1.75rem",
+                                  }}
+                                  href=""
+                                >
+                                  {contribution.userId === user.id
+                                    ? "Unclaim Item"
+                                    : "Claim Item"}
+                                </Button>
+                              </form>
+                            )}
+                          </Box>
+                        )}
                       </Box>
                       <hr style={{ borderTop: "1px dashed #bbb" }} />
                     </li>
@@ -297,26 +406,8 @@ export default function EventRoute() {
               Item Three
             </TabPanel>
           </Box>
-          {/* ------------------------------------------------------------------------------------------------------ */}
         </Box>
       </Box>
     </Box>
   );
 }
-
-// {
-/* {data.event.userId === data.userId ? (
-                    <Box>
-                      <Form method="post">
-                        <button type="submit" name="_action" value="delete" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
-                          Delete
-                        </button>
-                      </Form>
-                      <Link to="updateEvent">
-                        <button type="submit" className="rounded bg-blue-500  px-4 py-2 text-white hover:bg-blue-600 focus:bg-blue-400">
-                          Update
-                        </button>
-                      </Link>
-                    </Box>
-                  ) : (<Box></Box>)} */
-// }
