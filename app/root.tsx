@@ -3,24 +3,14 @@ import type { LoaderArgs } from "@remix-run/node";
 import { getUser } from "./services/session.server";
 import Background from "~/images/background.png";
 import * as React from "react";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { LiveReload, Outlet } from "@remix-run/react";
 import { ThemeProvider, withEmotionCache } from "@emotion/react";
-import {
-  unstable_useEnhancedEffect as useEnhancedEffect,
-} from "@mui/material";
+import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import ClientStyleContext from "./utils/ClientStyleContext";
 import theme from "./utils/theme";
 
 interface DocumentProps {
   children: React.ReactNode;
-  title?: string;
 }
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -28,7 +18,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 const Document = withEmotionCache(
-  ({ children, title }: DocumentProps, emotionCache) => {
+  ({ children }: DocumentProps, emotionCache) => {
     const clientStyleData = React.useContext(ClientStyleContext);
 
     // Only executed on client
@@ -48,51 +38,53 @@ const Document = withEmotionCache(
     }, []);
 
     return (
-      <html lang="en">
-        <head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1" />
-          <meta name="theme-color" />
-          {title ? <title>{title}</title> : null}
-          <Meta />
-          <Links />
-          <meta
-            name="emotion-insertion-point"
-            content="emotion-insertion-point"
-          />
-        </head>
-        <body>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
-        </body>
-      </html>
+      <ThemeProvider theme={theme}>
+        <html lang="en" style={{ height: "100%" }}>
+          <head>
+            <meta charSet="utf-8" />
+            <meta
+              name="viewport"
+              content="width=device-width,initial-scale=1"
+            />
+            <meta name="theme-color" />
+            <meta
+              name="emotion-insertion-point"
+              content="emotion-insertion-point"
+            />
+            <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+            <link
+              href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+              rel="stylesheet"
+            />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link
+              href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Rasa:wght@400&display=swap"
+              rel="stylesheet"
+            />
+          </head>
+          <title>GeTogether</title>
+          <body
+            style={{
+              backgroundImage: `url(${Background})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "right",
+              backgroundAttachment: "fixed",
+              margin: "0",
+              padding: "0",
+            }}
+          >
+            {children}
+            <Outlet />
+            <LiveReload />
+          </body>
+        </html>
+      </ThemeProvider>
     );
   }
 );
 
 export default function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <html lang="en" style={{ height: "100%" }}>
-        <head>
-          <meta charSet="utf-8" />
-          <title>GeTogether</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Rasa:wght@400&display=swap"
-            rel="stylesheet"
-          />
-        </head>
-        <body style={{ backgroundImage: `url(${Background})`, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "right", backgroundAttachment: "fixed", margin: "0", padding: "0" }}>
-          <Document>
-            <Outlet />
-            <LiveReload />
-          </Document>
-        </body>
-      </html>
-    </ThemeProvider>
-  );
+  return <Document children={undefined}></Document>;
 }

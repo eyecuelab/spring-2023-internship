@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
+
 import { json, redirect } from "@remix-run/node";
 
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
-
 import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
 import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
-
+import ReactMapGL, { Marker } from "react-map-gl";
+import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
+import { GetCoordinates } from "~/utils/Geocode";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // const userId = await requireUserId(request);
@@ -68,7 +70,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -80,7 +82,7 @@ function TabPanel(props: TabPanelProps) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -101,10 +103,19 @@ export default function EventRoute() {
     setValue(newValue);
   };
 
+  const address = data.event.streetAddress + " " + data.event.city + " " + data.event.state + " " + data.event.zip;
+  const coordinates = GetCoordinates(address).then((coordinates) => {
+        console.log(`Longitute: ${coordinates[0]}, Latitude: ${coordinates[1]}`);
+        return coordinates;
+      })
+      .catch((error) => {
+        console.error(error);
+      });;
+  
   return (
-    <div>
+    <Box>
       {user === undefined ? "" : <Appbar />}
-      <div
+      <Box
         style={{
           backgroundColor: "rgb(245, 245, 245)",
           width: "53%",
@@ -113,15 +124,15 @@ export default function EventRoute() {
           position: "absolute",
         }}
       >
-        <div style={{ margin: "8%" }}>
-          <div
+        <Box style={{ margin: "8%" }}>
+          <Box
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <div
+            <Box
               style={{
                 marginLeft: "1rem",
                 marginTop: "1rem",
@@ -147,7 +158,7 @@ export default function EventRoute() {
                     : data.event.user.email}
                 </Typography>
               </Box>
-            </div>
+            </Box>
             {user && data.event.userId === user.id ? (
               <Box sx={{ display: "flex" }}>
                 <Form method="post">
@@ -199,7 +210,7 @@ export default function EventRoute() {
                 )}
               </div>
             )}
-          </div>
+          </Box>
           <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
             {data.event.name}
           </Typography>
@@ -252,9 +263,10 @@ export default function EventRoute() {
                       sx={{ whiteSpace: "nowrap" }}
                     >{`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}</Typography>
                   </Box>
+
                   <Box
                     sx={{
-                      backgroundImage: `url(${MapImg})`,
+                      backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${coordinates[0]},${coordinates[1]},9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -262,7 +274,10 @@ export default function EventRoute() {
                       ml: "80px",
                       mt: "1rem",
                     }}
-                  ></Box>
+                    id="map"
+                  >
+                    
+                  </Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
@@ -273,11 +288,11 @@ export default function EventRoute() {
                     "show your generosity and claim a few items to bring with you!"
                   }
                 </Typography>
-                {data.event.contributions.map((contribution: any) => (
-                  <ul style={{ listStyleType: "none", padding: "0" }}>
+                <ul style={{ listStyleType: "none", padding: "0" }}>
+                  {data.event.contributions.map((contribution: any) => (
                     <li key={contribution.id}>
-                      <div style={{ display: "flex", flexDirection: "row" }}>
-                        <div style={{ marginRight: ".5rem" }}>
+                      <Box style={{ display: "flex", flexDirection: "row" }}>
+                        <Box style={{ marginRight: ".5rem" }}>
                           {contribution.user ? (
                             <img
                               alt="Checkmark"
@@ -290,17 +305,17 @@ export default function EventRoute() {
                           ) : (
                             "•"
                           )}
-                        </div>
-                        <div
+                        </Box>
+                        <Box
                           style={
                             contribution.user ? { fontWeight: "bold" } : {}
                           }
                         >
                           {contribution.contributionName}
-                        </div>
-                        <div style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                        </Box>
+                        <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
                           Discussion
-                        </div>
+                        </Box>
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
@@ -323,7 +338,7 @@ export default function EventRoute() {
                             )}
                           </div>
                         ) : (
-                          <div style={{ marginLeft: "2rem" }}>
+                          <Box style={{ marginLeft: "2rem" }}>
                             {contribution.user !== null &&
                             contribution.userId !== user.id ? (
                               <Avatar
@@ -363,13 +378,13 @@ export default function EventRoute() {
                                 </Button>
                               </form>
                             )}
-                          </div>
+                          </Box>
                         )}
-                      </div>
+                      </Box>
+                      <hr style={{ borderTop: "1px dashed #bbb" }} />
                     </li>
-                    <hr style={{ borderTop: "1px dashed #bbb" }} />
-                  </ul>
-                ))}
+                  ))}
+                </ul>
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
@@ -379,8 +394,8 @@ export default function EventRoute() {
               Item Three
             </TabPanel>
           </Box>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }

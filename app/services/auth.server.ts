@@ -5,8 +5,8 @@ import { sessionStorage } from "~/services/session.server";
 import { GoogleStrategy, SocialsProvider } from "remix-auth-socials";
 import { getUserByEmail, createGoogleUser } from "~/models/user.server";
 
-invariant(process.env.GOOGLE_CLIENT_ID, "GOOGLE_CLIENT_ID must be set");
-invariant(process.env.GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET must be set");
+invariant(process.env.REACT_APP_GOOGLE_CLIENT_ID, "GOOGLE_CLIENT_ID must be set");
+invariant(process.env.REACT_APP_GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET must be set");
 
 // Create an instance of the authenticator
 // It will take session storage as an input parameter and creates the user session on successful authentication
@@ -19,8 +19,8 @@ const getCallback = (provider: SocialsProvider) => {
 // Configuring Google Strategy
 authenticator.use(new GoogleStrategy(
   {
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+    clientSecret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
     callbackURL: getCallback(SocialsProvider.GOOGLE)
   },
   async ({ profile }) => {
