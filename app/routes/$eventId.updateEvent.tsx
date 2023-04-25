@@ -1,26 +1,17 @@
-import { getEvent, updateEvent } from "~/models/events.server";
 import { useEffect, useRef, useState } from "react";
-import { requireUserId } from "~/services/session.server";
-import type { ActionArgs, LoaderFunction } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
-import { createContribution, getContributionByName, updateContribution } from "~/models/contributions.server";
+import { json, redirect } from "@remix-run/node";
+import { Avatar, Box, Button, IconButton, Input, TextField, Typography } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Input,
-  TextField,
-  Typography,
-} from "@mui/material";
-import avatar from "../../public/img/avatar.png";
+import invariant from "tiny-invariant";
+
+import type { ActionArgs, LoaderFunction } from "@remix-run/node";
+
 import Appbar from "~/components/Appbar";
+import { createContribution, updateContribution, getContributions, deleteContribution } from "~/models/contributions.server";
+import { getEvent, updateEvent } from "~/models/events.server";
+import { requireUserId } from "~/services/session.server";
 import { useUser } from "~/utils/utils";
-import { getContributions } from "~/models/contributions.server";
-import { deleteContribution } from "~/models/contributions.server";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
@@ -38,7 +29,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       status: 403,
     });
   }
-  
+
   return json({ event });
 };
 
@@ -55,7 +46,6 @@ export const action = async ({ request, params }: ActionArgs) => {
   const state = formData.get("state");
   const zip = formData.get("zip");
   const date = formData.get("dateTime");
-  // const contributionName = formData.get("contributionName");
 
   if (typeof name !== "string" || name.length === 0) {
     return json(
@@ -201,24 +191,6 @@ export const action = async ({ request, params }: ActionArgs) => {
       { status: 400 }
     );
   }
-  // if (typeof contributionName !== "string" || contributionName.length === 0) {
-  //   return json(
-  //     {
-  //       errors: {
-  //         name: null,
-  //         summary: null,
-  //         streetAddress: null,
-  //         unit: null,
-  //         city: null,
-  //         state: null,
-  //         zip: null,
-  //         dateTime: null,
-  //         contributionName: "Contribution name is required",
-  //       },
-  //     },
-  //     { status: 400 }
-  //   );
-  // }
 
   const id = params.eventId;
   const dateTime = new Date(date);
@@ -238,38 +210,46 @@ export const action = async ({ request, params }: ActionArgs) => {
   const { _action, ...values } = Object.fromEntries(formData);
   if (typeof _action !== "string") return null;
   const updatedContributions = JSON.parse(_action);
-  console.log("🚀 ~ file: $eventId.updateEvent.tsx:241 ~ action ~ updatedContributions:", updatedContributions)
+  const contributions = await getContributions(id);
 
-  // vvvvv---updating contributions not working WIP!---vvvvv
-  const contributions = await getContributions(id)
-  contributions.forEach(async (e) => {
-    let remove = true;
-    for (let i = 0; i < updatedContributions.length; i++) {
-      if (e.id === updatedContributions[i].id) {
-        remove = false;
-        if (e.contributionName !== updatedContributions[i].contributionName) {
-          await updateContribution({ id: updatedContributions[i].id, contributionName: updatedContributions[i].contributionName })
+  if (updatedContributions.length === 0 && contributions.length > 0) {
+    contributions.forEach(async (e) => {
+      await deleteContribution({ id: e.id });
+    });
+  }
+
+  if (contributions.length === 0 && updatedContributions.length > 0) {
+    updatedContributions.forEach(async (e: { name: any }) => {
+      if (e.name !== "") {
+        await createContribution({ contributionName: e.name, eventId: id });
+      }
+    });
+  }
+
+  if (contributions.length > 0 && updatedContributions.length > 0) {
+    contributions.forEach(async (e) => {
+      let remove = true;
+      for (let i = 0; i < updatedContributions.length; i++) {
+        if (e.id === updatedContributions[i].id) {
+          remove = false;
+          if (e.contributionName !== updatedContributions[i].name) {
+            await updateContribution({
+              id: updatedContributions[i].id,
+              contributionName: updatedContributions[i].name,
+            });
+          }
         }
       }
-      console.log(remove);
-      // if (remove) { 
-      //   await deleteContribution({ id: e.id })
-      // }
-    }
-  });
-  updatedContributions.forEach(async (e: { id: string; contributionName: any; }) => {
-    if (e.id === "") {
-      await createContribution({ contributionName: e.contributionName, eventId: id })
-    }
-  })
-
-
-  
-  // return null;
-  
-
-  // const contributionId = params.contributionId;
-  // await updateContribution({ id: contributionId, contributionName, eventId: id });
+      if (remove) {
+        await deleteContribution({ id: e.id });
+      }
+    });
+    updatedContributions.forEach(async (e: { id: string; name: any }) => {
+      if (e.id === "" && e.name !== "") {
+        await createContribution({ contributionName: e.name, eventId: id });
+      }
+    });
+  }
 
   return redirect(`/${id}`);
 };
@@ -278,7 +258,7 @@ export default function UpdateEventRoute() {
   const user = useUser();
   const data = useLoaderData();
 
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData();
   const nameRef = useRef<HTMLInputElement>(null);
   const summaryRef = useRef<HTMLTextAreaElement>(null);
   const addressRef = useRef<HTMLInputElement>(null);
@@ -287,16 +267,17 @@ export default function UpdateEventRoute() {
   const stateRef = useRef<HTMLInputElement>(null);
   const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
-  const contributionRef = useRef<HTMLInputElement>(null);
-  
+
   const contributions = data.event.contributions;
-  const currentFormValues:{ name: string, id: string }[] = [];
+  const currentFormValues: { name: string; id: string }[] = [];
   if (contributions) {
-    contributions.forEach((e: { contributionName: string, id: string; }) => {
-      currentFormValues.push({ name: e.contributionName, id: e.id })
+    contributions.forEach((e: { contributionName: string; id: string }) => {
+      currentFormValues.push({ name: e.contributionName, id: e.id });
     });
   }
-  const [formValues, setFormValues] = useState<{ name: string, id: string }[]>(currentFormValues.length === 0 ? [{ name: "", id: "" }] : currentFormValues);
+  const [formValues, setFormValues] = useState<{ name: string; id: string }[]>(
+    currentFormValues.length === 0 ? [{ name: "", id: "" }] : currentFormValues
+  );
 
   const handleChange = (
     i: number,
@@ -336,8 +317,6 @@ export default function UpdateEventRoute() {
       zipRef.current?.focus();
     } else if (actionData?.errors?.dateTime) {
       dateTimeRef.current?.focus();
-    } else if (actionData?.errors?.contributionName) {
-      contributionRef.current?.focus();
     }
   }, [actionData]);
 
@@ -379,13 +358,10 @@ export default function UpdateEventRoute() {
               <Box sx={{ pl: ".75rem" }}>
                 <Typography sx={{ fontSize: ".75rem" }}>Created By</Typography>
                 <Typography sx={{ fontSize: ".75rem", fontWeight: "bold" }}>
-                  {user.displayName !== null
-                      ? user.displayName
-                      : user.email}
+                  {user.displayName !== null ? user.displayName : user.email}
                 </Typography>
               </Box>
             </div>
-
             <Box sx={{ display: "flex" }}>
               <Button
                 sx={{
@@ -407,7 +383,6 @@ export default function UpdateEventRoute() {
               </Button>
             </Box>
           </div>
-
           <TextField
             sx={{ mt: ".5rem", width: "100%" }}
             ref={nameRef}
@@ -419,27 +394,24 @@ export default function UpdateEventRoute() {
               actionData?.errors?.name ? "name-error" : undefined
             }
           />
-          {/* ------------------------------------------------------------------------------------------------------ */}
           <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
                 Details
               </Typography>
             </Box>
-
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
               <TextField
                 sx={{ width: "100%" }}
                 name="summary"
                 defaultValue={data.event.summary}
-              ></TextField>
+              />
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                     Location & Contact
                   </Typography>
-
                   <TextField
                     ref={addressRef}
                     name="streetAddress"
@@ -459,7 +431,6 @@ export default function UpdateEventRoute() {
                       {actionData.errors.streetAddress}
                     </div>
                   )}
-
                   <TextField
                     ref={unitRef}
                     name="unit"
@@ -475,7 +446,6 @@ export default function UpdateEventRoute() {
                       {actionData.errors.unit}
                     </div>
                   )}
-
                   <TextField
                     ref={cityRef}
                     name="city"
@@ -491,7 +461,6 @@ export default function UpdateEventRoute() {
                       {actionData.errors.city}
                     </div>
                   )}
-
                   <TextField
                     ref={stateRef}
                     name="state"
@@ -507,7 +476,6 @@ export default function UpdateEventRoute() {
                       {actionData.errors.state}
                     </div>
                   )}
-
                   <TextField
                     ref={zipRef}
                     name="zip"
@@ -525,7 +493,6 @@ export default function UpdateEventRoute() {
                   )}
                 </Box>
               </Box>
-
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Date & Time
               </Typography>
@@ -544,7 +511,6 @@ export default function UpdateEventRoute() {
                   {actionData.errors.dateTime}
                 </div>
               )}
-
               <Box
                 style={{
                   display: "flex",
@@ -578,36 +544,6 @@ export default function UpdateEventRoute() {
                   Add An Item
                 </Button>
               </Box>
-
-              {/* <div style={{ display: "flex", flexDirection: "row" }}>
-                <TextField
-                  ref={contributionRef}
-                  sx={{ width: "100%" }}
-                  name="contributionName"
-                  defaultValue={data.event.contributions[0].contributionName}
-                  aria-invalid={
-                    actionData?.errors?.contributionName ? true : undefined
-                  }
-                  aria-errormessage={
-                    actionData?.errors?.contributionName
-                      ? "contributionName-error"
-                      : undefined
-                  }
-                />
-                {actionData?.errors?.contributionName && (
-                  <div
-                    className="pt-1 text-red-700"
-                    id="contributionName-error"
-                  >
-                    {actionData.errors.contributionName}
-                  </div>
-                )}
-                <IconButton aria-label="delete" size="small">
-                  <Delete fontSize="inherit" />
-                </IconButton>
-                <div style={{ marginLeft: "2rem" }}></div>
-              </div>
-              <hr style={{ borderTop: "1px dashed #bbb" }} /> */}
               <div
                 style={{
                   display: "flex",
@@ -627,7 +563,6 @@ export default function UpdateEventRoute() {
                           name="contributionName"
                           value={element.name || ""}
                         />
-
                         <IconButton aria-label="delete" size="small">
                           <Delete
                             onClick={() => removeFormFields(index)}
@@ -644,7 +579,6 @@ export default function UpdateEventRoute() {
               </div>
             </Box>
           </Box>
-          {/* ------------------------------------------------------------------------------------------------------ */}
         </div>
       </Form>
     </div>

@@ -267,8 +267,11 @@ export default function EventRoute() {
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
-                <Typography>
-                  show your generosity and claim a few items to Bring with you!
+                <Typography>{data.event.contributions.length === 0 ?
+                    "your event doesn't have any contributions!  Hit the update buttom above to add some!"
+                  :
+                    "show your generosity and claim a few items to bring with you!"
+                  }
                 </Typography>
                 {data.event.contributions.map((contribution: any) => (
                   <ul style={{ listStyleType: "none", padding: "0" }}>
