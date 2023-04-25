@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
-import { json } from "@remix-run/node";
+
+import { json, redirect } from "@remix-run/node";
+
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
 import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
@@ -40,6 +42,7 @@ export async function action({ request, params }: ActionArgs) {
   const { _action, ...values } = Object.fromEntries(formData);
   if (_action === "delete") {
     await deleteEvent({ userId, id: eventId });
+    return redirect("/events");
   }
   if (typeof _action !== "string") {
     return null;
@@ -279,8 +282,11 @@ export default function EventRoute() {
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
-                <Typography>
-                  show your generosity and claim a few items to Bring with you!
+                <Typography>{data.event.contributions.length === 0 ?
+                    "your event doesn't have any contributions!  Hit the update buttom above to add some!"
+                  :
+                    "show your generosity and claim a few items to bring with you!"
+                  }
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
                   {data.event.contributions.map((contribution: any) => (
