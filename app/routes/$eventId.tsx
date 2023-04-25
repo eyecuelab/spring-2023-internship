@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
+import mapboxgl from "mapbox-gl";
 
 import { json, redirect } from "@remix-run/node";
 
@@ -50,7 +51,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error("Coordinates are not valid");
   }
 
-  const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${coordinates[0]},${coordinates[1]},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
+  const longitude = coordinates[0];
+  const latitude = coordinates[1];
+  const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${longitude},${latitude},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
+  console.log("🚀 ~ file: $eventId.tsx:58 ~ constloader:LoaderFunction= ~ mapUrl:", mapUrl);
+  
+  // const map = new mapboxgl.Map({
+  //   container: "map", // container id
+  //   style: "mapbox://styles/mapbox/streets-v12", // style URL
+  //   center: [longitude, latitude], // starting position [lng, lat]
+  //   zoom: 12, // starting zoom
+  // });
+
+  // new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
 
   return json({ event, mapUrl });
 };
