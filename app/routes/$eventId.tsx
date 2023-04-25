@@ -7,7 +7,11 @@ import { json, redirect } from "@remix-run/node";
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
 import Appbar from "~/components/Appbar";
 import { deleteEvent, getEvent } from "~/models/events.server";
-import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
+import {
+  claimItem,
+  getContribution,
+  unclaimItem,
+} from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
 import ReactMapGL, { Marker } from "react-map-gl";
@@ -27,8 +31,28 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!event) {
     throw new Response("Uh Oh! No event found.", { status: 404 });
   }
+  const address =
+    event.streetAddress +
+    " " +
+    event.city +
+    " " +
+    event.state +
+    " " +
+    event.zip;
+  const coordinates = await GetCoordinates(address)
+    .then((coordinates) => {
+      return coordinates;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  if (!Array.isArray(coordinates)) {
+    throw new Error("Coordinates are not valid");
+  }
 
-  return json({ event });
+  const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${coordinates[0]},${coordinates[1]},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
+
+  return json({ event, mapUrl });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -103,15 +127,6 @@ export default function EventRoute() {
     setValue(newValue);
   };
 
-  // const address = data.event.streetAddress + " " + data.event.city + " " + data.event.state + " " + data.event.zip;
-  // const coordinates = GetCoordinates(address).then((coordinates) => {
-  //       console.log(`Longitute: ${coordinates[0]}, Latitude: ${coordinates[1]}`);
-  //       return coordinates;
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });;
-  
   return (
     <Box>
       {user === undefined ? "" : <Appbar />}
@@ -266,7 +281,7 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      // backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${coordinates[0]},${coordinates[1]},9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
+                      backgroundImage: `${data.mapUrl}`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -275,18 +290,15 @@ export default function EventRoute() {
                       mt: "1rem",
                     }}
                     id="map"
-                  >
-                    
-                  </Box>
+                  ></Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
-                <Typography>{data.event.contributions.length === 0 ?
-                    "your event doesn't have any contributions!  Hit the update buttom above to add some!"
-                  :
-                    "show your generosity and claim a few items to bring with you!"
-                  }
+                <Typography>
+                  {data.event.contributions.length === 0
+                    ? "your event doesn't have any contributions!  Hit the update buttom above to add some!"
+                    : "show your generosity and claim a few items to bring with you!"}
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
                   {data.event.contributions.map((contribution: any) => (
