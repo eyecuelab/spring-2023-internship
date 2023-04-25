@@ -103,14 +103,14 @@ export default function EventRoute() {
     setValue(newValue);
   };
 
-  const address = data.event.streetAddress + " " + data.event.city + " " + data.event.state + " " + data.event.zip;
-  const coordinates = GetCoordinates(address).then((coordinates) => {
-        console.log(`Longitute: ${coordinates[0]}, Latitude: ${coordinates[1]}`);
-        return coordinates;
-      })
-      .catch((error) => {
-        console.error(error);
-      });;
+  // const address = data.event.streetAddress + " " + data.event.city + " " + data.event.state + " " + data.event.zip;
+  // const coordinates = GetCoordinates(address).then((coordinates) => {
+  //       console.log(`Longitute: ${coordinates[0]}, Latitude: ${coordinates[1]}`);
+  //       return coordinates;
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });;
   
   return (
     <Box>
@@ -266,7 +266,7 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${coordinates[0]},${coordinates[1]},9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
+                      // backgroundImage: `url(https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${coordinates[0]},${coordinates[1]},9.65,0/300x200?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
