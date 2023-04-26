@@ -83,13 +83,11 @@ const Document = withEmotionCache(
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
           <Document>
             <Outlet />
             <ScrollRestoration />
             <Scripts />
             <LiveReload />
           </Document>
-    </ThemeProvider>
   );
 }
