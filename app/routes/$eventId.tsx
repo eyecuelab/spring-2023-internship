@@ -51,6 +51,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Error("Coordinates are not valid");
   }
 
+  const mapImage = "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/geojson(%7B%22type%22%3A%22Point%22%2C%22coordinates%22%3A%5B-73.99%2C40.7%5D%7D)/-73.99,40.70,12/500x300?access_token=pk.eyJ1IjoiY2hyaXNrbG92ZSIsImEiOiJjbGdyMW52YnMxZXlsM2RudGl5MTNqMmtwIn0.gNa2FzN_LKdPMc0geTy-Kw";
+
   const longitude = coordinates[0];
   const latitude = coordinates[1];
   const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${longitude},${latitude},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
@@ -68,7 +70,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   // new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
 
-  return json({ event, mapUrl });
+  return json({ event, mapUrl, mapImage });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -293,7 +295,7 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      backgroundImage: `${data.mapUrl}`,
+                      // backgroundImage: `${data.mapUrl}`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -302,7 +304,9 @@ export default function EventRoute() {
                       mt: "1rem",
                     }}
                     id="map"
-                  ></Box>
+                  >
+                    <img src={data.mapImage} alt="map" />
+                  </Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
