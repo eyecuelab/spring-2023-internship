@@ -20,7 +20,6 @@ import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
 import { GetCoordinates } from "~/utils/Geocode";
-import Drawer from '@mui/material/Drawer';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // const userId = await requireUserId(request);
@@ -135,7 +134,6 @@ export default function EventRoute() {
   const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
-  const [open, setOpen] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -339,26 +337,22 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
-
                         <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
-                          <Button onClick={() => setOpen(true)}
-                            color="primary"
-                          sx={{
-                            fontFamily: "rasa",
-                            textTransform: "capitalize",
-                            width: "110px",
-                            pt: "8px",
-                            height: "1.75rem",
-                          }}>
-                          Discussion
-                          </Button>
+                          <Link to="discussion">
+                            <Button
+                              color="primary"
+                              sx={{
+                                fontFamily: "rasa",
+                                textTransform: "capitalize",
+                                width: "110px",
+                                pt: "8px",
+                                height: "1.75rem",
+                              }}
+                            >
+                              Discussion
+                            </Button>
+                          </Link>
                         </Box>
-
-                        <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-                          <h2>Drawer Contents</h2>
-                          <p>Here are some items in the drawer</p>
-                        </Drawer>
-
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
