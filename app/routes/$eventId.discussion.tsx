@@ -1,39 +1,58 @@
+import React from "react";
 import { Box, Typography } from "@mui/material";
 import Appbar from "~/components/Appbar";
+import io from "socket.io-client";
 
-//CODE TO START SOCKET SERVER
-const http = require('http').createServer();
-const io = require('socket.io')(http, {
-  cors: { origin: "*" }
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
-  socket.on('message', (message) =>     {
-      console.log(message);
-      io.emit('message', `${socket.id.substr(0,2)} said ${message}` );   
-  });
-});
-
-http.listen(8080, () => console.log('listening on http://localhost:8080') );
-//CODE TO DISPLAY MESSAGES SENT FORM SOCKET
-const socket = io('ws://localhost:8080');
-socket.on('message', text => {
-
-    const el = document.createElement('li');
-    el.innerHTML = text;
-    document.querySelector('ul').appendChild(el)
-
-});
-
-document.querySelector('button').onclick = () => {
-
-    const text = document.querySelector('input').value;
-    socket.emit('message', text)
-}
+type Message = {
+  id: number;
+  text: string;
+};
 
 export default function DiscussionRoute() {
+  const [messages, setMessages] = React.useState<Message[]>([]);
+
+  React.useEffect(() => {
+    const socket = io("ws://localhost:8080");
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server");
+    });
+
+    socket.on("message", (message: string) => {
+      const newMessage: Message = {
+        id: Date.now(),
+        text: message,
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    socket.on("connect_error", (error: Error) => {
+      console.error("Socket connection error:", error);
+    });
+
+    socket.on("connect_timeout", () => {
+      console.error("Socket connection timeout");
+    });
+
+    socket.on("error", (error: Error) => {
+      console.error("Socket error:", error);
+    });
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  const handleSendMessage = () => {
+    const input = document.querySelector<HTMLInputElement>("input");
+    const text = input?.value;
+    if (text) {
+      const socket = io("ws://localhost:8080");
+      socket.emit("message", text);
+      input.value = "";
+    }
+  };
+
   return (
     <div>
       <Appbar />
@@ -48,9 +67,13 @@ export default function DiscussionRoute() {
       >
         <Box style={{ margin: "8%" }}>
           <Typography> Discussion Room</Typography>
-          <ul></ul>
+          <ul>
+            {messages.map((message) => (
+              <li key={message.id}>{message.text}</li>
+            ))}
+          </ul>
           <input placeholder="message" />
-          <button>Send</button>
+          <button onClick={handleSendMessage}>Send</button>
         </Box>
       </Box>
     </div>
