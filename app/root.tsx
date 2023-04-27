@@ -74,8 +74,8 @@ const Document = withEmotionCache(
             padding: "0",
           }}
         >
-      {children}
-      </body>
+          {children}
+        </body>
       </html>
     );
   }
@@ -84,12 +84,12 @@ const Document = withEmotionCache(
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
-          <Document>
-            <Outlet />
-            <ScrollRestoration />
-            <Scripts />
-            <LiveReload />
-          </Document>
+      <Document>
+        <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+        <LiveReload />
+      </Document>
     </ThemeProvider>
   );
 }

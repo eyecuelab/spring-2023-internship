@@ -53,19 +53,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const longitude = coordinates[0];
   const latitude = coordinates[1];
-  const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${longitude},${latitude},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
-  console.log("🚀 ~ file: $eventId.tsx:58 ~ constloader:LoaderFunction= ~ mapUrl:", mapUrl);
-  
-  // const map = new mapboxgl.Map({
-  //   container: "map", // container id
-  //   style: "mapbox://styles/mapbox/streets-v12", // style URL
-  //   center: [longitude, latitude], // starting position [lng, lat]
-  //   zoom: 12, // starting zoom
-  // });
 
-  // new mapboxgl.Marker().setLngLat([longitude, latitude]).addTo(map);
+  const mapImage = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/geojson(%7B%22type%22%3A%22Point%22%2C%22coordinates%22%3A%5B${longitude}%2C${latitude}%5D%7D)/${longitude},${latitude},13/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`;
 
-  return json({ event, mapUrl });
+  return json({ event, mapImage });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -114,11 +105,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </Box>
   );
 }
@@ -294,7 +281,6 @@ export default function EventRoute() {
 
                   <Box
                     sx={{
-                      backgroundImage: `${data.mapUrl}`,
                       border: "1px solid #D3D3D3",
                       width: "530px",
                       height: "264px",
@@ -303,7 +289,17 @@ export default function EventRoute() {
                       mt: "1rem",
                     }}
                     id="map"
-                  ></Box>
+                  >
+                    <img
+                      src={data.mapImage}
+                      alt="map"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </Box>
                 </Box>
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
