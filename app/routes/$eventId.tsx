@@ -20,6 +20,7 @@ import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
 import { GetCoordinates } from "~/utils/Geocode";
+import Drawer from '@mui/material/Drawer';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // const userId = await requireUserId(request);
@@ -54,8 +55,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const longitude = coordinates[0];
   const latitude = coordinates[1];
   const mapUrl = `url(https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${longitude},${latitude},12,0/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN})`;
-  console.log("🚀 ~ file: $eventId.tsx:58 ~ constloader:LoaderFunction= ~ mapUrl:", mapUrl);
-  
+  console.log(
+    "🚀 ~ file: $eventId.tsx:58 ~ constloader:LoaderFunction= ~ mapUrl:",
+    mapUrl
+  );
+
   // const map = new mapboxgl.Map({
   //   container: "map", // container id
   //   style: "mapbox://styles/mapbox/streets-v12", // style URL
@@ -114,11 +118,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </Box>
   );
 }
@@ -135,6 +135,7 @@ export default function EventRoute() {
   const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
+  const [open, setOpen] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -338,9 +339,26 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
+
                         <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
+                          <Button onClick={() => setOpen(true)}
+                            color="primary"
+                          sx={{
+                            fontFamily: "rasa",
+                            textTransform: "capitalize",
+                            width: "110px",
+                            pt: "8px",
+                            height: "1.75rem",
+                          }}>
                           Discussion
+                          </Button>
                         </Box>
+
+                        <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+                          <h2>Drawer Contents</h2>
+                          <p>Here are some items in the drawer</p>
+                        </Drawer>
+
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
