@@ -1,14 +1,41 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
-import Appbar from "~/components/Appbar";
+import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import io from "socket.io-client";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import Appbar from "~/components/Appbar";
+import { requireUserId } from "~/services/session.server";
+import { getContribution } from "~/models/contributions.server";
 
 type Message = {
   id: number;
   text: string;
 };
 
+export const loader: LoaderFunction = async ({ request, params }) => {
+  const userId = await requireUserId(request);
+
+  const { contributionId } = params;
+  console.log(
+    "🚀 ~ file: $eventId.discussion.tsx:19 ~ constloader:LoaderFunction= ~ contributionId:",
+    contributionId
+  );
+  if (!contributionId) {
+    throw new Response("Uh Oh! There was no contribution found.", {
+      status: 404,
+    });
+  }
+  const contribution = await getContribution(contributionId);
+  if (!contribution) {
+    throw new Response("Uh Oh! No contribution found.", { status: 404 });
+  }
+
+  return json({ contribution });
+};
+
 export default function DiscussionRoute() {
+  const data = useLoaderData();
   const [messages, setMessages] = React.useState<Message[]>([]);
 
   React.useEffect(() => {
@@ -66,14 +93,30 @@ export default function DiscussionRoute() {
         }}
       >
         <Box style={{ margin: "8%" }}>
-          <Typography> Discussion Room</Typography>
+          <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
+            {data.contribution.contributionName}
+          </Typography>
+          <Typography variant="h6" fontFamily="rasa" sx={{ mt: ".5rem" }}>
+            Chat about this contribution!
+          </Typography>
+          <Divider/>
           <ul>
             {messages.map((message) => (
               <li key={message.id}>{message.text}</li>
             ))}
           </ul>
-          <input placeholder="message" />
-          <button onClick={handleSendMessage}>Send</button>
+          <TextField placeholder="Enter your text here...." />
+          
+          <Button onClick={handleSendMessage}
+          variant="outlined"
+          color="primary"
+          sx={{
+            fontFamily: "rasa",
+            textTransform: "capitalize",
+            width: "110px",
+            pt: "8px",
+            height: "1.75rem",
+          }}>Send</Button>
         </Box>
       </Box>
     </div>

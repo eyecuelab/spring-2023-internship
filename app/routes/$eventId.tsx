@@ -335,7 +335,7 @@ export default function EventRoute() {
                           {contribution.contributionName}
                         </Box>
                         <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
-                          <Link to="discussion">
+                          <Link to={`${contribution.id}`}>
                             <Button
                               color="primary"
                               sx={{
