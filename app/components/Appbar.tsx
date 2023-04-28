@@ -1,11 +1,12 @@
+import { Form } from "@remix-run/react";
+import { Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import logo from "../../public/img/logo.png";
 import { useUser } from "~/utils/utils";
-import { Typography } from "@mui/material";
 
 
 function Appbar() {
@@ -23,11 +24,11 @@ function Appbar() {
       }}
     >
       <img
-        alt="user image"
+        alt="logo"
         src={logo}
         style={{
-          height: "1.5rem",
-          width: "6rem",
+          height: "2.5rem",
+          width: "6.6rem",
           padding: ".5rem",
         }}
       />
@@ -39,19 +40,29 @@ function Appbar() {
           justifyContent: "space-between",
         }}
       >
-        <Button href="/events" variant="text" sx={{ color: "white" }}>
+        <Button href="/events" variant="text" 
+        sx={{ 
+          fontFamily: "rasa",
+          textTransform: "capitalize",
+          color: "white" 
+          }}>
           <Typography variant="body2" fontFamily="rasa">
             My GeTogethers
           </Typography>
         </Button>
 
-        <form action="/logout" method="post">
-          <Button type="submit" variant="text" style={{ color: "white" }}>
+        <Form action="/logout" method="post">
+          <Button type="submit" variant="text" 
+          sx={{ 
+            fontFamily: "rasa",
+            textTransform: "capitalize",
+            color: "white" 
+            }}>
             <Typography variant="body2" fontFamily="rasa">
               Logout
             </Typography>
           </Button>
-        </form>
+        </Form>
 
         <IconButton sx={{ p: 0 }}>
           <Avatar
