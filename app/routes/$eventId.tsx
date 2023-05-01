@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
-import { Avatar, Box, Button, Typography, Tabs, Tab } from "@mui/material";
+import { Avatar, Box, Button, Typography, Tabs, Tab, Drawer } from "@mui/material";
 import mapboxgl from "mapbox-gl";
 
 import { json, redirect } from "@remix-run/node";
@@ -15,7 +15,7 @@ import {
 } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
-import ReactMapGL, { Marker } from "react-map-gl";
+import ReactMapGL, { Anchor, Marker } from "react-map-gl";
 import avatar from "../../public/img/avatar.png";
 import MapImg from "~/images/map.png";
 import Checkmark from "~/images/checkmark.png";
@@ -122,6 +122,21 @@ export default function EventRoute() {
   const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = React.useState(0);
+  const [state, setState] = React.useState(false);
+
+  const toggleDrawer =
+    (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setState(open);
+    };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -334,9 +349,14 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
-                        <Box style={{ marginLeft: "auto", paddingTop: "3px" }}>
+{/* -------------------------------------------------------------------------------------------------------- */}
+                        <Box 
+                          style={{ marginLeft: "auto", paddingTop: "3px" }}
+                          onClick={toggleDrawer(true)}
+                          >
                           Discussion
                         </Box>
+{/* -------------------------------------------------------------------------------------------------------- */}
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
@@ -417,6 +437,22 @@ export default function EventRoute() {
           </Box>
         </Box>
       </Box>
+      {/* {(["left", "right", "top", "bottom"] as const).map((anchor) => (
+        <React.Fragment key={anchor}>
+          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
+          <Drawer
+            PaperProps={{
+              sx: { backgroundColor: "rgb(245, 245, 245)", left: "53%", width: "37%", top: "35px" }
+            }}
+            anchor={"left"}
+            open={state}
+            onClose={toggleDrawer(false)}
+          >
+            {/* {list("left")} */}
+            My discussion board!!!!
+          </Drawer>
+        {/* </React.Fragment>
+      ))} */}
     </Box>
   );
 }
