@@ -7,6 +7,8 @@ import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import Appbar from "~/components/Appbar";
 import { requireUserId } from "~/services/session.server";
 import { getContribution } from "~/models/contributions.server";
+import { createComment } from "~/models/comments.server";
+import { useUser } from "~/utils/utils";
 
 type Message = {
   id: number;
@@ -15,14 +17,10 @@ type Message = {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const userId = await requireUserId(request);
-
+  
   const { contributionId } = params;
-  console.log(
-    "🚀 ~ file: $eventId.discussion.tsx:19 ~ constloader:LoaderFunction= ~ contributionId:",
-    contributionId
-  );
-  if (!contributionId) {
-    throw new Response("Uh Oh! There was no contribution found.", {
+    if (!contributionId) {
+      throw new Response("Uh Oh! There was no contribution found.", {
       status: 404,
     });
   }
@@ -31,10 +29,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     throw new Response("Uh Oh! No contribution found.", { status: 404 });
   }
 
-  return json({ contribution });
+  return json({ contribution, userId });
 };
 
 export default function DiscussionRoute() {
+  const user = useUser();
   const data = useLoaderData();
   const [messages, setMessages] = React.useState<Message[]>([]);
 
@@ -74,11 +73,16 @@ export default function DiscussionRoute() {
     const input = document.querySelector<HTMLInputElement>("input");
     const text = input?.value;
     if (text) {
+      input.value = "";
       const socket = io("ws://localhost:8080");
       socket.emit("message", text);
-      input.value = "";
+      createComment({
+        post: text, 
+        contributionId: data.contribution.id, 
+        userId: data.userId,
+        });
     }
-  };
+    }
 
   return (
     <div>
@@ -102,7 +106,7 @@ export default function DiscussionRoute() {
           <Divider/>
           <ul>
             {messages.map((message) => (
-              <li key={message.id}>{message.text}</li>
+              <li key={message.id}><em>{user.email}</em> Said: {message.text}</li>
             ))}
           </ul>
           <TextField placeholder="Enter your text here...." />
