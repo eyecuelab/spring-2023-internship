@@ -441,6 +441,8 @@ export default function EventRoute() {
         <React.Fragment key={anchor}>
           <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
           <Drawer
+            hideBackdrop
+            variant="persistent"
             PaperProps={{
               sx: { backgroundColor: "rgb(245, 245, 245)", left: "53%", width: "37%", top: "35px" }
             }}
