@@ -1,25 +1,48 @@
 import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
-import { Avatar, Box, Button, Typography, Tabs, Tab, Drawer } from "@mui/material";
-import mapboxgl from "mapbox-gl";
-
 import { json, redirect } from "@remix-run/node";
+import { Avatar, Box, Button, Typography, Tabs, Tab, Drawer } from "@mui/material";
 
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
-import Appbar from "~/components/Appbar";
+import type { Contribution } from "@prisma/client";
+
 import { deleteEvent, getEvent } from "~/models/events.server";
-import {
-  claimItem,
-  getContribution,
-  unclaimItem,
-} from "~/models/contributions.server";
+import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
-import ReactMapGL, { Anchor, Marker } from "react-map-gl";
-import avatar from "../../public/img/avatar.png";
-import MapImg from "~/images/map.png";
-import Checkmark from "~/images/checkmark.png";
 import { GetCoordinates } from "~/utils/Geocode";
+import Checkmark from "~/images/checkmark.png";
+import Discussion from "~/components/Discussion";
+import Appbar from "~/components/Appbar";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Box
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </Box>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   // const userId = await requireUserId(request);
@@ -88,44 +111,16 @@ export async function action({ request, params }: ActionArgs) {
   return null;
 }
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </Box>
-  );
-}
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
 export default function EventRoute() {
   const data = useLoaderData();
   const user = useOptionalUser();
   const dateTime = new Date(data.event.dateTime);
-  const [value, setValue] = React.useState(0);
-  const [state, setState] = React.useState(false);
+  const [value, setValue] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [curContribution, setCurContribution] = useState<null | Contribution>(null);
 
   const toggleDrawer =
-    (open: boolean) =>
+    (open: boolean, contribution?: Contribution) =>
     (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
         event.type === "keydown" &&
@@ -135,7 +130,10 @@ export default function EventRoute() {
         return;
       }
 
-      setState(open);
+      if (contribution) {
+        setCurContribution(contribution);
+      }
+      setDrawerOpen(open);
     };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -152,6 +150,7 @@ export default function EventRoute() {
           minHeight: "100%",
           maxHeight: "auto",
           position: "absolute",
+          zIndex: "9999",
         }}
       >
         <Box style={{ margin: "8%" }}>
@@ -349,14 +348,12 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
-{/* -------------------------------------------------------------------------------------------------------- */}
-                        <Box 
+                        <Box
                           style={{ marginLeft: "auto", paddingTop: "3px" }}
-                          onClick={toggleDrawer(true)}
-                          >
+                          onClick={toggleDrawer(true, contribution)}
+                        >
                           Discussion
                         </Box>
-{/* -------------------------------------------------------------------------------------------------------- */}
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
@@ -437,24 +434,29 @@ export default function EventRoute() {
           </Box>
         </Box>
       </Box>
-      {/* {(["left", "right", "top", "bottom"] as const).map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
-          <Drawer
-            hideBackdrop
-            variant="persistent"
-            PaperProps={{
-              sx: { backgroundColor: "rgb(245, 245, 245)", left: "53%", width: "37%", top: "35px" }
-            }}
-            anchor={"left"}
-            open={state}
-            onClose={toggleDrawer(false)}
-          >
-            {/* {list("left")} */}
-            My discussion board!!!!
-          </Drawer>
-        {/* </React.Fragment>
-      ))} */}
+      <Drawer
+        hideBackdrop
+        variant="persistent"
+        PaperProps={{
+          sx: {
+            position: "",
+            backgroundColor: "rgba(239, 239, 239, 1)",
+            left: "53%",
+            width: "37%",
+            top: "35px",
+          },
+        }}
+        anchor={"left"}
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <h2 onClick={toggleDrawer(false)}>&lt;-- BACK</h2>
+        {curContribution !== null ? (
+          <Discussion contribution={curContribution} />
+        ) : (
+          <></>
+        )}
+      </Drawer>
     </Box>
   );
 }

@@ -21,6 +21,7 @@ function Appbar() {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        zIndex: "10000"
       }}
     >
       <img
