@@ -13,24 +13,6 @@ import { renderToPipeableStream } from "react-dom/server";
 import {Server as WebSocketServer} from "socket.io";
 
 const ABORT_DELAY = 5_000;
-const http = io("http").createServer();
-const webSocketServer = new WebSocketServer("socket.io")(http, {
-  cors: { origin: "*" },
-});
-
-//Run Socket globally 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  //Query db for everything the client may need 
-
-  socket.on("message", (message) => {
-    console.log(message);
-    //Emit message to all clients
-    io.emit("message", `${socket.id.substr(0, 2)} said ${message}`);
-  });
-});
-http.listen(8080, () => console.log("listening on http://localhost:8080"));
-
 
 export default function handleRequest(
   request: Request,

@@ -76,11 +76,11 @@ export default function DiscussionRoute() {
       input.value = "";
       const socket = io("ws://localhost:8080");
       socket.emit("message", text);
-      createComment({
-        post: text, 
-        contributionId: data.contribution.id, 
-        userId: data.userId,
-        });
+      // createComment({
+      //   post: text, 
+      //   contributionId: data.contribution.id, 
+      //   userId: data.userId,
+      //   });
     }
     }
 
@@ -106,7 +106,7 @@ export default function DiscussionRoute() {
           <Divider/>
           <ul>
             {messages.map((message) => (
-              <li key={message.id}><em>{user.email}</em> Said: {message.text}</li>
+              <li key={message.id}><strong>{user.email}</strong>:    {message.text}</li>
             ))}
           </ul>
           <TextField placeholder="Enter your text here...." />
