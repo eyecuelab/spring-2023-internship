@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Link, useActionData, useSearchParams } from "@remix-run/react";
+import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { GoogleProfile, SocialsProvider } from "remix-auth-socials";
 
@@ -9,6 +9,18 @@ import { createUser, getUserByEmail, verifyLogin } from "~/models/user.server";
 import { createUserSession, getUserId } from "~/services/session.server";
 import { safeRedirect, validateEmail } from "~/utils/utils";
 import { authenticator } from "~/services/auth.server";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from "@mui/material";
+import BlackLogo from "~/images/black-logo.png";
+import GoogleLogo from "~/images/google-logo.png";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const googleUser = (await authenticator.isAuthenticated(
@@ -118,7 +130,6 @@ export default function Login() {
   const redirectTo = searchParams.get("redirectTo") || "/events";
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  
 
   useEffect(() => {
     console.log(`ActionData:${actionData}`);
@@ -129,9 +140,8 @@ export default function Login() {
     }
   }, [actionData]);
 
-
   return (
-    <div
+    <Box
       style={{
         backgroundColor: "white",
         width: "53%",
@@ -139,39 +149,37 @@ export default function Login() {
         position: "absolute",
       }}
     >
-      <div
+      <Box
         data-light=""
         style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%" }}
       >
-        <h1>Login/Register</h1>
-        <form method="post">
+        <Link to="/">
+          <img src={BlackLogo} style={{ height: "40px" }} alt="Black logo." />
+        </Link>
+        <Form method="post">
           <input type="hidden" name="redirectTo" value={redirectTo} />
-          <fieldset>
-            <legend className="sr-only">Login or Register?</legend>
-            <label>
-              <input
-                type="radio"
-                name="loginType"
-                value="login"
-                defaultChecked={true}
-              />{" "}
-              Login
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="loginType"
-                value="register"
-              />{" "}
-              Register
-            </label>
-          </fieldset>
-          <div>
-            <label htmlFor="email">Email address</label>
-            <div>
-              <input
+          <FormLabel>Login or Register?</FormLabel>
+          <RadioGroup defaultValue="login" name="loginType">
+            <FormControlLabel
+              value="login"
+              name="loginType"
+              control={<Radio />}
+              label="Login"
+            />
+            <FormControlLabel
+              value="register"
+              name="loginType"
+              control={<Radio />}
+              label="Register"
+            />
+          </RadioGroup>
+          <Box>
+            <Box>
+              <TextField
                 ref={emailRef}
+                sx={{ my: 1, backgroundColor: "#f5f5f5", }}
                 id="email"
+                placeholder="Email Address"
                 required
                 autoFocus={true}
                 name="email"
@@ -181,38 +189,73 @@ export default function Login() {
                 aria-describedby="email-error"
               />
               {actionData?.errors?.email && (
-                <div id="email-error">{actionData.errors.email}</div>
+                <Box id="email-error">{actionData.errors.email}</Box>
               )}
-            </div>
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <div>
-              <input
+            </Box>
+          </Box>
+          <Box>
+            <Box>
+              <TextField
+                sx={{ my: 1, backgroundColor: "#f5f5f5", }}
                 id="password"
                 ref={passwordRef}
                 name="password"
                 type="password"
                 autoComplete="current-password"
+                placeholder="Password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
               />
               {actionData?.errors?.password && (
-                <div id="password-error">{actionData.errors.password}</div>
+                <Box id="password-error">{actionData.errors.password}</Box>
               )}
-            </div>
-          </div>
-          <button type="submit" className="button">
+            </Box>
+          </Box>
+          <Button
+            type="submit"
+            sx={{
+              fontFamily: "rasa",
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              pl: "1.5rem",
+              pr: "1.5rem",
+              pt: "8px",
+              height: "1.75rem",
+              alignSelf: "stretch",
+            }}
+            variant="outlined"
+            color="primary"
+          >
             Submit
-          </button>
-        </form>
-        <form method="post" action={`/auth/${SocialsProvider.GOOGLE}`}>
-          <button>Login with Google</button>
-        </form>
-        <div className="links">
-          <Link to="/">Home</Link>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Form>
+        <Box sx={{ textAlign: "center" }}>
+          <Typography>OR</Typography>
+          <Form method="post" action={`/auth/${SocialsProvider.GOOGLE}`}>
+            <Button
+              type="submit"
+              sx={{
+                fontFamily: "rasa",
+                fontWeight: "bold",
+                textTransform: "capitalize",
+                pl: "1.5rem",
+                pr: "1.5rem",
+                pt: "8px",
+                height: "1.75rem",
+                alignSelf: "stretch",
+              }}
+              color="primary"
+            >
+              <img
+                src={GoogleLogo}
+                style={{ height: "40px" }}
+                alt="Black logo."
+              />
+              Login with Google
+            </Button>
+          </Form>
+        </Box>
+      </Box>
+    </Box>
   );
 }
