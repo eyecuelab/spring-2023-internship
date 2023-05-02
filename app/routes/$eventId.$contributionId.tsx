@@ -2,13 +2,14 @@ import React from "react";
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import Appbar from "~/components/Appbar";
 import { requireUserId } from "~/services/session.server";
 import { getContribution } from "~/models/contributions.server";
-import { createComment } from "~/models/comments.server";
 import { useUser } from "~/utils/utils";
+
+import socket from "~/utils/socket"
 
 type Message = {
   id: number;
@@ -38,16 +39,17 @@ export default function DiscussionRoute() {
   const [messages, setMessages] = React.useState<Message[]>([]);
 
   React.useEffect(() => {
-    const socket = io("ws://localhost:8080");
+    // const socket = io("ws://localhost:8080");
 
     socket.on("connect", () => {
       console.log("Connected to socket server");
     });
 
-    socket.on("message", (message: string) => {
+    socket.on("message", (payload) => {
+      let name = payload.user.displayName ? payload.user.displayName : payload.user.email
       const newMessage: Message = {
         id: Date.now(),
-        text: message,
+        text: `${name} said: ${payload.post}`,
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -74,13 +76,15 @@ export default function DiscussionRoute() {
     const text = input?.value;
     if (text) {
       input.value = "";
-      const socket = io("ws://localhost:8080");
-      socket.emit("message", text);
-      // createComment({
-      //   post: text, 
-      //   contributionId: data.contribution.id, 
-      //   userId: data.userId,
-      //   });
+      const payload = {
+        post: text,
+        contributionId: data.contribution.id,
+        userId: data.userId,
+        user: user
+      }
+
+      // const socket = io("ws://localhost:8080");
+      socket.emit("message", payload);
     }
     }
 
@@ -106,7 +110,7 @@ export default function DiscussionRoute() {
           <Divider/>
           <ul>
             {messages.map((message) => (
-              <li key={message.id}><strong>{user.email}</strong>:    {message.text}</li>
+              <li key={message.id}>{message.text}</li>
             ))}
           </ul>
           <TextField placeholder="Enter your text here...." />
