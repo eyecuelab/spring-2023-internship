@@ -292,7 +292,6 @@ export default function EventRoute() {
                       sx={{ whiteSpace: "nowrap" }}
                     >{`${dateTime.toDateString()} - ${dateTime.toLocaleTimeString()}`}</Typography>
                   </Box>
-
                   <Box
                     sx={{
                       border: "1px solid #D3D3D3",
