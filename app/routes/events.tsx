@@ -86,7 +86,7 @@ export default function EventsRoute() {
             </Typography>
             <Divider />
 
-            <MenuItem>
+            <MenuItem sx={{ py: 2 }}>
               <ListItemIcon>
                 <CelebrationOutlined fontSize="medium" />
               </ListItemIcon>
@@ -103,7 +103,7 @@ export default function EventsRoute() {
               </Typography>
             </MenuItem>
 
-            <MenuItem>
+            <MenuItem sx={{ py: 2 }}>
               <ListItemIcon>
                 <CalendarMonthOutlined fontSize="medium" />
               </ListItemIcon>
@@ -122,7 +122,7 @@ export default function EventsRoute() {
             <ul>
               <li>Work in progress</li>
             </ul>
-            <MenuItem>
+            <MenuItem sx={{ py: 2 }}>
               <ListItemIcon>
                 <AddOutlinedIcon fontSize="medium" />
               </ListItemIcon>
