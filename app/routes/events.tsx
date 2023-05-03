@@ -39,7 +39,6 @@ export default function EventsRoute() {
   return (
     <Box>
       <Appbar />
-
       <Box
         style={{
           backgroundColor: "white",
@@ -49,7 +48,14 @@ export default function EventsRoute() {
           display: "flex",
         }}
       >
-        <Paper sx={{ width: 200, maxWidth: "100%", mt: "5%" }}>
+        <Paper
+          sx={{
+            width: 200,
+            maxWidth: "100%",
+            mt: "5%",
+            backgroundColor: "rgb(245, 245, 245)",
+          }}
+        >
           <MenuList>
             <Typography
               sx={{
@@ -69,34 +75,39 @@ export default function EventsRoute() {
               <ListItemIcon>
                 <CelebrationOutlined fontSize="medium" />
               </ListItemIcon>
-              <Typography
-                sx={{
-                  fontFamily: "rasa",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  fontSize: "large",
-                }}
-                color="primary"
-              >
-                Your Events
-              </Typography>
+              <Link to="/events">
+                <Button
+                  sx={{
+                    fontFamily: "rasa",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    fontSize: "large",
+                  }}
+                  color="primary"
+                >
+                  Your Events
+                </Button>
+              </Link>
             </MenuItem>
 
             <MenuItem sx={{ py: 2 }}>
               <ListItemIcon>
                 <CalendarMonthOutlined fontSize="medium" />
               </ListItemIcon>
-              <Typography
-                sx={{
-                  fontFamily: "rasa",
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  fontSize: "large",
-                }}
-                color="primary"
-              >
-                Attending Events
-              </Typography>
+              <Link to="">
+                <Button
+                  sx={{
+                    fontFamily: "rasa",
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    fontSize: "large",
+                  }}
+                  color="primary"
+                  disabled
+                >
+                  Attending Events
+                </Button>
+              </Link>
             </MenuItem>
             <ul>
               <li>Work in progress</li>
@@ -127,8 +138,6 @@ export default function EventsRoute() {
             right: "0%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
           }}
         >
           <Typography
@@ -137,25 +146,30 @@ export default function EventsRoute() {
               fontWeight: "bold",
               textTransform: "capitalize",
               fontSize: "large",
+              alignSelf: "center",
             }}
             color="black"
             variant="body2"
           >
             Select an event to view the details!
           </Typography>
-          <ul>
-            {data.events.map((event) => (
-              <ListItem key={event.id}>
-                <Card sx={{ minWidth: 275, textAlign: "center" }}>
-                  <CardContent>
-                    <Link prefetch="intent" to={`/${event.id}`}>
-                      {event.name}
-                    </Link>
-                  </CardContent>
-                </Card>
-              </ListItem>
-            ))}
-          </ul>
+
+          {data.events.map((event) => (
+            <ListItem key={event.id}>
+              <Card
+                sx={{
+                  minWidth: 200,
+                  textAlign: "center",
+                }}
+              >
+                <CardContent>
+                  <Link prefetch="intent" to={`/${event.id}`}>
+                    {event.name}
+                  </Link>
+                </CardContent>
+              </Card>
+            </ListItem>
+          ))}
         </Box>
       </Box>
       {/* <ul>
