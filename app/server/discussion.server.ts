@@ -9,7 +9,6 @@ io.on("connection", (socket) => {
   //Query db for everything the client may need 
 
   socket.on("message", (payload) => {
-    console.log("🚀 ~ file: discussion.server.ts:12 ~ socket.on ~ payload:", payload)
     //Emit message to all clients
     io.emit("new-message", payload);
   });
