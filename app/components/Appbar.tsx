@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
@@ -24,6 +24,7 @@ function Appbar() {
         zIndex: "10000"
       }}
     >
+      <Link to="/">
       <img
         alt="logo"
         src={logo}
@@ -33,6 +34,7 @@ function Appbar() {
           padding: ".5rem",
         }}
       />
+      </Link>
       <Box
         sx={{
           pr: 2,
