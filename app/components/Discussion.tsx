@@ -94,7 +94,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
     <Box
       sx={{
         mx: "10%",
-        my: "2%"
+        my: "2%",
       }}
     >
       <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
@@ -110,7 +110,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         ))}
       </ul>
       <TextField
-        sx={{ backgroundColor: "white" }}
+        size="small"
+        sx={{
+          backgroundColor: "white",
+        }}
         placeholder="Enter your text here...."
       />
       <Button
@@ -120,7 +123,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         sx={{
           fontFamily: "rasa",
           textTransform: "capitalize",
-          width: "110px",
+          width: "1.75rem",
           pt: "8px",
           height: "1.75rem",
         }}
