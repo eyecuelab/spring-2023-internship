@@ -14,17 +14,12 @@ import {
   Divider,
   ListItem,
   ListItemIcon,
-  ListItemText,
   MenuItem,
   MenuList,
   Paper,
   Typography,
 } from "@mui/material";
 import {
-  ContentCut,
-  ContentCopy,
-  ContentPaste,
-  Cloud,
   CelebrationOutlined,
   CalendarMonthOutlined,
 } from "@mui/icons-material";
@@ -44,22 +39,6 @@ export default function EventsRoute() {
   return (
     <Box>
       <Appbar />
-      {/* <Drawer
-        hideBackdrop
-        variant="permanent"
-        PaperProps={{
-          sx: {
-            position: "",
-            backgroundColor: "rgba(239, 239, 239, 1)",
-            left: "0%",
-            width: "15%",
-            top: "35px",
-          },
-        }}
-        anchor={"left"}
-        open={true}
-      > */}
-      {/* </Drawer> */}
 
       <Box
         style={{
