@@ -91,7 +91,12 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   };
 
   return (
-    <Box>
+    <Box
+      sx={{
+        mx: "10%",
+        my: "2%"
+      }}
+    >
       <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
         {contribution.contributionName}
       </Typography>
@@ -104,7 +109,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           <li key={message.id}>{message.text}</li>
         ))}
       </ul>
-      <TextField placeholder="Enter your text here...." />
+      <TextField
+        sx={{ backgroundColor: "white" }}
+        placeholder="Enter your text here...."
+      />
       <Button
         onClick={handleSendMessage}
         variant="outlined"

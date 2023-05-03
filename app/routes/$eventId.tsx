@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
-import { Avatar, Box, Button, Typography, Tabs, Tab, Drawer } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Typography,
+  Tabs,
+  Tab,
+  Drawer,
+} from "@mui/material";
 
 import type { LoaderFunction, ActionArgs } from "@remix-run/node";
 import type { Contribution } from "@prisma/client";
 
 import { deleteEvent, getEvent } from "~/models/events.server";
-import { claimItem, getContribution, unclaimItem } from "~/models/contributions.server";
+import {
+  claimItem,
+  getContribution,
+  unclaimItem,
+} from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
 import { GetCoordinates } from "~/utils/Geocode";
 import Checkmark from "~/images/checkmark.png";
 import Discussion from "~/components/Discussion";
 import Appbar from "~/components/Appbar";
+import BackArrow from "../images/arrow.png";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -117,7 +130,9 @@ export default function EventRoute() {
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [curContribution, setCurContribution] = useState<null | Contribution>(null);
+  const [curContribution, setCurContribution] = useState<null | Contribution>(
+    null
+  );
 
   const toggleDrawer =
     (open: boolean, contribution?: Contribution) =>
@@ -449,7 +464,12 @@ export default function EventRoute() {
         open={drawerOpen}
         onClose={toggleDrawer(false)}
       >
-        <h2 onClick={toggleDrawer(false)}>&lt;-- BACK</h2>
+        <img
+          src={BackArrow}
+          alt="back-arrow"
+          style={{ height: "25px", width: "25px", margin: "10%" }}
+          onClick={toggleDrawer(false)}
+        />
         {curContribution !== null ? (
           <Discussion contribution={curContribution} />
         ) : (
