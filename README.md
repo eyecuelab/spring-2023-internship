@@ -12,6 +12,17 @@ npm run dev
 
 This starts your app in development mode, rebuilding assets on file changes.
 
+## Socket.io Server
+
+From your terminal:
+Navigate to the app/server directory and run the following command.
+
+```sh
+$ node discussion.server.ts
+```
+
+This starts your app in development mode, rebuilding assets on file changes.
+
 ## Deployment
 
 First, build your app for production:

@@ -10,6 +10,7 @@ import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
+import {Server as WebSocketServer} from "socket.io";
 
 const ABORT_DELAY = 5_000;
 
@@ -117,3 +118,30 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY);
   });
 }
+
+// // import io from "socket.io-client";
+// import { createComment } from "~/models/comments.server";
+// import socket from "~/utils/socket"
+
+// // const socket = io("ws://localhost:8080");
+
+//     socket.on("connect", () => {
+//       console.log("Connected to socket server");
+//     });
+
+//     socket.on("message", (payload) => {
+//       createComment(payload.post, payload.contributionId, payload.user.id)
+//     });
+
+//     socket.on("connect_error", (error: Error) => {
+//       console.error("Socket connection error:", error);
+//     });
+
+//     socket.on("connect_timeout", () => {
+//       console.error("Socket connection timeout");
+//     });
+
+//     socket.on("error", (error: Error) => {
+//       console.error("Socket error:", error);
+//     });
+
