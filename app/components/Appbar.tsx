@@ -1,5 +1,5 @@
-import { Form } from "@remix-run/react";
-import { Typography } from "@mui/material";
+import { Form, Link } from "@remix-run/react";
+import { Divider, Typography } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
@@ -7,7 +7,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import logo from "../../public/img/logo.png";
 import { useUser } from "~/utils/utils";
-
 
 function Appbar() {
   const user = useUser();
@@ -21,18 +20,20 @@ function Appbar() {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
-        zIndex: "10000"
+        zIndex: "10000",
       }}
     >
-      <img
-        alt="logo"
-        src={logo}
-        style={{
-          height: "2.5rem",
-          width: "6.6rem",
-          padding: ".5rem",
-        }}
-      />
+      <Link to="/">
+        <img
+          alt="logo"
+          src={logo}
+          style={{
+            height: "2.5rem",
+            width: "6.6rem",
+            padding: ".5rem",
+          }}
+        />
+      </Link>
       <Box
         sx={{
           pr: 2,
@@ -41,24 +42,40 @@ function Appbar() {
           justifyContent: "space-between",
         }}
       >
-        <Button href="/events" variant="text" 
-        sx={{ 
-          fontFamily: "rasa",
-          textTransform: "capitalize",
-          color: "white" 
-          }}>
+        <Button
+          href="/events"
+          variant="text"
+          sx={{
+            fontFamily: "rasa",
+            textTransform: "capitalize",
+            color: "white"
+          }}
+        >
           <Typography variant="body2" fontFamily="rasa">
             My GeTogethers
           </Typography>
         </Button>
 
+        <Divider
+          orientation="vertical"
+          style={{
+            height: ".8rem",
+            alignSelf: "center",
+            borderColor: "white",
+            padding: 1
+          }}
+        />
+
         <Form action="/logout" method="post">
-          <Button type="submit" variant="text" 
-          sx={{ 
-            fontFamily: "rasa",
-            textTransform: "capitalize",
-            color: "white" 
-            }}>
+          <Button
+            type="submit"
+            variant="text"
+            sx={{
+              fontFamily: "rasa",
+              textTransform: "capitalize",
+              color: "white",
+            }}
+          >
             <Typography variant="body2" fontFamily="rasa">
               Logout
             </Typography>

@@ -180,13 +180,13 @@ export default function Login() {
                 sx={{ my: 1, backgroundColor: "#f5f5f5", }}
                 id="email"
                 placeholder="Email Address"
-                required
                 autoFocus={true}
                 name="email"
                 type="email"
                 autoComplete="email"
                 aria-invalid={actionData?.errors?.email ? true : undefined}
                 aria-describedby="email-error"
+                required
               />
               {actionData?.errors?.email && (
                 <Box id="email-error">{actionData.errors.email}</Box>
@@ -205,6 +205,7 @@ export default function Login() {
                 placeholder="Password"
                 aria-invalid={actionData?.errors?.password ? true : undefined}
                 aria-describedby="password-error"
+                required
               />
               {actionData?.errors?.password && (
                 <Box id="password-error">{actionData.errors.password}</Box>

@@ -321,7 +321,7 @@ export default function UpdateEventRoute() {
   }, [actionData]);
 
   return (
-    <div>
+    <Box>
       <Appbar />
       <Form
         method="post"
@@ -333,15 +333,15 @@ export default function UpdateEventRoute() {
           position: "absolute",
         }}
       >
-        <div style={{ margin: "8%" }}>
-          <div
+        <Box style={{ margin: "8%" }}>
+          <Box
             style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
-            <div
+            <Box
               style={{
                 marginLeft: "1rem",
                 marginTop: "1rem",
@@ -361,7 +361,7 @@ export default function UpdateEventRoute() {
                   {user.displayName !== null ? user.displayName : user.email}
                 </Typography>
               </Box>
-            </div>
+            </Box>
             <Box sx={{ display: "flex" }}>
               <Button
                 sx={{
@@ -382,9 +382,10 @@ export default function UpdateEventRoute() {
                 Publish
               </Button>
             </Box>
-          </div>
+          </Box>
           <TextField
-            sx={{ mt: ".5rem", width: "100%" }}
+            sx={{ mt: ".5rem", width: "100%", backgroundColor: "white", outline: "none" }}
+            
             ref={nameRef}
             name="name"
             placeholder="name"
@@ -396,23 +397,24 @@ export default function UpdateEventRoute() {
           />
           <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Typography sx={{ borderBottom: 1, borderColor: "divider", }}>
                 Details
               </Typography>
             </Box>
             <Box sx={{ mt: "1rem" }}>
               <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
               <TextField
-                sx={{ width: "100%" }}
+                sx={{ width: "100%", backgroundColor: "white" }}
                 name="summary"
                 defaultValue={data.event.summary}
               />
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
-                  <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                  <Typography sx={{ fontWeight: "bold", mt: "1rem", }}>
                     Location & Contact
                   </Typography>
                   <TextField
+                  sx={{ backgroundColor: "white" }}
                     ref={addressRef}
                     name="streetAddress"
                     placeholder="street address"
@@ -427,11 +429,12 @@ export default function UpdateEventRoute() {
                     }
                   />
                   {actionData?.errors?.streetAddress && (
-                    <div className="pt-1 text-red-700" id="address-error">
+                    <Box className="pt-1 text-red-700" id="address-error">
                       {actionData.errors.streetAddress}
-                    </div>
+                    </Box>
                   )}
                   <TextField
+                  sx={{ backgroundColor: "white" }}
                     ref={unitRef}
                     name="unit"
                     placeholder="unit #"
@@ -442,11 +445,12 @@ export default function UpdateEventRoute() {
                     }
                   />
                   {actionData?.errors?.unit && (
-                    <div className="pt-1 text-red-700" id="unit-error">
+                    <Box className="pt-1 text-red-700" id="unit-error">
                       {actionData.errors.unit}
-                    </div>
+                    </Box>
                   )}
                   <TextField
+                  sx={{ backgroundColor: "white" }}
                     ref={cityRef}
                     name="city"
                     placeholder="city"
@@ -457,11 +461,12 @@ export default function UpdateEventRoute() {
                     }
                   />
                   {actionData?.errors?.city && (
-                    <div className="pt-1 text-red-700" id="city-error">
+                    <Box className="pt-1 text-red-700" id="city-error">
                       {actionData.errors.city}
-                    </div>
+                    </Box>
                   )}
                   <TextField
+                  sx={{ backgroundColor: "white" }}
                     ref={stateRef}
                     name="state"
                     placeholder="state"
@@ -472,11 +477,12 @@ export default function UpdateEventRoute() {
                     }
                   />
                   {actionData?.errors?.state && (
-                    <div className="pt-1 text-red-700" id="state-error">
+                    <Box className="pt-1 text-red-700" id="state-error">
                       {actionData.errors.state}
-                    </div>
+                    </Box>
                   )}
                   <TextField
+                  sx={{ backgroundColor: "white" }}
                     ref={zipRef}
                     name="zip"
                     placeholder="zip"
@@ -487,9 +493,9 @@ export default function UpdateEventRoute() {
                     }
                   />
                   {actionData?.errors?.zip && (
-                    <div className="pt-1 text-red-700" id="zip-error">
+                    <Box className="pt-1 text-red-700" id="zip-error">
                       {actionData.errors.zip}
-                    </div>
+                    </Box>
                   )}
                 </Box>
               </Box>
@@ -497,6 +503,7 @@ export default function UpdateEventRoute() {
                 Date & Time
               </Typography>
               <Input
+              sx={{ backgroundColor: "white" }}
                 ref={dateTimeRef}
                 type="dateTime-local"
                 name="dateTime"
@@ -507,9 +514,9 @@ export default function UpdateEventRoute() {
                 }
               />
               {actionData?.errors?.dateTime && (
-                <div className="pt-1 text-red-700" id="dateTime-error">
+                <Box className="pt-1 text-red-700" id="dateTime-error">
                   {actionData.errors.dateTime}
-                </div>
+                </Box>
               )}
               <Box
                 style={{
@@ -544,7 +551,7 @@ export default function UpdateEventRoute() {
                   Add An Item
                 </Button>
               </Box>
-              <div
+              <Box
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -558,7 +565,7 @@ export default function UpdateEventRoute() {
                     <li className="form-inline" key={index}>
                       <Box sx={{ display: "flex", flexDirection: "row" }}>
                         <TextField
-                          sx={{ width: "100%" }}
+                          sx={{ width: "100%", backgroundColor: "white" }}
                           onChange={(e) => handleChange(index, e)}
                           name="contributionName"
                           value={element.name || ""}
@@ -576,11 +583,11 @@ export default function UpdateEventRoute() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Box>
             </Box>
           </Box>
-        </div>
+        </Box>
       </Form>
-    </div>
+    </Box>
   );
 }
