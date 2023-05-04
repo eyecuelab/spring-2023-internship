@@ -30,6 +30,28 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
 
   useEffect(() => {
     setMessages([]);
+    
+    fetch("/resource/createComment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contributionId: contribution.id }),
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        data.forEach((element: any) => {
+          const name = element.user.displayName
+            ? element.user.displayName
+            : element.user.email;
+          const newMessage: Message = {
+            id: element.createdAt,
+            text: `${name} said: ${element.post}`,
+          };
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        })
+      )
+      .catch((error) => console.error(error));
   }, [contribution]);
 
   useEffect(() => {
@@ -86,18 +108,17 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         userId: user.id,
         user: user,
       };
-// --------------------------------------------------------------------------------------------------
-      fetch('/resource/createComment', {
-        method: 'POST',
+
+      fetch("/resource/createComment", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ payload })
+        body: JSON.stringify({ payload }),
       })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error(error))
-// --------------------------------------------------------------------------------------------------
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
+
       socket.emit("message", payload);
     }
   };

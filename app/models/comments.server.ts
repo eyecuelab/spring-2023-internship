@@ -32,3 +32,11 @@ export function createComment({
     },
   });
 } 
+
+export async function getCommentsByContributionId(contributionId: string) {
+  return prisma.comment.findMany({
+    where: { contributionId },
+    include: { user: true },
+    orderBy: { createdAt: "asc" }
+  })
+}

@@ -11,7 +11,7 @@ export async function getEventsByUserId(userId: string) {
   });
 }
 
-export async function getEvent(id: string ) {
+export async function getEvent(id: string) {
   return prisma.event.findUnique({ 
     where: { id },
     include: { 
