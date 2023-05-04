@@ -1,5 +1,13 @@
 import React, { FC, useEffect } from "react";
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import type { Contribution } from "@prisma/client";
 import type { User } from "@prisma/client";
@@ -8,6 +16,7 @@ import { useUser } from "~/utils/utils";
 import socket from "~/utils/socket";
 import LikeButton from "../images/like.png";
 import DisLikeButton from "../images/dislike.png";
+import Avatar1 from "../../public/img/avatar1.png";
 
 type Message = {
   id: number;
@@ -111,23 +120,75 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" fontFamily="rasa" sx={{ mt: ".5rem" }}>
-          Chat about this contribution!
-        </Typography>
-        <Box sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          alignSelf: "flex-end",
-        }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+        >
+          <AvatarGroup max={4}>
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Remy Sharp"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Travis Howard"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Cindy Baker"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Agnes Walker"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Trevor Henderson"
+              src={Avatar1}
+            />
+          </AvatarGroup>
+          <Typography
+            variant="body1"
+            fontFamily="rasa"
+            sx={{ mt: ".5rem", pl: 1 }}
+          >
+            People Are Excited About It!
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignSelf: "flex-end",
+          }}
+        >
           <img
-            style={{ height: "12px", width: "12px", margin: "5px", alignSelf: "center" }}
+            style={{
+              height: "12px",
+              width: "12px",
+              margin: "5px",
+              alignSelf: "center",
+            }}
             src={LikeButton}
             alt="like-button"
           />
           <img
-            style={{ height: "12px", width: "12px", margin: "5px", alignSelf: "center" }}
+            style={{
+              height: "12px",
+              width: "12px",
+              margin: "5px",
+              alignSelf: "center",
+            }}
             src={DisLikeButton}
             alt="dislike-button"
           />
