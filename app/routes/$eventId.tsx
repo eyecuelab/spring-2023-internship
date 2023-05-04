@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import {
@@ -152,6 +152,7 @@ export default function EventRoute() {
     };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setDrawerOpen(false);
     setValue(newValue);
   };
 
