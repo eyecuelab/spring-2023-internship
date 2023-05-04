@@ -17,7 +17,7 @@ export async function getEvent(id: string ) {
     include: { 
       user: true,
       contributions: {
-        include: { user: true}
+        include: { user: true }
       }
     } 
   });

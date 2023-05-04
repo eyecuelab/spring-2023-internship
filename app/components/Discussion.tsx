@@ -86,6 +86,18 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         userId: user.id,
         user: user,
       };
+// --------------------------------------------------------------------------------------------------
+      fetch('/resource/createComment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ payload })
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error))
+// --------------------------------------------------------------------------------------------------
       socket.emit("message", payload);
     }
   };
