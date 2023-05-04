@@ -8,7 +8,14 @@ export async function getComments(contributionId: string) {
   });
 }
 
-export async function createComment(post: string, contributionId: string, userId: string) {
+export function createComment({
+  post,
+  contributionId,
+  userId
+}: Pick<Comment, "post"> & {
+  contributionId: Contribution["id"],
+  userId: User["id"];
+}) {
   return prisma.comment.create({
     data: {
       post,
@@ -26,27 +33,10 @@ export async function createComment(post: string, contributionId: string, userId
   });
 } 
 
-// export function createComment({
-//   post,
-//   contributionId,
-//   userId
-// }: Pick<Comment, "post"> & {
-//   contributionId: Contribution["id"],
-//   userId: User["id"];
-// }) {
-//   return prisma.comment.create({
-//     data: {
-//       post,
-//       contribution: {
-//         connect: {
-//           id: contributionId,
-//         },
-//       },
-//       user: { 
-//         connect: { 
-//           id: userId 
-//         } 
-//       }
-//     },
-//   });
-// } 
+export async function getCommentsByContributionId(contributionId: string) {
+  return prisma.comment.findMany({
+    where: { contributionId },
+    include: { user: true },
+    orderBy: { createdAt: "asc" }
+  })
+}
