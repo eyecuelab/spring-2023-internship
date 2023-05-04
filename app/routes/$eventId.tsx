@@ -467,7 +467,12 @@ export default function EventRoute() {
         <img
           src={BackArrow}
           alt="back-arrow"
-          style={{ height: "25px", width: "25px", margin: "10%" }}
+          style={{
+            height: "25px",
+            width: "30px",
+            margin: "10%",
+            marginBottom: "0%",
+          }}
           onClick={toggleDrawer(false)}
         />
         {curContribution !== null ? (

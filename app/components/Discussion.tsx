@@ -6,6 +6,8 @@ import type { User } from "@prisma/client";
 
 import { useUser } from "~/utils/utils";
 import socket from "~/utils/socket";
+import LikeButton from "../images/like.png";
+import DisLikeButton from "../images/dislike.png";
 
 type Message = {
   id: number;
@@ -100,10 +102,40 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
         {contribution.contributionName}
       </Typography>
-      <Typography variant="h6" fontFamily="rasa" sx={{ mt: ".5rem" }}>
-        Chat about this contribution!
-      </Typography>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h6" fontFamily="rasa" sx={{ mt: ".5rem" }}>
+          Chat about this contribution!
+        </Typography>
+        <Box sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          alignSelf: "flex-end",
+        }}>
+          <img
+            style={{ height: "12px", width: "12px", margin: "5px", alignSelf: "center" }}
+            src={LikeButton}
+            alt="like-button"
+          />
+          <img
+            style={{ height: "12px", width: "12px", margin: "5px", alignSelf: "center" }}
+            src={DisLikeButton}
+            alt="dislike-button"
+          />
+        </Box>
+      </Box>
+
       <Divider />
+
       <ul>
         {messages.map((message) => (
           <li key={message.id}>{message.text}</li>
