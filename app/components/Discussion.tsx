@@ -165,7 +165,24 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   };
   
   const handleDislikeContribution = () => {
-    // deleteLike( id: likeId)
+    const dislike = {
+      dislike: true,
+      contributionId: contribution.id,
+      userId: user.id,
+      user: user,
+    };
+
+    fetch("/resource/createDislike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ dislike }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    socket.emit("dislike", dislike);
   };
 
   return (
