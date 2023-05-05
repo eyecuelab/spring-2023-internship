@@ -516,9 +516,16 @@ export default function NewEventRoute() {
                           />
                         </IconButton>
                       </Box>
-                      <hr
-                        style={{ borderTop: "1px dashed #bbb", width: "100%" }}
-                      />
+                      {index !== formValues.length - 1 ? (
+                        <hr
+                          style={{
+                            borderTop: "1px dashed #bbb",
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
