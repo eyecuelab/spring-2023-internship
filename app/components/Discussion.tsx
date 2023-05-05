@@ -32,6 +32,7 @@ type Payload = {
 };
 
 type Like = {
+  id: number,
   like: boolean;
   contributionId: string;
   userId: string;
@@ -69,6 +70,32 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             text: `${name} said: ${element.post}`,
           };
           setMessages((prevMessages) => [...prevMessages, newMessage]);
+        })
+      )
+      .catch((error) => console.error(error));
+  }, [contribution]);
+
+  useEffect(() => {
+    setLikes([]);
+
+    fetch("/resource/createLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contributionId: contribution.id }),
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        data.forEach((element: any) => {
+          const newLike: Like = {
+            id: element.createdAt,
+            like: element.user.likes,
+            contributionId: contribution.id,
+            userId: user.id,
+            user: user,
+          };
+          setLikes((prevLikes) => [...prevLikes, newLike]);
         })
       )
       .catch((error) => console.error(error));
@@ -163,7 +190,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
 
     socket.emit("like", like);
   };
-  
+
   const handleDislikeContribution = () => {
     const dislike = {
       dislike: true,
@@ -172,7 +199,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       user: user,
     };
 
-    fetch("/resource/createDislike", {
+    fetch("/resource/createLike", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -213,11 +240,14 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           }}
         >
           <AvatarGroup max={4}>
+          {likes.map((like) => (
             <Avatar
               sx={{ width: 35, height: 35 }}
-              alt="Remy Sharp"
-              src={Avatar1}
-            />
+              key={like.id}
+              alt="user-picture"
+              src={like.user.picture ?? undefined}
+              />
+        ))}
             <Avatar
               sx={{ width: 35, height: 35 }}
               alt="Travis Howard"
@@ -239,6 +269,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
               src={Avatar1}
             />
           </AvatarGroup>
+
           <Typography
             variant="body1"
             fontFamily="rasa"

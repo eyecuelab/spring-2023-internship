@@ -1,6 +1,6 @@
 import { ActionArgs } from "@remix-run/node";
 
-import { createLike, getLikesByContributionId } from "~/models/likes.server"
+import { createDislike, createLike, getDislikesByContributionId, getLikesByContributionId } from "~/models/likes.server"
 
 export const action = async ({ request }: ActionArgs) => {
   const data = await request.json();
@@ -12,6 +12,17 @@ export const action = async ({ request }: ActionArgs) => {
       like: true,
       contributionId: data.like.contributionId,
       userId: data.like.userId
+    })
+  }
+
+  if (data.hasOwnProperty("contributionId")) {
+    return await getDislikesByContributionId(data.contributionId)
+  }
+  if (data.hasOwnProperty("dislike")) {
+    await createDislike({
+      dislike: true,
+      contributionId: data.dislike.contributionId,
+      userId: data.dislike.userId
     })
   }
 
