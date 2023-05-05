@@ -85,10 +85,10 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <Document>
+        <LiveReload />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </Document>
     </ThemeProvider>
   );

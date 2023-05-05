@@ -16,7 +16,7 @@ const theme = createTheme({
       fontSize: "13px",
       lineHeight: "170%",
       textTransform: "capitalize",
-      // color: "#868686"
+      // color: "rgba(134, 134, 134, 1)"
     }
   }
 });

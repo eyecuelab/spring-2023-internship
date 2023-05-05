@@ -364,7 +364,7 @@ export default function EventRoute() {
                     : "show your generosity and claim a few items to bring with you!"}
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
-                  {contributions.map((contribution: any) => (
+                  {contributions.map((contribution: any, index) => (
                     <li key={contribution.id}>
                       <Box style={{ display: "flex", flexDirection: "row" }}>
                         <Box style={{ marginRight: ".5rem" }}>
@@ -459,7 +459,16 @@ export default function EventRoute() {
                           </Box>
                         )}
                       </Box>
-                      <hr style={{ borderTop: "1px dashed #bbb" }} />
+                      {index !== contributions.length - 1 ? (
+                        <hr
+                          style={{
+                            borderTop: "1px dashed #bbb",
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
