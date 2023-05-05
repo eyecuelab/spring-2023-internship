@@ -135,13 +135,13 @@ export default function EventRoute() {
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [contributions, setContributions] = useState([])
+  const [contributions, setContributions] = useState([]);
   const [curContribution, setCurContribution] = useState<null | Contribution>(
     null
   );
 
   useEffect(() => {
-    setContributions(data.contributions)
+    setContributions(data.contributions);
     socket.on("new-claim", (message) => {
       if (user && message !== user.id) {
         fetch("/resource/getContributions", {
@@ -357,7 +357,6 @@ export default function EventRoute() {
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
-                
                 <Typography>
                   {contributions.length === 0
                     ? "your event doesn't have any contributions!  Hit the update buttom above to add some!"
@@ -492,7 +491,6 @@ export default function EventRoute() {
             backgroundColor: "rgba(239, 239, 239, 1)",
             left: "53%",
             width: "37%",
-            top: "35px",
           },
         }}
         anchor={"left"}
@@ -502,7 +500,12 @@ export default function EventRoute() {
         <img
           src={BackArrow}
           alt="back-arrow"
-          style={{ height: "25px", width: "25px", margin: "10%" }}
+          style={{
+            height: "30px",
+            width: "30px",
+            marginTop: "17%",
+            marginLeft: "9%",
+          }}
           onClick={toggleDrawer(false)}
         />
         {curContribution !== null ? (
