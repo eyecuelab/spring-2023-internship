@@ -13,5 +13,9 @@ io.on("connection", (socket) => {
     io.emit("new-message", payload);
     // io.emit("create", "CREATE!");
   });
+
+  socket.on("claim", (message) => {
+    io.emit("new-claim", message);
+  });
 });
 http.listen(8080, () => console.log("listening on http://localhost:8080"));

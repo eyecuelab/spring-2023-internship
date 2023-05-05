@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoaderData, Form, Link } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import {
@@ -18,10 +18,12 @@ import { deleteEvent, getEvent } from "~/models/events.server";
 import {
   claimItem,
   getContribution,
+  getContributions,
   unclaimItem,
 } from "~/models/contributions.server";
 import { requireUserId } from "~/services/session.server";
 import { useOptionalUser } from "~/utils/utils";
+import socket from "~/utils/socket";
 import { GetCoordinates } from "~/utils/Geocode";
 import Checkmark from "~/images/checkmark.png";
 import Discussion from "~/components/Discussion";
@@ -68,6 +70,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!event) {
     throw new Response("Uh Oh! No event found.", { status: 404 });
   }
+  const contributions = await getContributions(eventId);
   const address =
     event.streetAddress +
     " " +
@@ -92,7 +95,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const mapImage = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/geojson(%7B%22type%22%3A%22Point%22%2C%22coordinates%22%3A%5B${longitude}%2C${latitude}%5D%7D)/${longitude},${latitude},13/530x264?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`;
 
-  return json({ event, mapImage });
+  return json({ event, contributions, mapImage });
 };
 
 export async function action({ request, params }: ActionArgs) {
@@ -116,8 +119,10 @@ export async function action({ request, params }: ActionArgs) {
   if (contribution !== null) {
     if (contribution.userId === null) {
       await claimItem(contribution.id, userId);
+      socket.emit("claim", userId);
     } else {
       await unclaimItem(contribution.id);
+      socket.emit("claim", userId);
     }
   }
 
@@ -130,9 +135,28 @@ export default function EventRoute() {
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [contributions, setContributions] = useState([])
   const [curContribution, setCurContribution] = useState<null | Contribution>(
     null
   );
+
+  useEffect(() => {
+    setContributions(data.contributions)
+    socket.on("new-claim", (message) => {
+      if (user && message !== user.id) {
+        fetch("/resource/getContributions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ eventId: data.event.id }),
+        })
+          .then((response) => response.json())
+          .then((data) => setContributions(data))
+          .catch((error) => console.error(error));
+      }
+    });
+  }, []);
 
   const toggleDrawer =
     (open: boolean, contribution?: Contribution) =>
@@ -152,6 +176,7 @@ export default function EventRoute() {
     };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setDrawerOpen(false);
     setValue(newValue);
   };
 
@@ -332,13 +357,14 @@ export default function EventRoute() {
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
+                
                 <Typography>
-                  {data.event.contributions.length === 0
+                  {contributions.length === 0
                     ? "your event doesn't have any contributions!  Hit the update buttom above to add some!"
                     : "show your generosity and claim a few items to bring with you!"}
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
-                  {data.event.contributions.map((contribution: any) => (
+                  {contributions.map((contribution: any) => (
                     <li key={contribution.id}>
                       <Box style={{ display: "flex", flexDirection: "row" }}>
                         <Box style={{ marginRight: ".5rem" }}>
