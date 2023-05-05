@@ -6,8 +6,9 @@ export type { Event, Contribution } from "@prisma/client";
 
 export async function getContributions(eventId: string) {
   return prisma.contribution.findMany({
-    select: { id: true, contributionName: true },
-    where: { eventId }
+    where: { eventId },
+    include: { user: true },
+    orderBy: { contributionName: "asc"}
   });
 }
 

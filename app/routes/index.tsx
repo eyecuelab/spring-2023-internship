@@ -4,7 +4,7 @@ import BlackLogo from "~/images/black-logo.png";
 
 export default function Index() {
   return (
-    <div style={{ backgroundColor: "white", width: "53%", height: "100%", position: "absolute" }}>
+    <div style={{ backgroundColor: "white", width: "53%", minHeight: "100%", maxHeight: "auto", position: "absolute" }}>
       <div style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%"}}>
         <img src={BlackLogo} style={{ height: "40px"}} alt="Black logo." />
         <Typography variant="h3" fontFamily="rasa" sx={{ marginTop: "0", marginBottom: "1rem", fontSize: "43px" }}>You Are Invited!</Typography>
