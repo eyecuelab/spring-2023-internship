@@ -176,6 +176,7 @@ export default function EventRoute() {
     };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setDrawerOpen(false);
     setValue(newValue);
   };
 
