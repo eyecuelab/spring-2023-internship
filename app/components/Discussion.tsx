@@ -344,11 +344,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       <TextField
         size="small"
         sx={{
-          backgroundColor: "white",
           width: "100%",
           overflow: "hidden",
         }}
-        InputProps={{ sx: { borderRadius: 4 } }}
+        InputProps={{ sx: { borderRadius: 4, backgroundColor: "white" } }}
         placeholder="Enter your text here...."
         onKeyPress={(e) => {
           if (e.key === "Enter") {
