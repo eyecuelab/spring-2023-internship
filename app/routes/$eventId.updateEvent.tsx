@@ -1,14 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
-import { Avatar, Box, Button, IconButton, Input, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Input,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import invariant from "tiny-invariant";
 
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
 
 import Appbar from "~/components/Appbar";
-import { createContribution, updateContribution, getContributions, deleteContribution } from "~/models/contributions.server";
+import {
+  createContribution,
+  updateContribution,
+  getContributions,
+  deleteContribution,
+} from "~/models/contributions.server";
 import { getEvent, updateEvent } from "~/models/events.server";
 import { requireUserId } from "~/services/session.server";
 import { useUser } from "~/utils/utils";
@@ -384,8 +397,12 @@ export default function UpdateEventRoute() {
             </Box>
           </Box>
           <TextField
-            sx={{ mt: ".5rem", width: "100%", backgroundColor: "white", outline: "none" }}
-            
+            sx={{
+              mt: ".5rem",
+              width: "100%",
+              backgroundColor: "white",
+              outline: "none",
+            }}
             ref={nameRef}
             name="name"
             placeholder="name"
@@ -397,7 +414,7 @@ export default function UpdateEventRoute() {
           />
           <Box sx={{ width: "100%", mt: "1rem" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Typography sx={{ borderBottom: 1, borderColor: "divider", }}>
+              <Typography sx={{ borderBottom: 1, borderColor: "divider" }}>
                 Details
               </Typography>
             </Box>
@@ -409,12 +426,12 @@ export default function UpdateEventRoute() {
                 defaultValue={data.event.summary}
               />
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
-                <Box sx={{}}>
-                  <Typography sx={{ fontWeight: "bold", mt: "1rem", }}>
+                <Box>
+                  <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                     Location & Contact
                   </Typography>
                   <TextField
-                  sx={{ backgroundColor: "white" }}
+                    sx={{ backgroundColor: "white" }}
                     ref={addressRef}
                     name="streetAddress"
                     placeholder="street address"
@@ -434,7 +451,7 @@ export default function UpdateEventRoute() {
                     </Box>
                   )}
                   <TextField
-                  sx={{ backgroundColor: "white" }}
+                    sx={{ backgroundColor: "white" }}
                     ref={unitRef}
                     name="unit"
                     placeholder="unit #"
@@ -450,7 +467,7 @@ export default function UpdateEventRoute() {
                     </Box>
                   )}
                   <TextField
-                  sx={{ backgroundColor: "white" }}
+                    sx={{ backgroundColor: "white" }}
                     ref={cityRef}
                     name="city"
                     placeholder="city"
@@ -466,7 +483,7 @@ export default function UpdateEventRoute() {
                     </Box>
                   )}
                   <TextField
-                  sx={{ backgroundColor: "white" }}
+                    sx={{ backgroundColor: "white" }}
                     ref={stateRef}
                     name="state"
                     placeholder="state"
@@ -482,7 +499,7 @@ export default function UpdateEventRoute() {
                     </Box>
                   )}
                   <TextField
-                  sx={{ backgroundColor: "white" }}
+                    sx={{ backgroundColor: "white" }}
                     ref={zipRef}
                     name="zip"
                     placeholder="zip"
@@ -503,7 +520,7 @@ export default function UpdateEventRoute() {
                 Date & Time
               </Typography>
               <Input
-              sx={{ backgroundColor: "white" }}
+                sx={{ backgroundColor: "white" }}
                 ref={dateTimeRef}
                 type="dateTime-local"
                 name="dateTime"
@@ -542,6 +559,9 @@ export default function UpdateEventRoute() {
                     pr: "1.5rem",
                     pt: "8px",
                     height: "1.75rem",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
                   }}
                   onClick={() => addFormFields()}
                   variant="outlined"
@@ -570,16 +590,24 @@ export default function UpdateEventRoute() {
                           name="contributionName"
                           value={element.name || ""}
                         />
-                        <IconButton aria-label="delete" size="small">
-                          <Delete
-                            onClick={() => removeFormFields(index)}
-                            fontSize="inherit"
-                          />
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={() => removeFormFields(index)}
+                        >
+                          <Delete fontSize="inherit" />
                         </IconButton>
                       </Box>
-                      <hr
-                        style={{ borderTop: "1px dashed #bbb", width: "100%" }}
-                      />
+                      {index !== formValues.length - 1 ? (
+                        <hr
+                          style={{
+                            borderTop: "1px dashed #bbb",
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>

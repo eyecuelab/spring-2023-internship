@@ -135,13 +135,13 @@ export default function EventRoute() {
   const dateTime = new Date(data.event.dateTime);
   const [value, setValue] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [contributions, setContributions] = useState([])
+  const [contributions, setContributions] = useState([]);
   const [curContribution, setCurContribution] = useState<null | Contribution>(
     null
   );
 
   useEffect(() => {
-    setContributions(data.contributions)
+    setContributions(data.contributions);
     socket.on("new-claim", (message) => {
       if (user && message !== user.id) {
         fetch("/resource/getContributions", {
@@ -357,14 +357,13 @@ export default function EventRoute() {
                 <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
                   claim your contributions
                 </Typography>
-                
                 <Typography>
                   {contributions.length === 0
                     ? "your event doesn't have any contributions!  Hit the update buttom above to add some!"
                     : "show your generosity and claim a few items to bring with you!"}
                 </Typography>
                 <ul style={{ listStyleType: "none", padding: "0" }}>
-                  {contributions.map((contribution: any) => (
+                  {contributions.map((contribution: any, index) => (
                     <li key={contribution.id}>
                       <Box style={{ display: "flex", flexDirection: "row" }}>
                         <Box style={{ marginRight: ".5rem" }}>
@@ -459,7 +458,16 @@ export default function EventRoute() {
                           </Box>
                         )}
                       </Box>
-                      <hr style={{ borderTop: "1px dashed #bbb" }} />
+                      {index !== contributions.length - 1 ? (
+                        <hr
+                          style={{
+                            borderTop: "1px dashed #bbb",
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -483,7 +491,6 @@ export default function EventRoute() {
             backgroundColor: "rgba(239, 239, 239, 1)",
             left: "53%",
             width: "37%",
-            top: "35px",
           },
         }}
         anchor={"left"}

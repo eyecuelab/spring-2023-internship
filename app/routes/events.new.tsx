@@ -2,7 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { Form, useActionData } from "@remix-run/react";
 import { json, redirect } from "@remix-run/node";
 import { requireUserId } from "~/services/session.server";
-import { Avatar, Box, Button, IconButton, Input, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Input,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 
 import type { ActionArgs, LoaderFunction } from "@remix-run/node";
@@ -194,14 +202,13 @@ export const action = async ({ request }: ActionArgs) => {
   if (typeof _action !== "string") return null;
   const contributions = JSON.parse(_action);
 
-  contributions.forEach(async (e: { name: string; }) => {
+  contributions.forEach(async (e: { name: string }) => {
     if (e.name !== "") {
       const contributionName = e.name;
-      await createContribution({ contributionName, eventId })
+      await createContribution({ contributionName, eventId });
     }
   });
 
-  
   return redirect(`/${event.id}`);
 };
 
@@ -217,7 +224,9 @@ export default function NewEventRoute() {
   const zipRef = useRef<HTMLInputElement>(null);
   const dateTimeRef = useRef<HTMLInputElement>(null);
 
-  const [formValues, setFormValues] = useState<{ name: string }[]>([{ name: "" }]);
+  const [formValues, setFormValues] = useState<{ name: string }[]>([
+    { name: "" },
+  ]);
 
   const handleChange = (
     i: number,
@@ -257,7 +266,7 @@ export default function NewEventRoute() {
       zipRef.current?.focus();
     } else if (actionData?.errors?.dateTime) {
       dateTimeRef.current?.focus();
-    } 
+    }
   }, [actionData]);
 
   return (
@@ -509,16 +518,24 @@ export default function NewEventRoute() {
                           name="contributionName"
                           value={element.name || ""}
                         />
-                        <IconButton aria-label="delete" size="small">
-                          <Delete
-                            onClick={() => removeFormFields(index)}
-                            fontSize="inherit"
-                          />
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          onClick={() => removeFormFields(index)}
+                        >
+                          <Delete fontSize="inherit" />
                         </IconButton>
                       </Box>
-                      <hr
-                        style={{ borderTop: "1px dashed #bbb", width: "100%" }}
-                      />
+                      {index !== formValues.length - 1 ? (
+                        <hr
+                          style={{
+                            borderTop: "1px dashed #bbb",
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </li>
                   ))}
                 </ul>
