@@ -36,7 +36,7 @@ type Payload = {
 };
 
 type Like = {
-  id: number,
+  id: number;
   like: boolean;
   contributionId: string;
   userId: string;
@@ -52,9 +52,14 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   const [payloads, setPayloads] = React.useState<Payload[]>([]);
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [likes, setLikes] = React.useState<Like[]>([]);
+  const [userLiked, setUserLiked] = React.useState(false);
+  const [userDisliked, setUserDisliked] = React.useState(false);
 
   useEffect(() => {
     setMessages([]);
+    setLikes([]);
+    setUserLiked(false);
+    setUserDisliked(false);
 
     fetch("/resource/createComment", {
       method: "POST",
@@ -80,10 +85,6 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         })
       )
       .catch((error) => console.error(error));
-  }, [contribution]);
-
-  useEffect(() => {
-    setLikes([]);
 
     fetch("/resource/createLike", {
       method: "POST",
@@ -95,12 +96,15 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       .then((response) => response.json())
       .then((data) =>
         data.forEach((element: any) => {
+          if (user.id === element.userId){
+            setUserLiked(true);
+          }
           const newLike: Like = {
             id: element.createdAt,
             like: element.user.likes,
             contributionId: contribution.id,
-            userId: user.id,
-            user: user,
+            userId: element.user.id,
+            user: element.user,
           };
           setLikes((prevLikes) => [...prevLikes, newLike]);
         })
@@ -188,6 +192,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       userId: user.id,
       user: user,
     };
+    setUserLiked(true);
 
     fetch("/resource/createLike", {
       method: "POST",
@@ -209,7 +214,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       userId: user.id,
       user: user,
     };
-
+    setUserDisliked(true);
     fetch("/resource/createLike", {
       method: "POST",
       headers: {
@@ -251,14 +256,14 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           }}
         >
           <AvatarGroup max={4}>
-          {likes.map((like) => (
-            <Avatar
-              sx={{ width: 35, height: 35 }}
-              key={like.id}
-              alt="user-picture"
-              src={like.user.picture ?? undefined}
+            {likes.map((like) => (
+              <Avatar
+                sx={{ width: 35, height: 35 }}
+                key={like.id}
+                alt="user-picture"
+                src={like.user.picture ?? undefined}
               />
-        ))}
+            ))}
             <Avatar
               sx={{ width: 35, height: 35 }}
               alt="Travis Howard"
@@ -296,10 +301,11 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           <Button onClick={handleLikeContribution}>
             <img
               style={{
-                height: "12px",
-                width: "12px",
+                height:  "12px",
+                width:  "12px",
                 margin: "5px",
                 alignSelf: "center",
+                filter: userLiked ? "opacity(100%)" : "opacity(25%)"
               }}
               src={LikeButton}
               alt="like-button"
@@ -308,10 +314,11 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           <Button onClick={handleDislikeContribution}>
             <img
               style={{
-                height: "12px",
-                width: "12px",
+                height:  "12px",
+                width:  "12px",
                 margin: "5px",
                 alignSelf: "center",
+                filter: userDisliked ? "opacity(100%)" : "opacity(25%)"
               }}
               src={DisLikeButton}
               alt="dislike-button"

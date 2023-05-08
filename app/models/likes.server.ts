@@ -3,7 +3,7 @@ import { prisma } from "~/db.server";
 
 export async function getLikes(contributionId: string) {
   return prisma.like.findMany({
-    select: { id: true, like: true },
+    select: { id: true, like: true, userId: true },
     where: { contributionId }
   });
 }
