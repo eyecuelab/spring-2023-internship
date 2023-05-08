@@ -106,7 +106,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         })
       )
       .catch((error) => console.error(error));
-  }, [contribution]);
+  }, [contribution, user]);
 
   useEffect(() => {
     if (

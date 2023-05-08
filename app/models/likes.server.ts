@@ -18,9 +18,9 @@ export async function createLike({
 }) {
   const existingLike = await getLikeByContributionIdAndUserId(contributionId, userId);
   if (existingLike) {
+    console.log("🚀 ~ file: likes.server.ts:23 ~ 'User has already liked this contribution':", 'User has already liked this contribution')
     throw new Error('User has already liked this contribution');
   }
-    console.log("🚀 ~ file: likes.server.ts:23 ~ 'User has already liked this contribution':", 'User has already liked this contribution')
   return prisma.like.create({
     data: {
       like,
@@ -74,7 +74,7 @@ export async function getDislikes(contributionId: string) {
   });
 }
 
-export function createDislike({
+export async function createDislike({
   dislike,
   contributionId,
   userId
@@ -82,6 +82,11 @@ export function createDislike({
   contributionId: Contribution["id"],
   userId: User["id"];
 }) {
+  const existingDislike = await getDislikeByContributionIdAndUserId(contributionId, userId);
+  if (existingDislike) {
+    console.log("🚀 ~ file: likes.server.ts:89 ~ 'User has already disliked this contribution':", 'User has already disliked this contribution')
+    throw new Error('User has already disliked this contribution');
+  }
   return prisma.dislike.create({
     data: {
       dislike,
@@ -105,6 +110,19 @@ export async function getDislikesByContributionId(contributionId: string) {
     include: { user: true },
     orderBy: { createdAt: "asc" }
   })
+}
+
+async function getDislikeByContributionIdAndUserId(
+  contributionId: Contribution['id'],
+  userId: User['id']
+) {
+  return prisma.dislike.findFirst({
+    where: {
+      contributionId,
+      userId,
+      dislike: true
+    }
+  });
 }
 
 export function deleteDisLike({
