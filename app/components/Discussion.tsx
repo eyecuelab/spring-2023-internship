@@ -1,5 +1,13 @@
 import React, { FC, useEffect } from "react";
-import { Box, Divider, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import type { Contribution } from "@prisma/client";
 import type { User } from "@prisma/client";
@@ -7,6 +15,10 @@ import type { User } from "@prisma/client";
 import { useUser } from "~/utils/utils";
 import socket from "~/utils/socket";
 import ChatBubble from "~/components/ChatBubble";
+import { createLike, deleteLike, getLikes } from "~/models/likes.server";
+import LikeButton from "../images/like.png";
+import DisLikeButton from "../images/dislike.png";
+import Avatar1 from "../../public/img/avatar1.png";
 
 type Message = {
   name: string;
@@ -22,6 +34,14 @@ type Payload = {
   user: User;
 };
 
+type Like = {
+  id: number,
+  like: boolean;
+  contributionId: string;
+  userId: string;
+  user: User;
+};
+
 interface DiscussionProps {
   contribution: Contribution;
 }
@@ -30,6 +50,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   const user = useUser();
   const [payloads, setPayloads] = React.useState<Payload[]>([]);
   const [messages, setMessages] = React.useState<Message[]>([]);
+  const [likes, setLikes] = React.useState<Like[]>([]);
 
   useEffect(() => {
     setMessages([]);
@@ -55,6 +76,32 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             image: typeof image === "string" ? image : "",
           };
           setMessages((prevMessages) => [...prevMessages, newMessage]);
+        })
+      )
+      .catch((error) => console.error(error));
+  }, [contribution]);
+
+  useEffect(() => {
+    setLikes([]);
+
+    fetch("/resource/createLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contributionId: contribution.id }),
+    })
+      .then((response) => response.json())
+      .then((data) =>
+        data.forEach((element: any) => {
+          const newLike: Like = {
+            id: element.createdAt,
+            like: element.user.likes,
+            contributionId: contribution.id,
+            userId: user.id,
+            user: user,
+          };
+          setLikes((prevLikes) => [...prevLikes, newLike]);
         })
       )
       .catch((error) => console.error(error));
@@ -133,6 +180,48 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
     }
   };
 
+  const handleLikeContribution = () => {
+    const like = {
+      like: true,
+      contributionId: contribution.id,
+      userId: user.id,
+      user: user,
+    };
+
+    fetch("/resource/createLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ like }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    socket.emit("like", like);
+  };
+
+  const handleDislikeContribution = () => {
+    const dislike = {
+      dislike: true,
+      contributionId: contribution.id,
+      userId: user.id,
+      user: user,
+    };
+
+    fetch("/resource/createLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ dislike }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    socket.emit("dislike", dislike);
+  };
+
   return (
     <Box
       sx={{
@@ -143,9 +232,98 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       <Typography variant="h3" fontFamily="rasa" sx={{ mt: ".5rem" }}>
         {contribution.contributionName}
       </Typography>
-      <Typography variant="h6" fontFamily="rasa" sx={{ mt: ".5rem" }}>
-        Chat about this contribution!
-      </Typography>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+        >
+          <AvatarGroup max={4}>
+          {likes.map((like) => (
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              key={like.id}
+              alt="user-picture"
+              src={like.user.picture ?? undefined}
+              />
+        ))}
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Travis Howard"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Cindy Baker"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Agnes Walker"
+              src={Avatar1}
+            />
+            <Avatar
+              sx={{ width: 35, height: 35 }}
+              alt="Trevor Henderson"
+              src={Avatar1}
+            />
+          </AvatarGroup>
+
+          <Typography
+            variant="body1"
+            fontFamily="rasa"
+            sx={{ mt: ".5rem", pl: 1 }}
+          >
+            People Are Excited About It!
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignSelf: "flex-end",
+          }}
+        >
+          <Button onClick={handleLikeContribution}>
+            <img
+              style={{
+                height: "12px",
+                width: "12px",
+                margin: "5px",
+                alignSelf: "center",
+              }}
+              src={LikeButton}
+              alt="like-button"
+            />
+          </Button>
+          <Button onClick={handleDislikeContribution}>
+            <img
+              style={{
+                height: "12px",
+                width: "12px",
+                margin: "5px",
+                alignSelf: "center",
+              }}
+              src={DisLikeButton}
+              alt="dislike-button"
+            />
+          </Button>
+        </Box>
+      </Box>
+
       <Divider />
       <ul
         style={{
@@ -166,11 +344,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       <TextField
         size="small"
         sx={{
-          backgroundColor: "white",
           width: "100%",
           overflow: "hidden",
         }}
-        InputProps={{ sx: { borderRadius: 4 } }}
+        InputProps={{ sx: { borderRadius: 4, backgroundColor: "white" } }}
         placeholder="Enter your text here...."
         onKeyPress={(e) => {
           if (e.key === "Enter") {

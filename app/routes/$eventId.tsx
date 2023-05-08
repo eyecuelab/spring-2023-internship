@@ -501,10 +501,10 @@ export default function EventRoute() {
           src={BackArrow}
           alt="back-arrow"
           style={{
-            height: "30px",
+            height: "25px",
             width: "30px",
-            marginTop: "17%",
-            marginLeft: "9%",
+            margin: "10%",
+            marginBottom: "0%",
           }}
           onClick={toggleDrawer(false)}
         />
