@@ -15,7 +15,6 @@ import type { User } from "@prisma/client";
 import { useUser } from "~/utils/utils";
 import socket from "~/utils/socket";
 import ChatBubble from "~/components/ChatBubble";
-import { createLike, deleteLike, getLikes } from "~/models/likes.server";
 import LikeButton from "../images/like.png";
 import DisLikeButton from "../images/dislike.png";
 import Avatar1 from "../../public/img/avatar1.png";
@@ -274,11 +273,6 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
               sx={{ width: 35, height: 35 }}
               alt="Agnes Walker"
               src={Avatar3}
-            />
-            <Avatar
-              sx={{ width: 35, height: 35 }}
-              alt="Trevor Henderson"
-              src={Avatar1}
             />
           </AvatarGroup>
 
