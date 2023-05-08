@@ -19,6 +19,8 @@ import { createLike, deleteLike, getLikes } from "~/models/likes.server";
 import LikeButton from "../images/like.png";
 import DisLikeButton from "../images/dislike.png";
 import Avatar1 from "../../public/img/avatar1.png";
+import Avatar2 from "../../public/img/avatar2.png";
+import Avatar3 from "../../public/img/avatar3.png";
 
 type Message = {
   name: string;
@@ -266,12 +268,12 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             <Avatar
               sx={{ width: 35, height: 35 }}
               alt="Cindy Baker"
-              src={Avatar1}
+              src={Avatar2}
             />
             <Avatar
               sx={{ width: 35, height: 35 }}
               alt="Agnes Walker"
-              src={Avatar1}
+              src={Avatar3}
             />
             <Avatar
               sx={{ width: 35, height: 35 }}
