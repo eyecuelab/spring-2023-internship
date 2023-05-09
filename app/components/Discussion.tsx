@@ -20,6 +20,7 @@ import DisLikeButton from "../images/dislike.png";
 import Avatar1 from "../../public/img/avatar1.png";
 import Avatar2 from "../../public/img/avatar2.png";
 import Avatar3 from "../../public/img/avatar3.png";
+import { deleteLike, getLike, getLikeByContributionIdAndUserId, getLikesByContributionId } from "~/models/likes.server";
 
 type Message = {
   name: string;
@@ -185,9 +186,14 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
     }
   };
 
-  const handleLikeContribution = () => {
+  const handleLikeContribution = async () => {
     if (userLiked === true) {
       setUserLiked(false);
+      const like = await getLikeByContributionIdAndUserId(contribution.id, user.id);
+      const id = like?.id;
+      if(id){
+        deleteLike(id);
+      }
     } else {
       const like = {
         like: true,
@@ -213,25 +219,29 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   };
 
   const handleDislikeContribution = () => {
-    const dislike = {
-      dislike: true,
-      contributionId: contribution.id,
-      userId: user.id,
-      user: user,
+    if (userDisliked === true) {
+      setUserDisliked(false);
+    } else {
+      const dislike = {
+        dislike: true,
+        contributionId: contribution.id,
+        userId: user.id,
+        user: user,
+      };
+      setUserDisliked(true);
+      setUserLiked(false);
+      fetch("/resource/createLike", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dislike }),
+      })
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
+  
+      socket.emit("dislike", dislike);
     };
-    setUserDisliked(true);
-    setUserLiked(false);
-    fetch("/resource/createLike", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ dislike }),
-    })
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
-
-    socket.emit("dislike", dislike);
   };
 
   return (
@@ -304,27 +314,25 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             alignSelf: "flex-end",
           }}
         >
-          <Button onClick={handleLikeContribution}>
+          <Button sx={{ padding: 1, minWidth: "14px" }} onClick={handleLikeContribution}>
             <img
               style={{
-                height: "12px",
-                width: "12px",
-                margin: "5px",
+                height: "14px",
+                width: "14px",
                 alignSelf: "center",
-                filter: userLiked ? "opacity(100%)" : "opacity(25%)",
+                filter: userLiked ? "opacity(100%)" : "opacity(50%)",
               }}
               src={LikeButton}
               alt="like-button"
             />
           </Button>
-          <Button onClick={handleDislikeContribution}>
+          <Button sx={{ padding: 1, minWidth: "14px" }} onClick={handleDislikeContribution}>
             <img
               style={{
-                height: "12px",
-                width: "12px",
-                margin: "5px",
+                height: "14px",
+                width: "14px",
                 alignSelf: "center",
-                filter: userDisliked ? "opacity(100%)" : "opacity(25%)",
+                filter: userDisliked ? "opacity(100%)" : "opacity(50%)",
               }}
               src={DisLikeButton}
               alt="dislike-button"

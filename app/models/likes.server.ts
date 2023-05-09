@@ -8,6 +8,13 @@ export async function getLikes(contributionId: string) {
   });
 }
 
+export async function getLike(userId: string) {
+  return prisma.like.findUnique({
+    select: { id: true, like: true, userId: true },
+    where: { id: userId }
+  });
+}
+
 export async function createLike({
   like,
   contributionId,
@@ -46,7 +53,7 @@ export async function getLikesByContributionId(contributionId: string) {
   })
 }
 
-async function getLikeByContributionIdAndUserId(
+export async function getLikeByContributionIdAndUserId(
   contributionId: Contribution['id'],
   userId: User['id']
 ) {
@@ -59,9 +66,9 @@ async function getLikeByContributionIdAndUserId(
   });
 }
 
-export function deleteLike({
-  id,
-}: Pick<Like, "id">) {
+export function deleteLike(
+  id: string
+) {
   return prisma.like.delete({
     where: { id }
   });
