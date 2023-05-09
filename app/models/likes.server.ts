@@ -8,13 +8,6 @@ export async function getLikes(contributionId: string) {
   });
 }
 
-export async function getLike(userId: string) {
-  return prisma.like.findUnique({
-    select: { id: true, like: true, userId: true },
-    where: { id: userId }
-  });
-}
-
 export async function createLike({
   like,
   contributionId,
@@ -26,6 +19,7 @@ export async function createLike({
   const existingLike = await getLikeByContributionIdAndUserId(contributionId, userId);
   if (existingLike) {
     console.log("🚀 ~ file: likes.server.ts:23 ~ 'User has already liked this contribution':", 'User has already liked this contribution')
+    deleteLike(existingLike.id);
     throw new Error('User has already liked this contribution');
   }
   return prisma.like.create({
@@ -53,7 +47,7 @@ export async function getLikesByContributionId(contributionId: string) {
   })
 }
 
-export async function getLikeByContributionIdAndUserId(
+async function getLikeByContributionIdAndUserId(
   contributionId: Contribution['id'],
   userId: User['id']
 ) {

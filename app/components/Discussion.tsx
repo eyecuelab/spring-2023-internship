@@ -20,7 +20,7 @@ import DisLikeButton from "../images/dislike.png";
 import Avatar1 from "../../public/img/avatar1.png";
 import Avatar2 from "../../public/img/avatar2.png";
 import Avatar3 from "../../public/img/avatar3.png";
-import { deleteLike, getLike, getLikeByContributionIdAndUserId, getLikesByContributionId } from "~/models/likes.server";
+import { deleteLike, getLikesByContributionId } from "~/models/likes.server";
 
 type Message = {
   name: string;
@@ -187,13 +187,8 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   };
 
   const handleLikeContribution = async () => {
-    if (userLiked === true) {
+    if (userLiked) {
       setUserLiked(false);
-      const like = await getLikeByContributionIdAndUserId(contribution.id, user.id);
-      const id = like?.id;
-      if(id){
-        deleteLike(id);
-      }
     } else {
       const like = {
         like: true,
