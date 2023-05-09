@@ -151,7 +151,7 @@ export default function Login() {
     >
       <Box
         data-light=""
-        style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%" }}
+        style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%", alignContent: "center" }}
       >
         <Link to="/">
           <img src={BlackLogo} style={{ height: "40px" }} alt="Black logo." />
