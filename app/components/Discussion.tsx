@@ -96,7 +96,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       .then((response) => response.json())
       .then((data) =>
         data.forEach((element: any) => {
-          if (user.id === element.userId){
+          if (user.id === element.userId) {
             setUserLiked(true);
           }
           const newLike: Like = {
@@ -186,25 +186,30 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
   };
 
   const handleLikeContribution = () => {
-    const like = {
-      like: true,
-      contributionId: contribution.id,
-      userId: user.id,
-      user: user,
-    };
-    setUserLiked(true);
+    if (userLiked === true) {
+      setUserLiked(false);
+    } else {
+      const like = {
+        like: true,
+        contributionId: contribution.id,
+        userId: user.id,
+        user: user,
+      };
+      setUserLiked(true);
+      setUserDisliked(false);
 
-    fetch("/resource/createLike", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ like }),
-    })
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
+      fetch("/resource/createLike", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ like }),
+      })
+        .then((response) => response.json())
+        .catch((error) => console.error(error));
 
-    socket.emit("like", like);
+      socket.emit("like", like);
+    }
   };
 
   const handleDislikeContribution = () => {
@@ -215,6 +220,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       user: user,
     };
     setUserDisliked(true);
+    setUserLiked(false);
     fetch("/resource/createLike", {
       method: "POST",
       headers: {
@@ -301,11 +307,11 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           <Button onClick={handleLikeContribution}>
             <img
               style={{
-                height:  "12px",
-                width:  "12px",
+                height: "12px",
+                width: "12px",
                 margin: "5px",
                 alignSelf: "center",
-                filter: userLiked ? "opacity(100%)" : "opacity(25%)"
+                filter: userLiked ? "opacity(100%)" : "opacity(25%)",
               }}
               src={LikeButton}
               alt="like-button"
@@ -314,11 +320,11 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           <Button onClick={handleDislikeContribution}>
             <img
               style={{
-                height:  "12px",
-                width:  "12px",
+                height: "12px",
+                width: "12px",
                 margin: "5px",
                 alignSelf: "center",
-                filter: userDisliked ? "opacity(100%)" : "opacity(25%)"
+                filter: userDisliked ? "opacity(100%)" : "opacity(25%)",
               }}
               src={DisLikeButton}
               alt="dislike-button"
