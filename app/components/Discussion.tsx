@@ -20,7 +20,6 @@ import DisLikeButton from "../images/dislike.png";
 import Avatar1 from "../../public/img/avatar1.png";
 import Avatar2 from "../../public/img/avatar2.png";
 import Avatar3 from "../../public/img/avatar3.png";
-import { deleteLike, getLikesByContributionId } from "~/models/likes.server";
 
 type Message = {
   name: string;
@@ -186,30 +185,34 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
     }
   };
 
+  const likeServerRequest = async () => {
+    const like = {
+      like: true,
+      contributionId: contribution.id,
+      userId: user.id,
+      user: user,
+    };
+    fetch("/resource/createLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ like }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    socket.emit("like", like);
+  }
+
   const handleLikeContribution = async () => {
     if (userLiked) {
       setUserLiked(false);
+      likeServerRequest();
     } else {
-      const like = {
-        like: true,
-        contributionId: contribution.id,
-        userId: user.id,
-        user: user,
-      };
       setUserLiked(true);
       setUserDisliked(false);
-
-      fetch("/resource/createLike", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ like }),
-      })
-        .then((response) => response.json())
-        .catch((error) => console.error(error));
-
-      socket.emit("like", like);
+      likeServerRequest();
     }
   };
 
