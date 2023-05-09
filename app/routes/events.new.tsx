@@ -6,6 +6,7 @@ import {
   Avatar,
   Box,
   Button,
+  Grid,
   IconButton,
   Input,
   TextField,
@@ -373,87 +374,109 @@ export default function NewEventRoute() {
                   <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                     Location & Contact
                   </Typography>
-                  <TextField
-                    sx={{ backgroundColor: "white" }}
-                    ref={addressRef}
-                    name="streetAddress"
-                    placeholder="street address"
-                    aria-invalid={
-                      actionData?.errors?.streetAddress ? true : undefined
-                    }
-                    aria-errormessage={
-                      actionData?.errors?.streetAddress
-                        ? "address-error"
-                        : undefined
-                    }
-                  />
-                  {actionData?.errors?.streetAddress && (
-                    <Box className="pt-1 text-red-700" id="address-error">
-                      {actionData.errors.streetAddress}
-                    </Box>
-                  )}
-                  <TextField
-                    sx={{ backgroundColor: "white" }}
-                    ref={unitRef}
-                    name="unit"
-                    placeholder="unit #"
-                    aria-invalid={actionData?.errors?.unit ? true : undefined}
-                    aria-errormessage={
-                      actionData?.errors?.unit ? "unit-error" : undefined
-                    }
-                  />
-                  {actionData?.errors?.unit && (
-                    <Box className="pt-1 text-red-700" id="unit-error">
-                      {actionData.errors.unit}
-                    </Box>
-                  )}
-                  <TextField
-                    sx={{ backgroundColor: "white" }}
-                    ref={cityRef}
-                    name="city"
-                    placeholder="city"
-                    aria-invalid={actionData?.errors?.city ? true : undefined}
-                    aria-errormessage={
-                      actionData?.errors?.city ? "city-error" : undefined
-                    }
-                  />
-                  {actionData?.errors?.city && (
-                    <Box className="pt-1 text-red-700" id="city-error">
-                      {actionData.errors.city}
-                    </Box>
-                  )}
-                  <TextField
-                    sx={{ backgroundColor: "white" }}
-                    ref={stateRef}
-                    name="state"
-                    placeholder="state"
-                    aria-invalid={actionData?.errors?.state ? true : undefined}
-                    aria-errormessage={
-                      actionData?.errors?.state ? "state-error" : undefined
-                    }
-                  />
-                  {actionData?.errors?.state && (
-                    <Box className="pt-1 text-red-700" id="state-error">
-                      {actionData.errors.state}
-                    </Box>
-                  )}
-                  <TextField
-                    sx={{ backgroundColor: "white" }}
-                    ref={zipRef}
-                    name="zip"
-                    placeholder="zip"
-                    aria-invalid={actionData?.errors?.zip ? true : undefined}
-                    aria-errormessage={
-                      actionData?.errors?.zip ? "zip-error" : undefined
-                    }
-                  />
-                  {actionData?.errors?.zip && (
-                    <Box className="pt-1 text-red-700" id="zip-error">
-                      {actionData.errors.zip}
-                    </Box>
-                  )}
+
+                  <Grid container spacing={1}>
+                    <Grid item xs={12}>
+                      <TextField
+                        sx={{ backgroundColor: "white", minWidth: "100%" }}
+                        ref={addressRef}
+                        name="streetAddress"
+                        placeholder="street address"
+                        aria-invalid={
+                          actionData?.errors?.streetAddress ? true : undefined
+                        }
+                        aria-errormessage={
+                          actionData?.errors?.streetAddress
+                            ? "address-error"
+                            : undefined
+                        }
+                      />
+                      {actionData?.errors?.streetAddress && (
+                        <Box className="pt-1 text-red-700" id="address-error">
+                          {actionData.errors.streetAddress}
+                        </Box>
+                      )}
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        sx={{ backgroundColor: "white", minWidth: "100%" }}
+                        ref={unitRef}
+                        name="unit"
+                        placeholder="unit #"
+                        aria-invalid={
+                          actionData?.errors?.unit ? true : undefined
+                        }
+                        aria-errormessage={
+                          actionData?.errors?.unit ? "unit-error" : undefined
+                        }
+                      />
+                      {actionData?.errors?.unit && (
+                        <Box className="pt-1 text-red-700" id="unit-error">
+                          {actionData.errors.unit}
+                        </Box>
+                      )}
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        sx={{ backgroundColor: "white", minWidth: "100%" }}
+                        ref={cityRef}
+                        name="city"
+                        placeholder="city"
+                        aria-invalid={
+                          actionData?.errors?.city ? true : undefined
+                        }
+                        aria-errormessage={
+                          actionData?.errors?.city ? "city-error" : undefined
+                        }
+                      />
+                      {actionData?.errors?.city && (
+                        <Box className="pt-1 text-red-700" id="city-error">
+                          {actionData.errors.city}
+                        </Box>
+                      )}
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        sx={{ backgroundColor: "white", minWidth: "100%" }}
+                        ref={stateRef}
+                        name="state"
+                        placeholder="state"
+                        aria-invalid={
+                          actionData?.errors?.state ? true : undefined
+                        }
+                        aria-errormessage={
+                          actionData?.errors?.state ? "state-error" : undefined
+                        }
+                      />
+                      {actionData?.errors?.state && (
+                        <Box className="pt-1 text-red-700" id="state-error">
+                          {actionData.errors.state}
+                        </Box>
+                      )}
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        sx={{ backgroundColor: "white", minWidth: "100%" }}
+                        ref={zipRef}
+                        name="zip"
+                        placeholder="zip"
+                        aria-invalid={
+                          actionData?.errors?.zip ? true : undefined
+                        }
+                        aria-errormessage={
+                          actionData?.errors?.zip ? "zip-error" : undefined
+                        }
+                      />
+                      {actionData?.errors?.zip && (
+                        <Box className="pt-1 text-red-700" id="zip-error">
+                          {actionData.errors.zip}
+                        </Box>
+                      )}
+                    </Grid>
+                  </Grid>
                 </Box>
               </Box>
+
               <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Date & Time
               </Typography>
@@ -502,7 +525,7 @@ export default function NewEventRoute() {
                   color="primary"
                   href=""
                 >
-                  Add An Item
+                  Add A{" "}
                 </Button>
               </Box>
               <Box
