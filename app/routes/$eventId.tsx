@@ -59,8 +59,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  // const userId = await requireUserId(request);
+export const loader: LoaderFunction = async ({ params }) => {
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
