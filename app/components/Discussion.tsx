@@ -123,7 +123,6 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
         post: payloads[payloads.length - 1].post,
         image: typeof image === "string" ? image : "",
       };
-      console.log(newMessage.date.toDateString());
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     }
   }, [payloads]);

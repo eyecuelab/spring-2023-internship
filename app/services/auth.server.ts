@@ -13,7 +13,11 @@ invariant(process.env.REACT_APP_GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET must
 export let authenticator = new Authenticator(sessionStorage, { sessionKey: '_session' });
 
 const getCallback = (provider: SocialsProvider) => {
-  return `http://localhost:3000/auth/${provider}/callback`
+// ************************************************************************************************************************
+// vvvvv---need to figure out how to check to see whether in dev mode or not before merging!!!---vvvvv
+  // return `http://localhost:3000/auth/${provider}/callback`
+  return `http://getogether.fly.dev/auth/${provider}/callback`
+// ************************************************************************************************************************
 } 
 
 // Configuring Google Strategy

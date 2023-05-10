@@ -18,4 +18,4 @@ io.on("connection", (socket) => {
     io.emit("new-claim", message);
   });
 });
-http.listen(8080, () => console.log("listening on http://localhost:8080"));
+http.listen(8081, () => console.log("listening on http://localhost:8081"));

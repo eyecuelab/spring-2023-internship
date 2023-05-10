@@ -2,7 +2,7 @@
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=18.11.0
-FROM node:${NODE_VERSION}-slim as base
+FROM node:${NODE_VERSION}-bullseye as base
 
 LABEL fly_launch_runtime="Remix/Prisma"
 
@@ -11,14 +11,15 @@ WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV=production
-
+RUN apt-get update -qq && \
+    apt-get install -y lsof bash
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
-    apt-get install -y python-is-python3 pkg-config build-essential openssl 
+    apt-get install -y python-is-python3 pkg-config build-essential openssl
 
 # Install node modules
 COPY --link package.json package-lock.json .
