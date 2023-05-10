@@ -481,10 +481,10 @@ export default function EventRoute() {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Item Two
+              Event Photo Gallery Coming Soon...
             </TabPanel>
             <TabPanel value={value} index={2}>
-              Item Three
+              Connections Section...
             </TabPanel>
           </Box>
         </Box>
