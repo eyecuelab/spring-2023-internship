@@ -46,24 +46,27 @@ export default function EventsRoute() {
           height: "100vh",
           position: "static",
           display: "flex",
+          justifyContent: "space-between"
         }}
       >
-        <Paper
-          sx={{
-            width: 200,
-            maxWidth: "100%",
-            maxHeight: "100%",
-            mt: "5%",
-            backgroundColor: "rgb(245, 245, 245)",
-          }}
-        >
-          <MenuList>
+        <MenuList>
+          <Paper
+            sx={{
+              width: 200,
+              height: "100%",
+              maxWidth: "100%",
+              minHeight: "100%",
+              mt: "5%",
+              backgroundColor: "rgb(245, 245, 245)",
+            }}
+          >
             <Typography
               sx={{
                 fontFamily: "rasa",
                 fontWeight: "bold",
                 textTransform: "capitalize",
                 ml: 1,
+                pt: 3,
               }}
               color="black"
               variant="h6"
@@ -131,14 +134,15 @@ export default function EventsRoute() {
                 </Button>
               </Link>
             </MenuItem>
-          </MenuList>
-        </Paper>
+          </Paper>
+        </MenuList>
         <Box
-          style={{
-            margin: "8%",
+          sx={{
+            margin: "6%",
             right: "0%",
             display: "flex",
             flexDirection: "column",
+            flexGrow: 4
           }}
         >
           <Typography
@@ -148,6 +152,7 @@ export default function EventsRoute() {
               textTransform: "capitalize",
               fontSize: "large",
               alignSelf: "center",
+              p: 1
             }}
             color="black"
             variant="body2"
@@ -157,22 +162,23 @@ export default function EventsRoute() {
           {data.events.length === 0 ? (
             <Typography>No events created yet!</Typography>
           ) : (
-          data.events.map((event) => (
-            <ListItem key={event.id}>
-              <Card
-                sx={{
-                  minWidth: 200,
-                  textAlign: "center",
-                }}
-              >
-                <CardContent>
-                  <Link prefetch="intent" to={`/${event.id}`}>
-                    {event.name}
-                  </Link>
-                </CardContent>
-              </Card>
-            </ListItem>
-          )))}
+            data.events.map((event) => (
+              <ListItem key={event.id} sx={{ justifyContent: "center"}}>
+                <Card
+                  sx={{
+                    minWidth: 200,
+                    textAlign: "center",
+                  }}
+                >
+                  <CardContent>
+                    <Link prefetch="intent" to={`/${event.id}`}>
+                      {event.name}
+                    </Link>
+                  </CardContent>
+                </Card>
+              </ListItem>
+            ))
+          )}
         </Box>
       </Box>
     </Box>

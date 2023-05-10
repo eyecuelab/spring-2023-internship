@@ -307,12 +307,12 @@ export default function EventRoute() {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <Box sx={{ mt: "1rem" }}>
-                <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
+              <Box sx={{ mt: "1rem", p: 0}}>
+                <Typography variant="h6">Summary</Typography>
                 <Typography>{data.event.summary}</Typography>
                 <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                   <Box sx={{}}>
-                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    <Typography variant="h6" sx={{ mt: "1rem" }}>
                       Location & Contact
                     </Typography>
                     <Typography>
@@ -324,7 +324,7 @@ export default function EventRoute() {
                     <br />
                     <Typography>(501) 778-1145</Typography>
                     <Typography>{data.event.user.email}</Typography>
-                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    <Typography variant="h6" sx={{ mt: "1rem" }}>
                       Date and Time
                     </Typography>
                     <Typography
@@ -353,7 +353,7 @@ export default function EventRoute() {
                     />
                   </Box>
                 </Box>
-                <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
+                <Typography variant="h6" sx={{ mt: "2rem" }}>
                   claim your contributions
                 </Typography>
                 <Typography>
