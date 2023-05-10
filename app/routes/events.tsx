@@ -138,7 +138,7 @@ export default function EventsRoute() {
         </MenuList>
         <Box
           sx={{
-            margin: "8%",
+            margin: "6%",
             right: "0%",
             display: "flex",
             flexDirection: "column",
@@ -152,6 +152,7 @@ export default function EventsRoute() {
               textTransform: "capitalize",
               fontSize: "large",
               alignSelf: "center",
+              p: 1
             }}
             color="black"
             variant="body2"
