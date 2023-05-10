@@ -203,7 +203,7 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       .catch((error) => console.error(error));
 
     socket.emit("like", like);
-  }
+  };
 
   const handleLikeContribution = async () => {
     if (userLiked) {
@@ -237,9 +237,9 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
       })
         .then((response) => response.json())
         .catch((error) => console.error(error));
-  
+
       socket.emit("dislike", dislike);
-    };
+    }
   };
 
   return (
@@ -269,39 +269,33 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             alignItems: "flex-end",
           }}
         >
-          <AvatarGroup max={4}>
-            {likes.map((like) => (
-              <Avatar
-                sx={{ width: 35, height: 35 }}
-                key={like.id}
-                alt="user-picture"
-                src={like.user.picture ?? undefined}
-              />
-            ))}
-            <Avatar
-              sx={{ width: 35, height: 35 }}
-              alt="Travis Howard"
-              src={Avatar1}
-            />
-            <Avatar
-              sx={{ width: 35, height: 35 }}
-              alt="Cindy Baker"
-              src={Avatar2}
-            />
-            <Avatar
-              sx={{ width: 35, height: 35 }}
-              alt="Agnes Walker"
-              src={Avatar3}
-            />
-          </AvatarGroup>
-
-          <Typography
-            variant="body1"
-            fontFamily="rasa"
-            sx={{ mt: ".5rem", pl: 1 }}
-          >
-            People Are Excited About It!
-          </Typography>
+          {likes.length === 0 ? (
+            <Typography
+              variant="body1"
+              fontFamily="rasa"
+              sx={{ mt: ".5rem", pl: 1 }}
+            >
+              The likes are yet to pour in.
+            </Typography>
+          ) : (
+            <AvatarGroup max={4}>
+              {likes.map((like) => (
+                <Avatar
+                  sx={{ width: 35, height: 35 }}
+                  key={like.id}
+                  alt="user-picture"
+                  src={like.user.picture ?? undefined}
+                />
+              ))}
+              <Typography
+                variant="body1"
+                fontFamily="rasa"
+                sx={{ mt: ".5rem", pl: 1 }}
+              >
+                People Are Excited About It!
+              </Typography>
+            </AvatarGroup>
+          )}
         </Box>
         <Box
           sx={{
@@ -312,7 +306,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
             alignSelf: "flex-end",
           }}
         >
-          <Button sx={{ padding: 1, minWidth: "14px" }} onClick={handleLikeContribution}>
+          <Button
+            sx={{ padding: 1, minWidth: "14px" }}
+            onClick={handleLikeContribution}
+          >
             <img
               style={{
                 height: "14px",
@@ -324,7 +321,10 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
               alt="like-button"
             />
           </Button>
-          <Button sx={{ padding: 1, minWidth: "14px" }} onClick={handleDislikeContribution}>
+          <Button
+            sx={{ padding: 1, minWidth: "14px" }}
+            onClick={handleDislikeContribution}
+          >
             <img
               style={{
                 height: "14px",
@@ -338,8 +338,8 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           </Button>
         </Box>
       </Box>
-
       <Divider />
+
       <ul
         style={{
           listStyleType: "none",
@@ -350,12 +350,23 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           overflowY: "auto",
         }}
       >
-        {messages.map((message, index) => (
-          <li key={index} style={{ width: "100%" }}>
-            <ChatBubble message={message} />
-          </li>
-        ))}
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            fontFamily="rasa"
+            sx={{ mt: ".5rem", p: 5, fontSize: "16px" }}
+          >
+            Awaiting Discussion...{" "}
+          </Typography>
+        ) : (
+          messages.map((message, index) => (
+            <li key={index} style={{ width: "100%" }}>
+              <ChatBubble message={message} />
+            </li>
+          ))
+        )}
       </ul>
+
       <TextField
         size="small"
         sx={{

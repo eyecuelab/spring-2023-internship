@@ -363,7 +363,7 @@ export default function NewEventRoute() {
                 }
               />
               {actionData?.errors?.summary && (
-                <Box className="pt-1 text-red-700" id="summary">
+                <Box id="summary">
                   {actionData.errors.summary}
                 </Box>
               )}
