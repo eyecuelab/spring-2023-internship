@@ -52,6 +52,7 @@ export default function EventsRoute() {
           sx={{
             width: 200,
             maxWidth: "100%",
+            maxHeight: "100%",
             mt: "5%",
             backgroundColor: "rgb(245, 245, 245)",
           }}
@@ -153,8 +154,10 @@ export default function EventsRoute() {
           >
             Select an event to view the details!
           </Typography>
-
-          {data.events.map((event) => (
+          {data.events.length === 0 ? (
+            <Typography>No events created yet!</Typography>
+          ) : (
+          data.events.map((event) => (
             <ListItem key={event.id}>
               <Card
                 sx={{
@@ -169,18 +172,9 @@ export default function EventsRoute() {
                 </CardContent>
               </Card>
             </ListItem>
-          ))}
+          )))}
         </Box>
       </Box>
-      {/* <ul>
-        {data.attendingEvents.map((attendee) => (
-          <li key={attendee.event.id}>
-          <Link prefetch="intent" to={`/${attendee.event.id}`}>
-              {attendee.event.title}
-              </Link>
-          </li>
-          ))}
-      </ul> */}
     </Box>
   );
 }
