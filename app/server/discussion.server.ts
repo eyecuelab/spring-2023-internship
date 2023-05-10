@@ -11,7 +11,6 @@ io.on("connection", (socket) => {
   socket.on("message", (payload) => {
     //Emit message to all clients
     io.emit("new-message", payload);
-    // io.emit("create", "CREATE!");
   });
 
   socket.on("claim", (message) => {
