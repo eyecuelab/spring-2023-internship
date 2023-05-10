@@ -335,7 +335,6 @@ export default function NewEventRoute() {
             sx={{ mt: ".5rem", width: "100%", backgroundColor: "white" }}
             ref={nameRef}
             name="name"
-            placeholder="name"
             aria-invalid={actionData?.errors?.name ? true : undefined}
             aria-errormessage={
               actionData?.errors?.name ? "name-error" : undefined
@@ -353,12 +352,11 @@ export default function NewEventRoute() {
               </Typography>
             </Box>
             <Box sx={{ mt: "1rem" }}>
-              <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
+              <Typography variant="h6">Summary</Typography>
               <TextField
                 sx={{ width: "100%", backgroundColor: "white" }}
                 ref={summaryRef}
                 name="summary"
-                placeholder="summary"
                 aria-invalid={actionData?.errors?.summary ? true : undefined}
                 aria-errormessage={
                   actionData?.errors?.summary ? "summary-error" : undefined
@@ -371,17 +369,18 @@ export default function NewEventRoute() {
               )}
               <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                 <Box sx={{}}>
-                  <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                  <Typography variant="h6" sx={{ mt: "1rem" }}>
                     Location & Contact
                   </Typography>
-
                   <Grid container spacing={1}>
                     <Grid item xs={12}>
+                      <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                        Street Address
+                      </Typography>
                       <TextField
                         sx={{ backgroundColor: "white", minWidth: "100%" }}
                         ref={addressRef}
                         name="streetAddress"
-                        placeholder="street address"
                         aria-invalid={
                           actionData?.errors?.streetAddress ? true : undefined
                         }
@@ -398,11 +397,13 @@ export default function NewEventRoute() {
                       )}
                     </Grid>
                     <Grid item xs={2}>
+                      <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                        Unit#
+                      </Typography>
                       <TextField
                         sx={{ backgroundColor: "white", minWidth: "100%" }}
                         ref={unitRef}
                         name="unit"
-                        placeholder="unit #"
                         aria-invalid={
                           actionData?.errors?.unit ? true : undefined
                         }
@@ -417,11 +418,13 @@ export default function NewEventRoute() {
                       )}
                     </Grid>
                     <Grid item xs={4}>
+                      <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                        City
+                      </Typography>
                       <TextField
                         sx={{ backgroundColor: "white", minWidth: "100%" }}
                         ref={cityRef}
                         name="city"
-                        placeholder="city"
                         aria-invalid={
                           actionData?.errors?.city ? true : undefined
                         }
@@ -436,11 +439,13 @@ export default function NewEventRoute() {
                       )}
                     </Grid>
                     <Grid item xs={4}>
+                      <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                        State
+                      </Typography>
                       <TextField
                         sx={{ backgroundColor: "white", minWidth: "100%" }}
                         ref={stateRef}
                         name="state"
-                        placeholder="state"
                         aria-invalid={
                           actionData?.errors?.state ? true : undefined
                         }
@@ -455,11 +460,13 @@ export default function NewEventRoute() {
                       )}
                     </Grid>
                     <Grid item xs={2}>
+                      <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                        Zip
+                      </Typography>
                       <TextField
                         sx={{ backgroundColor: "white", minWidth: "100%" }}
                         ref={zipRef}
                         name="zip"
-                        placeholder="zip"
                         aria-invalid={
                           actionData?.errors?.zip ? true : undefined
                         }
@@ -504,7 +511,7 @@ export default function NewEventRoute() {
                 }}
               >
                 <Box>
-                  <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
+                  <Typography variant="h6" sx={{ mt: "2rem" }}>
                     claim your contributions
                   </Typography>
                   <Typography>
@@ -525,7 +532,7 @@ export default function NewEventRoute() {
                   color="primary"
                   href=""
                 >
-                  Add A{" "}
+                  Add An Item
                 </Button>
               </Box>
               <Box
