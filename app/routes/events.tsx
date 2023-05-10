@@ -46,7 +46,7 @@ export default function EventsRoute() {
           height: "100vh",
           position: "static",
           display: "flex",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         <MenuList>
@@ -142,7 +142,7 @@ export default function EventsRoute() {
             right: "0%",
             display: "flex",
             flexDirection: "column",
-            flexGrow: 4
+            flexGrow: 4,
           }}
         >
           <Typography
@@ -152,7 +152,7 @@ export default function EventsRoute() {
               textTransform: "capitalize",
               fontSize: "large",
               alignSelf: "center",
-              p: 1
+              p: 1,
             }}
             color="black"
             variant="body2"
@@ -160,10 +160,22 @@ export default function EventsRoute() {
             Select an event to view the details!
           </Typography>
           {data.events.length === 0 ? (
-            <Typography>No events created yet!</Typography>
+            <Typography
+              sx={{
+                fontFamily: "rasa",
+                textTransform: "capitalize",
+                fontSize: "large",
+                alignSelf: "center",
+                p: 3,
+              }}
+              color="black"
+              variant="body2"
+            >
+              No events created yet!
+            </Typography>
           ) : (
             data.events.map((event) => (
-              <ListItem key={event.id} sx={{ justifyContent: "center"}}>
+              <ListItem key={event.id} sx={{ justifyContent: "center" }}>
                 <Card
                   sx={{
                     minWidth: 200,
