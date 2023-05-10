@@ -280,12 +280,12 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           ) : (
             <AvatarGroup max={4}>
               {likes.map((like) => (
-                  <Avatar
-                    sx={{ width: 35, height: 35 }}
-                    key={like.id}
-                    alt="user-picture"
-                    src={like.user.picture ?? undefined}
-                  />
+                <Avatar
+                  sx={{ width: 35, height: 35 }}
+                  key={like.id}
+                  alt="user-picture"
+                  src={like.user.picture ?? undefined}
+                />
               ))}
               <Typography
                 variant="body1"
@@ -338,8 +338,8 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           </Button>
         </Box>
       </Box>
-
       <Divider />
+
       <ul
         style={{
           listStyleType: "none",
@@ -350,12 +350,23 @@ const Discussion: FC<DiscussionProps> = ({ contribution }) => {
           overflowY: "auto",
         }}
       >
-        {messages.map((message, index) => (
-          <li key={index} style={{ width: "100%" }}>
-            <ChatBubble message={message} />
-          </li>
-        ))}
+        {messages.length === 0 ? (
+          <Typography
+            variant="body2"
+            fontFamily="rasa"
+            sx={{ mt: ".5rem", p: 5, fontSize: "16px" }}
+          >
+            Awaiting Discussion...{" "}
+          </Typography>
+        ) : (
+          messages.map((message, index) => (
+            <li key={index} style={{ width: "100%" }}>
+              <ChatBubble message={message} />
+            </li>
+          ))
+        )}
       </ul>
+
       <TextField
         size="small"
         sx={{

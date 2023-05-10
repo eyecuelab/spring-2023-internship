@@ -307,7 +307,7 @@ export default function EventRoute() {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <Box sx={{ mt: "1rem", p: 0}}>
+              <Box sx={{ mt: "1rem", p: 0 }}>
                 <Typography variant="h6">Summary</Typography>
                 <Typography>{data.event.summary}</Typography>
                 <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
@@ -386,12 +386,20 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
-                        <Box
-                          style={{ marginLeft: "auto", paddingTop: "3px" }}
+                        <Button
+                          sx={{
+                            marginLeft: "auto",
+                            paddingTop: "3px",
+                            fontFamily: "rasa",
+                            textTransform: "capitalize",
+                            width: "110px",
+                            pt: "8px",
+                            height: "1.75rem",
+                          }}
                           onClick={toggleDrawer(true, contribution)}
                         >
                           Discussion
-                        </Box>
+                        </Button>
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
