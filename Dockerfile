@@ -12,7 +12,7 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 RUN apt-get update -qq && \
-    apt-get install -y lsof bash
+    apt-get install -y lsof bash tcpdump
 
 # Throw-away build stage to reduce size of final image
 FROM base as build

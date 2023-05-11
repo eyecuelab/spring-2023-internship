@@ -18,10 +18,11 @@ primary_region = "lax"
     port = "443"
 
 [[services]]
+  http_checks = []
   internal_port = 8081
   protocol = "tcp"
+  script_checks = []
 
   [[services.ports]]
-    force_https = true
-    handlers = ["http"]
+    handlers = ["tls", "http"]
     port = "8081"
