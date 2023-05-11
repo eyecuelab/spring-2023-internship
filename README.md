@@ -102,6 +102,11 @@ If you've followed the setup instructions already, all you need to do is run thi
 ```sh
 npm run deploy
 ```
+***
+***** If you get this error on build => ERROR [internal] load remote build context *****
+
+***** Change the "deploy": script in the package.json to --local-only and make sure to have a docker daemon running. *****
+***
 
 You can run `flyctl info` to get the url and ip address of your server.
 

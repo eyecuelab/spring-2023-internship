@@ -15,8 +15,13 @@ export let authenticator = new Authenticator(sessionStorage, { sessionKey: '_ses
 const getCallback = (provider: SocialsProvider) => {
 // ************************************************************************************************************************
 // vvvvv---need to figure out how to check to see whether in dev mode or not before merging!!!---vvvvv
-  // return `http://localhost:3000/auth/${provider}/callback`
-  return `http://getogether.fly.dev/auth/${provider}/callback`
+  if (process.env.NODE_ENV === "development") {  
+    return `http://localhost:3000/auth/${provider}/callback`
+  } else if (process.env.NODE_ENV === "production") {
+    return `http://getogether.fly.dev/auth/${provider}/callback`
+  } else {
+    return ""
+  }
 // ************************************************************************************************************************
 } 
 
