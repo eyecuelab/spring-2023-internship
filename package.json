@@ -7,7 +7,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "remix-serve build",
+    "start": "concurrently \"remix-serve build\" \"node app/server/discussion.server.ts\"",
     "typecheck": "tsc"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@remix-run/serve": "^1.15.0",
     "@types/mapbox__mapbox-sdk": "^0.13.4",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^8.0.1",
     "express": "^4.18.2",
     "isbot": "^3.6.5",
     "passport": "^0.6.0",
