@@ -59,8 +59,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
-  // const userId = await requireUserId(request);
+export const loader: LoaderFunction = async ({ params }) => {
   const { eventId } = params;
   if (!eventId) {
     throw new Response("Uh Oh! There was no id.", { status: 404 });
@@ -308,12 +307,12 @@ export default function EventRoute() {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <Box sx={{ mt: "1rem" }}>
-                <Typography sx={{ fontWeight: "bold" }}>Summary</Typography>
+              <Box sx={{ mt: "1rem", p: 0 }}>
+                <Typography variant="h6">Summary</Typography>
                 <Typography>{data.event.summary}</Typography>
                 <Box sx={{ display: "flex", direction: "row", mt: "2rem" }}>
                   <Box sx={{}}>
-                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    <Typography variant="h6" sx={{ mt: "1rem" }}>
                       Location & Contact
                     </Typography>
                     <Typography>
@@ -325,7 +324,7 @@ export default function EventRoute() {
                     <br />
                     <Typography>(501) 778-1145</Typography>
                     <Typography>{data.event.user.email}</Typography>
-                    <Typography sx={{ fontWeight: "bold", mt: "1rem" }}>
+                    <Typography variant="h6" sx={{ mt: "1rem" }}>
                       Date and Time
                     </Typography>
                     <Typography
@@ -354,7 +353,7 @@ export default function EventRoute() {
                     />
                   </Box>
                 </Box>
-                <Typography sx={{ fontWeight: "bold", mt: "2rem" }}>
+                <Typography variant="h6" sx={{ mt: "2rem" }}>
                   claim your contributions
                 </Typography>
                 <Typography>
@@ -387,12 +386,20 @@ export default function EventRoute() {
                         >
                           {contribution.contributionName}
                         </Box>
-                        <Box
-                          style={{ marginLeft: "auto", paddingTop: "3px" }}
+                        <Button
+                          sx={{
+                            marginLeft: "auto",
+                            paddingTop: "3px",
+                            fontFamily: "rasa",
+                            textTransform: "capitalize",
+                            width: "110px",
+                            pt: "8px",
+                            height: "1.75rem",
+                          }}
                           onClick={toggleDrawer(true, contribution)}
                         >
                           Discussion
-                        </Box>
+                        </Button>
                         {user === undefined ? (
                           <div>
                             {contribution.user ? (
@@ -474,10 +481,10 @@ export default function EventRoute() {
               </Box>
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Item Two
+              Event Photo Gallery Coming Soon...
             </TabPanel>
             <TabPanel value={value} index={2}>
-              Item Three
+              Connections Section...
             </TabPanel>
           </Box>
         </Box>

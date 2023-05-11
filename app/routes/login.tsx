@@ -151,12 +151,21 @@ export default function Login() {
     >
       <Box
         data-light=""
-        style={{ marginTop: "25%", marginLeft: "15%", marginRight: "22%" }}
+        sx={{
+          height: "50%",
+          marginTop: "25%",
+          marginLeft: "15%",
+          marginRight: "22%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+        }}
       >
         <Link to="/">
           <img src={BlackLogo} style={{ height: "40px" }} alt="Black logo." />
         </Link>
-        <Form method="post">
+        <Form method="post" style={{ textAlign: "center" }}>
           <input type="hidden" name="redirectTo" value={redirectTo} />
           <FormLabel>Login or Register?</FormLabel>
           <RadioGroup defaultValue="login" name="loginType">
@@ -173,45 +182,44 @@ export default function Login() {
               label="Register"
             />
           </RadioGroup>
+
           <Box>
-            <Box>
-              <TextField
-                ref={emailRef}
-                sx={{ my: 1, backgroundColor: "#f5f5f5", }}
-                id="email"
-                placeholder="Email Address"
-                autoFocus={true}
-                name="email"
-                type="email"
-                autoComplete="email"
-                aria-invalid={actionData?.errors?.email ? true : undefined}
-                aria-describedby="email-error"
-                required
-              />
-              {actionData?.errors?.email && (
-                <Box id="email-error">{actionData.errors.email}</Box>
-              )}
-            </Box>
+            <TextField
+              ref={emailRef}
+              sx={{ my: 1, backgroundColor: "#f5f5f5" }}
+              id="email"
+              placeholder="Email Address"
+              autoFocus={true}
+              name="email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={actionData?.errors?.email ? true : undefined}
+              aria-describedby="email-error"
+              required
+            />
+            {actionData?.errors?.email && (
+              <Box id="email-error">{actionData.errors.email}</Box>
+            )}
           </Box>
+
           <Box>
-            <Box>
-              <TextField
-                sx={{ my: 1, backgroundColor: "#f5f5f5", }}
-                id="password"
-                ref={passwordRef}
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="Password"
-                aria-invalid={actionData?.errors?.password ? true : undefined}
-                aria-describedby="password-error"
-                required
-              />
-              {actionData?.errors?.password && (
-                <Box id="password-error">{actionData.errors.password}</Box>
-              )}
-            </Box>
+            <TextField
+              sx={{ my: 1, backgroundColor: "#f5f5f5" }}
+              id="password"
+              ref={passwordRef}
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              placeholder="Password"
+              aria-invalid={actionData?.errors?.password ? true : undefined}
+              aria-describedby="password-error"
+              required
+            />
+            {actionData?.errors?.password && (
+              <Box id="password-error">{actionData.errors.password}</Box>
+            )}
           </Box>
+
           <Button
             type="submit"
             sx={{
@@ -221,6 +229,7 @@ export default function Login() {
               pl: "1.5rem",
               pr: "1.5rem",
               pt: "8px",
+              mt: 2,
               height: "1.75rem",
               alignSelf: "stretch",
             }}
@@ -229,33 +238,31 @@ export default function Login() {
           >
             Submit
           </Button>
+          <Typography sx={{ py: 2, textAlign: "center" }}>OR</Typography>
         </Form>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography>OR</Typography>
-          <Form method="post" action={`/auth/${SocialsProvider.GOOGLE}`}>
-            <Button
-              type="submit"
-              sx={{
-                fontFamily: "rasa",
-                fontWeight: "bold",
-                textTransform: "capitalize",
-                pl: "1.5rem",
-                pr: "1.5rem",
-                pt: "8px",
-                height: "1.75rem",
-                alignSelf: "stretch",
-              }}
-              color="primary"
-            >
-              <img
-                src={GoogleLogo}
-                style={{ height: "40px" }}
-                alt="Black logo."
-              />
-              Login with Google
-            </Button>
-          </Form>
-        </Box>
+        <Form
+          method="post"
+          action={`/auth/${SocialsProvider.GOOGLE}`}
+          style={{ alignSelf: "center" }}
+        >
+          <Button
+            type="submit"
+            sx={{
+              fontFamily: "rasa",
+              fontWeight: "bold",
+              textTransform: "capitalize",
+              height: "1.75rem",
+            }}
+            color="primary"
+          >
+            <img
+              src={GoogleLogo}
+              style={{ height: "40px" }}
+              alt="Black logo."
+            />
+            Login with Google
+          </Button>
+        </Form>
       </Box>
     </Box>
   );
