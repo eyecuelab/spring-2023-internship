@@ -6,6 +6,7 @@ import { useUser } from "~/utils/utils";
 import type { LoaderArgs } from "@remix-run/node";
 import { requireUserId } from "~/services/session.server";
 import Appbar from "~/components/Appbar";
+import { ContentContainer } from "~/components/Responsiveness";
 import {
   Box,
   Button,
@@ -39,16 +40,7 @@ export default function EventsRoute() {
   return (
     <Box>
       <Appbar />
-      <Box
-        style={{
-          backgroundColor: "white",
-          width: "53%",
-          height: "100vh",
-          position: "static",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
+      <ContentContainer>
         <MenuList>
           <Paper
             sx={{
@@ -192,7 +184,7 @@ export default function EventsRoute() {
             ))
           )}
         </Box>
-      </Box>
+      </ContentContainer>
     </Box>
   );
 }
