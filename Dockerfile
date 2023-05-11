@@ -38,12 +38,17 @@ RUN npm run build
 # Remove development dependencies
 RUN npm prune --production
 
+FROM caddy:2.6.4 as caddy
 
 # Final stage for app image
 FROM base
 
 # Copy built application
 COPY --from=build /app /app
+
+# caddy
+COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
+COPY Caddyfile /Caddyfile
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/app/docker-entrypoint"]

@@ -7,22 +7,10 @@ app = "getogether"
 primary_region = "lax"
 
 [env]
-  PORT = "8080"
+  PORT = "8081"
 
-[[services]]
+[http_service]
   internal_port = 8080
-  protocol = "tcp"
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = "443"
-
-[[services]]
-  http_checks = []
-  internal_port = 8081
-  protocol = "tcp"
-  script_checks = []
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = "8081"
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
