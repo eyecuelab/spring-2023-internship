@@ -123,8 +123,6 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 export default function Login() {
-  // vvvvv---original code was throwing type error on actionData.error---vvvvv
-  // const actionData = useActionData<typeof action>();
   const actionData = useActionData();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/events";
@@ -132,7 +130,6 @@ export default function Login() {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log(`ActionData:${actionData}`);
     if (actionData?.errors?.email) {
       emailRef.current?.focus();
     } else if (actionData?.errors?.password) {
@@ -145,7 +142,8 @@ export default function Login() {
       style={{
         backgroundColor: "white",
         width: "53%",
-        height: "100%",
+        minHeight: "100%", 
+        maxHeight: "auto",
         position: "absolute",
       }}
     >

@@ -13,8 +13,6 @@ invariant(process.env.REACT_APP_GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET must
 export let authenticator = new Authenticator(sessionStorage, { sessionKey: '_session' });
 
 const getCallback = (provider: SocialsProvider) => {
-// ************************************************************************************************************************
-// vvvvv---need to figure out how to check to see whether in dev mode or not before merging!!!---vvvvv
   if (process.env.NODE_ENV === "development") {  
     return `http://localhost:3000/auth/${provider}/callback`
   } else if (process.env.NODE_ENV === "production") {
@@ -22,7 +20,6 @@ const getCallback = (provider: SocialsProvider) => {
   } else {
     return ""
   }
-// ************************************************************************************************************************
 } 
 
 // Configuring Google Strategy
