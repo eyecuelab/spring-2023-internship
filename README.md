@@ -1,8 +1,36 @@
-# EyeCue Lab Spring 2023 Internship
+# EyeCue Lab Spring 2023 Internship: GeTogether
 
- [Remix Docs](https://remix.run/docs)
+## Authors: David Gamble and Chris Loveless
 
-## Development
+Check Out the Live Site: [getogether.fly.dev](https://getogether.fly.dev/) 
+
+## Description:
+
+GeTogether is a robust web application built with Remix and Typescript while utilizing Postgres as the database management system. The app facilitates the creation and management of potluck style events, allowing users to organize and coordinate gatherings seamlessly. In addition to its powerful event management capabilities, the app employs Socket.io, a real-time communication library, to enable live communication between users associated with the events, fostering interactive and engaging experiences. With its combination of Typescript, Postgres, and Socket.io, GeTogether provides a reliable and dynamic platform for users to plan and participate in potluck events.
+
+## Website 
+
+![homepage](app/images/homepage.png)
+
+![login](app/images/login.png)
+
+![dashboard](app/images/dashboard.png)
+
+![createEvent](app/images/createEvent.png)
+
+![eventDetails](app/images/eventDetails.png)
+
+![discussion](app/images/discussion.png)
+
+## Project Setup 
+
+1. Clone this repo to your desktop.
+2. Navigate to the project directory and run `$ npm install`.
+3. Add a `.env` file to the `.gitignore` and commit the change.
+4. Add a `.env` file to the root directory.
+5. Use the template provided to declare environment variables.
+
+## Available Scripts
 
 From your terminal:
 
@@ -12,13 +40,10 @@ npm run dev
 
 This starts your app in development mode, rebuilding assets on file changes.
 
-## Socket.io Server
-
-From your terminal:
-Navigate to the app/server directory and run the following command.
+## Run Socket.io Server and App Server concurrently on LocalHost
 
 ```sh
-$ node discussion.server.ts
+$ npm run start 
 ```
 
 This starts your app in development mode, rebuilding assets on file changes.
@@ -48,20 +73,11 @@ Make sure to deploy the output of `remix build`
 - `build/`
 - `public/build/`
 
-### Using a Template
+## License
+Copyright (c) 2023 David Gamble and Chris Loveless 
+_[MIT](https://choosealicense.com/licenses/mit/)_
 
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
 
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```
 
 ## Fly Setup
 
