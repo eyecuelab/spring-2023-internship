@@ -6,8 +6,9 @@
   },
   "scripts": {
     "build": "remix build",
+    "deploy": "fly deploy --remote-only",
     "dev": "remix dev",
-    "start": "concurrently \"remix-serve build\" \"node app/server/discussion.server.ts\"",
+    "start": "concurrently \"remix-serve build\" \"caddy run --config /Caddyfile\" \"node app/server/discussion.server.ts\"",
     "typecheck": "tsc"
   },
   "dependencies": {

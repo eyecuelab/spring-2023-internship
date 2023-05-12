@@ -1,0 +1,11 @@
+http://:8080 {
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+
+	reverse_proxy @websockets localhost:8082
+  reverse_proxy /socket.io/* localhost:8082
+
+	reverse_proxy localhost:8081
+}

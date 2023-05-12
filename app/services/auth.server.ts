@@ -13,7 +13,13 @@ invariant(process.env.REACT_APP_GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET must
 export let authenticator = new Authenticator(sessionStorage, { sessionKey: '_session' });
 
 const getCallback = (provider: SocialsProvider) => {
-  return `http://localhost:3000/auth/${provider}/callback`
+  if (process.env.NODE_ENV === "development") {  
+    return `http://localhost:3000/auth/${provider}/callback`
+  } else if (process.env.NODE_ENV === "production") {
+    return `http://getogether.fly.dev/auth/${provider}/callback`
+  } else {
+    return ""
+  }
 } 
 
 // Configuring Google Strategy
