@@ -40,6 +40,12 @@ npm run dev
 
 This starts your app in development mode, rebuilding assets on file changes.
 
+```sh
+node app/server/discussion.server.js
+```
+
+This starts the websocket server.
+
 ## Run Socket.io Server and App Server concurrently on LocalHost
 
 ```sh
@@ -61,23 +67,6 @@ Then run the app in production mode:
 ```sh
 npm start
 ```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
-
-## License
-Copyright (c) 2023 David Gamble and Chris Loveless 
-_[MIT](https://choosealicense.com/licenses/mit/)_
-
-
 
 ## Fly Setup
 
@@ -127,3 +116,7 @@ npm run deploy
 You can run `flyctl info` to get the url and ip address of your server.
 
 Check out the [fly docs](https://fly.io/docs/getting-started/node/) for more information.
+
+## License
+Copyright (c) 2023 David Gamble and Chris Loveless 
+_[MIT](https://choosealicense.com/licenses/mit/)_
