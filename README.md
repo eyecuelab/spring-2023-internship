@@ -20,7 +20,7 @@ GeTogether is a robust web application built with Remix and Typescript while uti
 
 ![eventDetails](app/images/eventDetails.png)
 
-![discussion](app/images/discussion.png)
+![discussion](app/images/GetogetherDemo.png)
 
 ## Project Setup 
 
